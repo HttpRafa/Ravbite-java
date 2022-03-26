@@ -41,7 +41,6 @@ public class CameraComponent extends Component {
 
     /**
      * Check if the camera is responsible to render this GameObject
-     *
      * @param gameObject GameObject
      * @return If the camera is responsible
      */
@@ -51,7 +50,6 @@ public class CameraComponent extends Component {
 
     /**
      * Check if the camera is responsible to render this GameObject
-     *
      * @param layer LayerId
      * @return If the camera is responsible
      */

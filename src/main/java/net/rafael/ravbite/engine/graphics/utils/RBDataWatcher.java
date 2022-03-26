@@ -33,7 +33,6 @@ public class RBDataWatcher {
 
     /**
      * Store vao for later cleanUp
-     *
      * @param vao Vao to store
      */
     public void glVao(int vao) {
@@ -42,7 +41,6 @@ public class RBDataWatcher {
 
     /**
      * Store vbo for later cleanUp
-     *
      * @param vbo Vbo to store
      */
     public void glVbo(int vbo) {

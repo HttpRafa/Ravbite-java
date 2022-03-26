@@ -8,8 +8,8 @@ package net.rafael.ravbite.engine.graphics.object.scene;
 //
 //------------------------------
 
-import net.rafael.ravbite.engine.graphics.components.Component;
 import net.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import net.rafael.ravbite.engine.graphics.components.Component;
 import net.rafael.ravbite.engine.graphics.object.game.GameObject;
 import net.rafael.ravbite.engine.graphics.window.EngineWindow;
 
@@ -48,7 +48,7 @@ public abstract class Scene {
         // TODO: Optimize
         for (GameObject gameObject : gameObjects) {
             Optional<Component> componentOptional = gameObject.hasComponent(CameraComponent.class);
-            if (componentOptional.isPresent()) {
+            if(componentOptional.isPresent()) {
                 CameraComponent cameraComponent = (CameraComponent) componentOptional.get();
                 cameraComponent.startRendering();
                 renderCamera(gameObjects, cameraComponent);
@@ -59,12 +59,11 @@ public abstract class Scene {
 
     /**
      * Called to render the frame in the camera
-     *
      * @param cameraComponent Camera
      */
     private void renderCamera(Collection<GameObject> gameObjects, CameraComponent cameraComponent) {
         for (GameObject gameObject : gameObjects) {
-            if (cameraComponent.isResponsableFor(gameObject)) {
+            if(cameraComponent.isResponsableFor(gameObject)) {
                 gameObject.render(cameraComponent);
             }
         }

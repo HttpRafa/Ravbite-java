@@ -22,12 +22,19 @@ public class Mesh {
 
     /**
      * Store the meshData into openGL VAOs and VBOs
-     *
      * @param engineWindow Window to handle the VAOs and VBOs
      * @return Stored version of the mesh
      */
     public StoredMesh store(EngineWindow engineWindow) {
         return engineWindow.getGLUtils().rbLoadToVAO(this);
+    }
+
+    /**
+     * Sets the vertices
+     * @param vertices New vertices
+     */
+    public void setVertices(float[] vertices) {
+        this.vertices = vertices;
     }
 
     /**
@@ -38,12 +45,11 @@ public class Mesh {
     }
 
     /**
-     * Sets the vertices
-     *
-     * @param vertices New vertices
+     * Sets the indices
+     * @param indices New indices
      */
-    public void setVertices(float[] vertices) {
-        this.vertices = vertices;
+    public void setIndices(int[] indices) {
+        this.indices = indices;
     }
 
     /**
@@ -51,15 +57,6 @@ public class Mesh {
      */
     public int[] getIndices() {
         return indices;
-    }
-
-    /**
-     * Sets the indices
-     *
-     * @param indices New indices
-     */
-    public void setIndices(int[] indices) {
-        this.indices = indices;
     }
 
 }

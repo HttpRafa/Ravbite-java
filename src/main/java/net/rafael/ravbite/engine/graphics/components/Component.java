@@ -28,20 +28,17 @@ public abstract class Component {
     /**
      * Called every frame
      */
-    public void update() {
-    }
+    public void update() {}
 
     /**
      * Called every fixed update(Physics)
      */
-    public void fixedUpdate() {
-    }
+    public void fixedUpdate() {}
 
     /**
      * Called to render the GameObject
      */
-    public void render(CameraComponent cameraComponent) {
-    }
+    public void render(CameraComponent cameraComponent) {}
 
     /**
      * @return GameObject of the component
@@ -59,7 +56,6 @@ public abstract class Component {
 
     /**
      * Sets the enabled state
-     *
      * @param enabled New State
      */
     public void setEnabled(boolean enabled) {

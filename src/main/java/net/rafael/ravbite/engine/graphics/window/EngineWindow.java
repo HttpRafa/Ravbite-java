@@ -20,20 +20,23 @@ import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 public abstract class EngineWindow {
 
     private final int initialWidth, initialHeight;
-    private final GLUtils glUtils;
+
     private int currentScene = 0;
     private Scene[] scenes = new Scene[0];
+
     private long window;
+
     private RBDataWatcher dataWatcher;
+    private final GLUtils glUtils;
 
     public EngineWindow(int width, int height) {
         initialHeight = height;
@@ -69,7 +72,7 @@ public abstract class EngineWindow {
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW. Most GLFW functions will not work before doing this
-        if (!glfwInit())
+        if ( !glfwInit() )
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Configure GLFW
@@ -114,7 +117,6 @@ public abstract class EngineWindow {
 
     /**
      * Tell the engine to handle a new scene
-     *
      * @param scene Scene to handle
      * @return Index of the added scene
      */
@@ -126,14 +128,13 @@ public abstract class EngineWindow {
 
     /**
      * Tell the engine to change the rendered scene
-     *
      * @param index Index of the new scene
      * @return Index of the old scene
      */
     public int changeScene(int index) {
         int old = currentScene;
         scenes[currentScene].dispose();
-        if (dataWatcher != null) dataWatcher.rbCleanUp();
+        if(dataWatcher != null) dataWatcher.rbCleanUp();
         dataWatcher = new RBDataWatcher();
         currentScene = index;
         scenes[currentScene].prepare();
@@ -155,7 +156,7 @@ public abstract class EngineWindow {
         changeScene(0);
 
         // Set the clear color
-        glClearColor(220f / 255f, 220f / 255f, 220f / 255f, 0.0f);
+        glClearColor(220f/255f,220f/255f,220f/255f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

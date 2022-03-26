@@ -8,8 +8,8 @@ package net.rafael.ravbite.engine.graphics.object.game;
 //
 //------------------------------
 
-import net.rafael.ravbite.engine.graphics.components.Component;
 import net.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import net.rafael.ravbite.engine.graphics.components.Component;
 import net.rafael.ravbite.engine.graphics.object.scene.Scene;
 
 import java.util.ArrayList;
@@ -21,10 +21,13 @@ public class GameObject {
 
     private final Scene scene;
     private final String name;
-    private final List<Component> objectComponents = new ArrayList<>();
-    private final List<GameObject> childrenObjects = new ArrayList<>();
+
     private int renderLayer = 0;
+
+    private final List<Component> objectComponents = new ArrayList<>();
+
     private GameObject parentObject = null;
+    private final List<GameObject> childrenObjects = new ArrayList<>();
 
     public GameObject(Scene scene) {
         this.scene = scene;
@@ -50,7 +53,6 @@ public class GameObject {
 
     /**
      * Append new child to GameObject
-     *
      * @param child GameObject to add
      * @return GameObject
      */
@@ -61,7 +63,6 @@ public class GameObject {
 
     /**
      * Append new children to GameObject
-     *
      * @param children GameObjects to add
      * @return GameObject
      */
@@ -72,7 +73,6 @@ public class GameObject {
 
     /**
      * Append new component to GameObject
-     *
      * @param component Component to add
      * @return GameObject
      */
@@ -83,7 +83,6 @@ public class GameObject {
 
     /**
      * Append new components to GameObject
-     *
      * @param components Components to add
      * @return GameObject
      */
@@ -94,7 +93,7 @@ public class GameObject {
 
     public Optional<Component> hasComponent(Class<? extends Component> type) {
         for (Component objectComponent : objectComponents) {
-            if (type.isAssignableFrom(objectComponent.getClass())) {
+            if(type.isAssignableFrom(objectComponent.getClass())) {
                 return Optional.of(objectComponent);
             }
         }
@@ -163,7 +162,6 @@ public class GameObject {
 
     /**
      * Updates the renderLayer
-     *
      * @param renderLayer New renderLayer
      */
     public void setRenderLayer(int renderLayer) {

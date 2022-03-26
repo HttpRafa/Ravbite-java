@@ -14,7 +14,7 @@ import net.rafael.ravbite.engine.scene.MainScene;
 public class TestWindow extends EngineWindow {
 
     public TestWindow() {
-        super(1920 / 2, 1080 / 2);
+        super(1920/2, 1080/2);
     }
 
     @Override

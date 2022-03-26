@@ -36,8 +36,8 @@ public class MainScene extends Scene {
         };
 
         int[] indices = {
-                0, 1, 3,//top left triangle (v0, v1, v3)
-                3, 1, 2//bottom right triangle (v3, v1, v2)
+                0,1,3,//top left triangle (v0, v1, v3)
+                3,1,2//bottom right triangle (v3, v1, v2)
         };
         Mesh mesh = new Mesh(vertices, indices);
 

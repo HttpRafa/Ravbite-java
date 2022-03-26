@@ -32,21 +32,20 @@ public class MeshComponent extends Component {
     }
 
     /**
+     * @return Mesh stored in OpenGL
+     */
+    public StoredMesh getStoredMesh() {
+        return storedMesh;
+    }
+
+    /**
      * Sets the mesh handled by the Component
-     *
      * @param mesh New Mesh
      */
     public void setMesh(Mesh mesh) {
         // TODO: Dispose/Delete old mesh from OpenGL
         this.mesh = mesh;
         this.storedMesh = mesh.store(getGameObject().getScene().getEngineWindow());
-    }
-
-    /**
-     * @return Mesh stored in OpenGL
-     */
-    public StoredMesh getStoredMesh() {
-        return storedMesh;
     }
 
 }

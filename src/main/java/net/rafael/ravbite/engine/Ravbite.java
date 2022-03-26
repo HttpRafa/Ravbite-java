@@ -28,7 +28,6 @@ public class Ravbite {
 
     /**
      * Adds a window to the engine manager
-     *
      * @param window Window to add
      */
     public void addWindow(EngineWindow window) {
@@ -36,6 +35,7 @@ public class Ravbite {
     }
 
     /**
+     *
      * @return All registered windows
      */
     public List<EngineWindow> getWindows() {

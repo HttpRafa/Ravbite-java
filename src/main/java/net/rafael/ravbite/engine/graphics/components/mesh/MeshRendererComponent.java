@@ -28,7 +28,7 @@ public class MeshRendererComponent extends Component {
     public void render(CameraComponent cameraComponent) {
         // TODO: Optimize
         Optional<Component> componentOptional = getGameObject().hasComponent(MeshComponent.class);
-        if (componentOptional.isPresent()) {
+        if(componentOptional.isPresent()) {
             MeshComponent meshComponent = (MeshComponent) componentOptional.get();
             StoredMesh mesh = meshComponent.getStoredMesh();
 
