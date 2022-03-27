@@ -9,8 +9,10 @@ package net.rafael.ravbite.engine.graphics.window;
 //------------------------------
 
 import net.rafael.ravbite.engine.graphics.object.scene.Scene;
+import net.rafael.ravbite.engine.graphics.shader.Shader;
+import net.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import net.rafael.ravbite.engine.graphics.utils.GLUtils;
-import net.rafael.ravbite.engine.graphics.utils.RBDataWatcher;
+import net.rafael.ravbite.engine.graphics.utils.DataWatcher;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -33,11 +35,18 @@ public abstract class EngineWindow {
     private int currentScene = 0;
     private Scene[] scenes = new Scene[0];
 
+    private Shader[] shaders = new Shader[0];
+
     private long window;
 
-    private RBDataWatcher dataWatcher;
+    private DataWatcher dataWatcher;
     private final GLUtils glUtils;
 
+    /**
+     * WARNING: Not in the render thread
+     * @param width Width of the window
+     * @param height Height of the window
+     */
     public EngineWindow(int width, int height) {
         initialHeight = height;
         initialWidth = width;
@@ -45,15 +54,24 @@ public abstract class EngineWindow {
         glUtils = new GLUtils(this);
     }
 
+    public void runThreaded() {
+        Thread renderThread = new Thread(this::run);
+        renderThread.start();
+    }
+
     /**
      * Opens the window and starts the render loop
      */
     public void run() {
         initialize();
+        prepareShaders();
         prepare();
         loop();
 
         dataWatcher.rbCleanUp();
+        for (Shader shader : shaders) {
+            shader.dispose();
+        }
 
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
@@ -108,12 +126,26 @@ public abstract class EngineWindow {
 
         // Make the window visible
         glfwShowWindow(window);
+
+        // This line is critical for LWJGL's interoperation with GLFW's
+        // OpenGL context, or any context that is managed externally.
+        // LWJGL detects the context that is current in the current thread,
+        // creates the GLCapabilities instance and makes the OpenGL
+        // bindings available for use.
+        GL.createCapabilities();
     }
 
     /**
      * Initializes all Scenes
      */
     public abstract void prepare();
+
+    /**
+     * Initializes all Shaders
+     */
+    public void prepareShaders() {
+        addShader(new StandardShader(this));
+    }
 
     /**
      * Tell the engine to handle a new scene
@@ -127,6 +159,52 @@ public abstract class EngineWindow {
     }
 
     /**
+     * Tell the engine to add a new shader
+     * @param shader Shader to add
+     * @return ID of the added shader
+     */
+    public int addShader(Shader shader) {
+        shaders = Arrays.copyOf(shaders, shaders.length + 1);
+        shaders[shaders.length - 1] = shader;
+        shader.setShaderId(shaders.length - 1);
+        return shaders.length - 1;
+    }
+
+    /**
+     * @param type Type of the shader like StandardShader.class
+     * @return ID of the shader or null
+     */
+    public Integer getIdOfShader(Class<? extends Shader> type) {
+        for (Shader shader : shaders) {
+            if(type.isAssignableFrom(shader.getClass())) {
+                return shader.getShaderId();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param type Type of the shader like StandardShader.class
+     * @return Shader or null
+     */
+    public Shader getShaderOfType(Class<? extends Shader> type) {
+        for (Shader shader : shaders) {
+            if(type.isAssignableFrom(shader.getClass())) {
+                return shader;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param id ID of the shader
+     * @return Shader instance
+     */
+    public Shader getShader(int id) {
+        return shaders[id];
+    }
+
+    /**
      * Tell the engine to change the rendered scene
      * @param index Index of the new scene
      * @return Index of the old scene
@@ -135,7 +213,7 @@ public abstract class EngineWindow {
         int old = currentScene;
         scenes[currentScene].dispose();
         if(dataWatcher != null) dataWatcher.rbCleanUp();
-        dataWatcher = new RBDataWatcher();
+        dataWatcher = new DataWatcher();
         currentScene = index;
         scenes[currentScene].prepare();
         return old;
@@ -145,13 +223,6 @@ public abstract class EngineWindow {
      * Starts the render loop
      */
     public void loop() {
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
-        GL.createCapabilities();
-
         // Trigger prepare method in scene
         changeScene(0);
 
@@ -226,7 +297,7 @@ public abstract class EngineWindow {
     /**
      * @return DataWatcher
      */
-    public RBDataWatcher getDataWatcher() {
+    public DataWatcher getDataWatcher() {
         return dataWatcher;
     }
 

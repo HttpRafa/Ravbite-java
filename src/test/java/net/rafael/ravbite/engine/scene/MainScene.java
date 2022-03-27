@@ -10,8 +10,10 @@ package net.rafael.ravbite.engine.scene;
 
 import net.rafael.ravbite.engine.component.TestComponent;
 import net.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import net.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import net.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
 import net.rafael.ravbite.engine.graphics.components.mesh.MeshRendererComponent;
+import net.rafael.ravbite.engine.graphics.material.Material;
 import net.rafael.ravbite.engine.graphics.mesh.Mesh;
 import net.rafael.ravbite.engine.graphics.object.game.GameObject;
 import net.rafael.ravbite.engine.graphics.object.scene.Scene;
@@ -45,6 +47,7 @@ public class MainScene extends Scene {
         testCube.appendComponent(new TestComponent(testCube));
         testCube.appendComponent(new MeshComponent(testCube, mesh));
         testCube.appendComponent(new MeshRendererComponent(testCube));
+        testCube.appendComponent(new MaterialComponent(testCube, new Material(this.getEngineWindow())));
 
         getSceneObject().appendChildren(camera, testCube);
     }

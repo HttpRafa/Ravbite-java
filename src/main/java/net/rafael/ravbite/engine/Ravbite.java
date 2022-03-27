@@ -21,8 +21,12 @@ public class Ravbite {
      * Runs every window
      */
     public void run() {
-        for (EngineWindow window : windows) {
-            window.run();
+        for (int i = 0; i < windows.size(); i++) {
+            if(i == (windows.size() - 1)) {
+                windows.get(i).run();
+            } else {
+                windows.get(i).runThreaded();
+            }
         }
     }
 

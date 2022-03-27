@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL30;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RBDataWatcher {
+public class DataWatcher {
 
     private final List<Integer> vaoList = new ArrayList<>();
     private final List<Integer> vboList = new ArrayList<>();
