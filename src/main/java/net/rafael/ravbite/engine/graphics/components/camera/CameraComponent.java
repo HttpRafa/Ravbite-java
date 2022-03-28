@@ -14,14 +14,13 @@ import org.apache.commons.lang3.ArrayUtils;
 
 public class CameraComponent extends Component {
 
-    private int[] renderLayers = {0};
+    private int[] renderLayers;
 
-    public CameraComponent(GameObject gameObject) {
-        super(gameObject);
+    public CameraComponent() {
+        this.renderLayers = new int[]{0};
     }
 
-    public CameraComponent(GameObject gameObject, int... renderLayers) {
-        super(gameObject);
+    public CameraComponent(int... renderLayers) {
         this.renderLayers = renderLayers;
     }
 
@@ -62,6 +61,14 @@ public class CameraComponent extends Component {
      */
     public int[] getRenderLayers() {
         return renderLayers;
+    }
+
+    /**
+     * Sets the renderLayers
+     * @param renderLayers New renderLayers
+     */
+    public void setRenderLayers(int[] renderLayers) {
+        this.renderLayers = renderLayers;
     }
 
 }

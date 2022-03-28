@@ -8,6 +8,7 @@ package net.rafael.ravbite.engine.graphics.window;
 //
 //------------------------------
 
+import net.rafael.ravbite.engine.graphics.asset.AssetLocation;
 import net.rafael.ravbite.engine.graphics.object.scene.Scene;
 import net.rafael.ravbite.engine.graphics.shader.Shader;
 import net.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
@@ -18,6 +19,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.Objects;
@@ -38,6 +40,8 @@ public abstract class EngineWindow {
     private Shader[] shaders = new Shader[0];
 
     private long window;
+
+    private int defaultTexture = 0;
 
     private DataWatcher dataWatcher;
     private final GLUtils glUtils;
@@ -133,6 +137,13 @@ public abstract class EngineWindow {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        // Load default assets
+        try {
+            this.defaultTexture = this.glUtils.rbStaticLoadTexture(AssetLocation.create("/textures/default/standard.png", AssetLocation.INTERNAL));
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     /**
@@ -292,6 +303,13 @@ public abstract class EngineWindow {
      */
     public long getWindow() {
         return window;
+    }
+
+    /**
+     * @return ID of defaultTexture
+     */
+    public int getDefaultTexture() {
+        return defaultTexture;
     }
 
     /**

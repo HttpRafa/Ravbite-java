@@ -13,8 +13,12 @@ import net.rafael.ravbite.engine.graphics.object.game.GameObject;
 
 public abstract class Component {
 
-    private final GameObject gameObject;
+    private GameObject gameObject;
     private boolean enabled = true;
+
+    public Component() {
+
+    }
 
     public Component(GameObject gameObject) {
         this.gameObject = gameObject;
@@ -23,6 +27,13 @@ public abstract class Component {
     public Component(GameObject gameObject, boolean enabled) {
         this.gameObject = gameObject;
         this.enabled = enabled;
+    }
+
+    /**
+     * Called when the component gets added to a GameObject
+     */
+    public void initialize() {
+
     }
 
     /**
@@ -45,6 +56,14 @@ public abstract class Component {
      */
     public GameObject getGameObject() {
         return gameObject;
+    }
+
+    /**
+     * Sets to parent GameObject
+     * @param gameObject GameObject
+     */
+    public void setGameObject(GameObject gameObject) {
+        this.gameObject = gameObject;
     }
 
     /**

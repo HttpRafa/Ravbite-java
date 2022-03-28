@@ -11,20 +11,18 @@ package net.rafael.ravbite.engine.graphics.components.mesh;
 import net.rafael.ravbite.engine.graphics.components.Component;
 import net.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import net.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
+import net.rafael.ravbite.engine.graphics.material.Material;
 import net.rafael.ravbite.engine.graphics.mesh.StoredMesh;
 import net.rafael.ravbite.engine.graphics.object.game.GameObject;
 import net.rafael.ravbite.engine.graphics.shader.Shader;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import java.util.Optional;
 
 public class MeshRendererComponent extends Component {
-
-    public MeshRendererComponent(GameObject gameObject) {
-        super(gameObject);
-    }
 
     @Override
     public void render(CameraComponent cameraComponent) {
@@ -37,16 +35,30 @@ public class MeshRendererComponent extends Component {
 
             // Material
             Optional<Component> materialComponentOptional = getGameObject().hasComponent(MaterialComponent.class);
-            MaterialComponent material = (MaterialComponent) materialComponentOptional.orElse(null);
+            MaterialComponent materialComponent = (MaterialComponent) materialComponentOptional.orElse(null);
 
             GL30.glBindVertexArray(mesh.getVao());
             GL20.glEnableVertexAttribArray(0);
+            GL20.glEnableVertexAttribArray(1);
 
-            // Start Shader
+            // Apply Material
+            Material material = null;
+            if(materialComponent != null) {
+                material = materialComponent.getMaterial();
+            }
             Shader shader = null;
             if(material != null) {
-                shader = this.getGameObject().getScene().getEngineWindow().getShader(material.getMaterial().getShaderId());
+                // Start Shader
+                shader = this.getGameObject().getScene().getEngineWindow().getShader(material.getShaderId());
                 shader.start();
+
+                // Active Texture
+                if(material.getAlbedo() != null) {
+                    // TODO: Implement material.getAlbedo().getColor()
+
+                    GL13.glActiveTexture(GL13.GL_TEXTURE0);
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, material.getAlbedo().getTextureId());
+                }
             }
 
             // Render the mesh
@@ -56,6 +68,7 @@ public class MeshRendererComponent extends Component {
             if(shader != null) shader.stop();
 
             GL20.glDisableVertexAttribArray(0);
+            GL20.glDisableVertexAttribArray(1);
             GL30.glBindVertexArray(0);
         } else {
             // TODO: Warning MeshRender without a meshComponent

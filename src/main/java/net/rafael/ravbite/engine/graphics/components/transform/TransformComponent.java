@@ -20,8 +20,7 @@ public class TransformComponent extends Component {
     private final Vector3f scale;
     private final Quat4f rotation;
 
-    public TransformComponent(GameObject gameObject) {
-        super(gameObject);
+    public TransformComponent() {
         this.position = new Vector3f(0f, 0f, 0f);
         this.scale = new Vector3f(1f, 1f, 1f);
         this.rotation = new Quat4f();

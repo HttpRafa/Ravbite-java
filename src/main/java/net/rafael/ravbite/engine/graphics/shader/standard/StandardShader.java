@@ -31,6 +31,7 @@ public class StandardShader extends Shader {
     @Override
     public void bindAttributes() {
         super.bindAttribute(0, "position");
+        super.bindAttribute(1, "textureCoords");
     }
 
 }

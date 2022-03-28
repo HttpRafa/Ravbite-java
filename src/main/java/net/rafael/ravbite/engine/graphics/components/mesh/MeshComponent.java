@@ -11,17 +11,19 @@ package net.rafael.ravbite.engine.graphics.components.mesh;
 import net.rafael.ravbite.engine.graphics.components.Component;
 import net.rafael.ravbite.engine.graphics.mesh.Mesh;
 import net.rafael.ravbite.engine.graphics.mesh.StoredMesh;
-import net.rafael.ravbite.engine.graphics.object.game.GameObject;
 
 public class MeshComponent extends Component {
 
     private Mesh mesh;
     private StoredMesh storedMesh;
 
-    public MeshComponent(GameObject gameObject, Mesh mesh) {
-        super(gameObject);
+    public MeshComponent(Mesh mesh) {
         this.mesh = mesh;
-        this.storedMesh = this.mesh.store(gameObject.getScene().getEngineWindow());
+    }
+
+    @Override
+    public void initialize() {
+        this.storedMesh = this.mesh.store(getGameObject().getScene().getEngineWindow());
     }
 
     /**

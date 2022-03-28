@@ -10,14 +10,12 @@ package net.rafael.ravbite.engine.graphics.components.material;
 
 import net.rafael.ravbite.engine.graphics.components.Component;
 import net.rafael.ravbite.engine.graphics.material.Material;
-import net.rafael.ravbite.engine.graphics.object.game.GameObject;
 
 public class MaterialComponent extends Component {
 
     private Material material;
 
-    public MaterialComponent(GameObject gameObject, Material material) {
-        super(gameObject);
+    public MaterialComponent(Material material) {
         this.material = material;
     }
 

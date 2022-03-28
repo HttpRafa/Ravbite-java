@@ -13,10 +13,12 @@ import net.rafael.ravbite.engine.graphics.window.EngineWindow;
 public class Mesh {
 
     private float[] vertices;
+    private float[] textureCoords;
     private int[] indices;
 
-    public Mesh(float[] vertices, int[] indices) {
+    public Mesh(float[] vertices, float[] textureCoords, int[] indices) {
         this.vertices = vertices;
+        this.textureCoords = textureCoords;
         this.indices = indices;
     }
 
@@ -42,6 +44,21 @@ public class Mesh {
      */
     public float[] getVertices() {
         return vertices;
+    }
+
+    /**
+     * Sets the textureCoords
+     * @param textureCoords New textureCoords
+     */
+    public void setTextureCoords(float[] textureCoords) {
+        this.textureCoords = textureCoords;
+    }
+
+    /**
+     * @return TextureCoords used for this mesh
+     */
+    public float[] getTextureCoords() {
+        return textureCoords;
     }
 
     /**

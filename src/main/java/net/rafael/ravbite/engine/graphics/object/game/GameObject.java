@@ -77,7 +77,9 @@ public class GameObject {
      * @return GameObject
      */
     public GameObject appendComponent(Component component) {
+        component.setGameObject(this);
         objectComponents.add(component);
+        component.initialize();
         return this;
     }
 
@@ -87,7 +89,9 @@ public class GameObject {
      * @return GameObject
      */
     public GameObject appendComponents(Component... components) {
-        objectComponents.addAll(List.of(components));
+        for (Component component : components) {
+            appendComponent(component);
+        }
         return this;
     }
 

@@ -11,16 +11,44 @@ package net.rafael.ravbite.engine.graphics.material;
 import net.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import net.rafael.ravbite.engine.graphics.window.EngineWindow;
 
+import java.awt.*;
+
 public class Material {
 
-    private final int shaderId;
+    private final EngineWindow engineWindow;
 
-    public Material(int shaderId) {
-        this.shaderId = shaderId;
-    }
+    private Integer shaderId;
+    private AlbedoProperty albedo;
 
     public Material(EngineWindow engineWindow) {
-        this.shaderId = engineWindow.getIdOfShader(StandardShader.class);
+        this.engineWindow = engineWindow;
+    }
+
+    public Material shader(int id) {
+        shaderId = id;
+        return this;
+    }
+
+    public Material albedo(AlbedoProperty albedo) {
+        this.albedo = albedo;
+        return this;
+    }
+
+    public Material create() {
+        if(this.shaderId == null) {
+            this.shaderId = engineWindow.getIdOfShader(StandardShader.class);
+        }
+        if(this.albedo == null) {
+            this.albedo = new AlbedoProperty(this, new Color(0, 0, 0));
+        }
+        return this;
+    }
+
+    /**
+     * @return EngineWindow
+     */
+    public EngineWindow getEngineWindow() {
+        return engineWindow;
     }
 
     /**
@@ -28,6 +56,13 @@ public class Material {
      */
     public int getShaderId() {
         return shaderId;
+    }
+
+    /**
+     * @return AlbedoProperty
+     */
+    public AlbedoProperty getAlbedo() {
+        return albedo;
     }
 
 }

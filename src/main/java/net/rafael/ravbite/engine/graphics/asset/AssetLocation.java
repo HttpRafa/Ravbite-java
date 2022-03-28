@@ -33,13 +33,13 @@ public class AssetLocation {
         this.location = location;
     }
 
+    /**
+     * Loads the data from the file as a string
+     * @return Data as string
+     * @throws IOException If the file doesn't exist or the bufferReader fails
+     */
     public String loadString() throws IOException {
-        InputStream inputStream;
-        if(location == INTERNAL) {
-            inputStream = this.getClass().getResourceAsStream(path);
-        } else {
-            inputStream = new FileInputStream(path);
-        }
+        InputStream inputStream = asInputStream();
         assert inputStream != null;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -50,6 +50,20 @@ public class AssetLocation {
         }
         bufferedReader.close();
         return stringBuilder.toString();
+    }
+
+    /**
+     * @return Creates a inputSteam from the given file location
+     * @throws FileNotFoundException If the file doesn't exist
+     */
+    public InputStream asInputStream() throws FileNotFoundException {
+        InputStream inputStream;
+        if(location == INTERNAL) {
+            inputStream = this.getClass().getResourceAsStream(path);
+        } else {
+            inputStream = new FileInputStream(path);
+        }
+        return inputStream;
     }
 
     /**

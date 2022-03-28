@@ -10,13 +10,8 @@ package net.rafael.ravbite.engine.component;
 
 import net.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import net.rafael.ravbite.engine.graphics.components.Component;
-import net.rafael.ravbite.engine.graphics.object.game.GameObject;
 
 public class TestComponent extends Component {
-
-    public TestComponent(GameObject gameObject) {
-        super(gameObject);
-    }
 
     @Override
     public void render(CameraComponent cameraComponent) {

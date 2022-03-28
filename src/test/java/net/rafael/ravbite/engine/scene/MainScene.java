@@ -27,8 +27,9 @@ public class MainScene extends Scene {
 
     @Override
     public void prepare() {
+
         GameObject camera = new GameObject(this, "Camera 1");
-        camera.appendComponent(new CameraComponent(camera));
+        camera.appendComponent(new CameraComponent());
 
         float[] vertices = {
                 -0.5f, 0.5f, 0f,//v0
@@ -41,13 +42,21 @@ public class MainScene extends Scene {
                 0,1,3,//top left triangle (v0, v1, v3)
                 3,1,2//bottom right triangle (v3, v1, v2)
         };
-        Mesh mesh = new Mesh(vertices, indices);
+
+        float[] textureCoords = {
+                0,0,
+                0,1,
+                1,1,
+                1,0
+        };
+
+        Mesh mesh = new Mesh(vertices, textureCoords, indices);
 
         GameObject testCube = new GameObject(this, "Test Cube");
-        testCube.appendComponent(new TestComponent(testCube));
-        testCube.appendComponent(new MeshComponent(testCube, mesh));
-        testCube.appendComponent(new MeshRendererComponent(testCube));
-        testCube.appendComponent(new MaterialComponent(testCube, new Material(this.getEngineWindow())));
+        testCube.appendComponent(new TestComponent());
+        testCube.appendComponent(new MeshComponent(mesh));
+        testCube.appendComponent(new MeshRendererComponent());
+        testCube.appendComponent(new MaterialComponent(new Material(this.getEngineWindow()).create()));
 
         getSceneObject().appendChildren(camera, testCube);
     }
