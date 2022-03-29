@@ -11,9 +11,9 @@ package de.rafael.ravbite.engine.graphics.window;
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.shader.Shader;
+import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
 import de.rafael.ravbite.engine.graphics.utils.GLUtils;
-import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -23,16 +23,15 @@ import org.lwjgl.system.MemoryStack;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class EngineWindow {
 

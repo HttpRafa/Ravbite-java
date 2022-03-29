@@ -15,7 +15,6 @@ import org.lwjgl.glfw.GLFWImage;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -31,6 +30,11 @@ public class ImageUtils {
         return ImageIO.read(assetLocation.asInputStream());
     }
 
+    /**
+     * Converts an array of BufferedImages to an array of GLFWImages
+     * @param bufferedImageArray Array of BufferedImages
+     * @return Array of GLFWImages
+     */
     public static GLFWImage[] bufferedImageArrayToGLFWImageArray(BufferedImage[] bufferedImageArray) {
         GLFWImage[] array = new GLFWImage[bufferedImageArray.length];
         for (int i = 0; i < bufferedImageArray.length; i++) {
@@ -39,10 +43,13 @@ public class ImageUtils {
         return array;
     }
 
+    /**
+     * Converts an image of BufferedImage to an GLFWImage
+     * @param bufferedImage BufferedImage
+     * @return GLFWImage
+     */
     public static GLFWImage bufferedImageToGLFWImage(BufferedImage bufferedImage) {
-
         if (bufferedImage.getType() != BufferedImage.TYPE_INT_ARGB_PRE) {
-
             BufferedImage convertedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
             Graphics2D graphics = convertedImage.createGraphics();
 
@@ -55,11 +62,11 @@ public class ImageUtils {
             bufferedImage = convertedImage;
         }
 
-        final ByteBuffer buffer = BufferUtils.createByteBuffer(bufferedImage.getWidth() * bufferedImage.getHeight() * 4);
+        ByteBuffer buffer = BufferUtils.createByteBuffer(bufferedImage.getWidth() * bufferedImage.getHeight() * 4);
 
-        for (int i = 0; i < bufferedImage.getHeight(); i++) {
-            for (int j = 0; j < bufferedImage.getWidth(); j++) {
-                int colorSpace = bufferedImage.getRGB(j, i);
+        for (int h = 0; h < bufferedImage.getHeight(); h++) {
+            for (int w = 0; w < bufferedImage.getWidth(); w++) {
+                int colorSpace = bufferedImage.getRGB(w, h);
                 buffer.put((byte) ((colorSpace << 8) >> 24));
                 buffer.put((byte) ((colorSpace << 16) >> 24));
                 buffer.put((byte) ((colorSpace << 24) >> 24));
@@ -69,7 +76,7 @@ public class ImageUtils {
 
         buffer.flip();
 
-        final GLFWImage result = GLFWImage.create();
+        GLFWImage result = GLFWImage.create();
         result.set(bufferedImage.getWidth(), bufferedImage.getHeight(), buffer);
 
         return result;
