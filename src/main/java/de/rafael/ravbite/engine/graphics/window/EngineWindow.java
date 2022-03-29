@@ -14,12 +14,16 @@ import de.rafael.ravbite.engine.graphics.shader.Shader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
 import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
+import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.Objects;
@@ -131,6 +135,14 @@ public abstract class EngineWindow {
         // Make the window visible
         glfwShowWindow(window);
 
+        // Set default icon
+        try {
+            BufferedImage iconImage = ImageUtils.loadImage(new AssetLocation("/textures/icon/icon128.png", AssetLocation.INTERNAL));
+            setIcon(iconImage);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread,
@@ -143,6 +155,20 @@ public abstract class EngineWindow {
             this.defaultTexture = this.glUtils.rbStaticLoadTexture(AssetLocation.create("/textures/default/standard.png", AssetLocation.INTERNAL));
         } catch (IOException exception) {
             exception.printStackTrace();
+        }
+    }
+
+    public void setIcon(BufferedImage bufferedImage) {
+        this.setIcons(new BufferedImage[] {bufferedImage});
+    }
+
+    public void setIcons(BufferedImage[] bufferedImages) {
+        GLFWImage[] glfwImages = ImageUtils.bufferedImageArrayToGLFWImageArray(bufferedImages);
+        try(GLFWImage.Buffer iconBuffer = GLFWImage.malloc(glfwImages.length)) {
+            for (int i = 0; i < glfwImages.length; i++) {
+                iconBuffer.put(i, glfwImages[i]);
+            }
+            glfwSetWindowIcon(window, iconBuffer);
         }
     }
 
