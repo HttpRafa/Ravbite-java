@@ -11,11 +11,15 @@ package de.rafael.ravbite.engine.graphics.shader;
 import de.rafael.ravbite.engine.exception.ShaderCompilationException;
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 
-public abstract class Shader {
+public abstract class AbstractShader {
 
     private final EngineWindow engineWindow;
 
@@ -28,11 +32,13 @@ public abstract class Shader {
     /**
      * @param engineWindow EngineWindow
      */
-    public Shader(EngineWindow engineWindow) {
+    public AbstractShader(EngineWindow engineWindow) {
         this.engineWindow = engineWindow;
     }
 
     public abstract void bindAttributes();
+
+    public abstract void updateUniformLocations();
 
     /**
      * Bind the attribute index to a variable name
@@ -41,6 +47,48 @@ public abstract class Shader {
      */
     public void bindAttribute(int attribute, String variableName) {
         GL20.glBindAttribLocation(programId, attribute, variableName);
+    }
+
+    /**
+     * @param uniformName Name of the uniform variable
+     * @return ID of the uniform variable
+     */
+    public int getUniformLocation(String uniformName) {
+        return GL20.glGetUniformLocation(programId, uniformName);
+    }
+
+    public void load(int location, float value) {
+        GL20.glUniform1f(location, value);
+    }
+
+    public void load(int location, boolean value) {
+        GL20.glUniform1f(location, value ? 1 : 0);
+    }
+
+    public void load(int location, Vector3f value) {
+        GL20.glUniform3f(location, value.x, value.y, value.z);
+    }
+
+    public void load(int location, Matrix4f value) {
+        FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(16);
+        floatBuffer.put(0, value.m00);
+        floatBuffer.put(1, value.m01);
+        floatBuffer.put(2, value.m02);
+        floatBuffer.put(3, value.m03);
+        floatBuffer.put(4, value.m10);
+        floatBuffer.put(5, value.m11);
+        floatBuffer.put(6, value.m12);
+        floatBuffer.put(7, value.m13);
+        floatBuffer.put(8, value.m20);
+        floatBuffer.put(9, value.m21);
+        floatBuffer.put(10, value.m22);
+        floatBuffer.put(11, value.m23);
+        floatBuffer.put(12, value.m30);
+        floatBuffer.put(13, value.m31);
+        floatBuffer.put(14, value.m32);
+        floatBuffer.put(15, value.m33);
+        floatBuffer.flip();
+        GL20.glUniformMatrix4fv(location, false, floatBuffer);
     }
 
     /**
@@ -70,8 +118,10 @@ public abstract class Shader {
         programId = GL20.glCreateProgram();
         if(vertexShaderId != null) GL20.glAttachShader(programId, vertexShaderId);
         if(fragmentShaderId != null) GL20.glAttachShader(programId, fragmentShaderId);
+        this.bindAttributes();
         GL20.glLinkProgram(programId);
         GL20.glValidateProgram(programId);
+        this.updateUniformLocations();
     }
 
     /**

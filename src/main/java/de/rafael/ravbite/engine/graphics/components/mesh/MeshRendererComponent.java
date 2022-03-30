@@ -8,12 +8,12 @@ package de.rafael.ravbite.engine.graphics.components.mesh;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
-import de.rafael.ravbite.engine.graphics.mesh.StoredMesh;
-import de.rafael.ravbite.engine.graphics.shader.Shader;
 import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.material.Material;
+import de.rafael.ravbite.engine.graphics.mesh.StoredMesh;
+import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -45,11 +45,11 @@ public class MeshRendererComponent extends Component {
             if(materialComponent != null) {
                 material = materialComponent.getMaterial();
             }
-            Shader shader = null;
+            AbstractShader abstractShader = null;
             if(material != null) {
                 // Start Shader
-                shader = this.getGameObject().getScene().getEngineWindow().getShader(material.getShaderId());
-                shader.start();
+                abstractShader = this.getGameObject().getScene().getEngineWindow().getShader(material.getShaderId());
+                abstractShader.start();
 
                 // Active Texture
                 if(material.getAlbedo() != null) {
@@ -64,7 +64,7 @@ public class MeshRendererComponent extends Component {
             GL20.glDrawElements(GL11.GL_TRIANGLES, mesh.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 
             // Stop Shader
-            if(shader != null) shader.stop();
+            if(abstractShader != null) abstractShader.stop();
 
             GL20.glDisableVertexAttribArray(0);
             GL20.glDisableVertexAttribArray(1);

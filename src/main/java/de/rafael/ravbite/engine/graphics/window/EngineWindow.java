@@ -10,7 +10,7 @@ package de.rafael.ravbite.engine.graphics.window;
 
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
-import de.rafael.ravbite.engine.graphics.shader.Shader;
+import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
 import de.rafael.ravbite.engine.graphics.utils.GLUtils;
@@ -40,7 +40,7 @@ public abstract class EngineWindow {
     private int currentScene = 0;
     private Scene[] scenes = new Scene[0];
 
-    private Shader[] shaders = new Shader[0];
+    private AbstractShader[] abstractShaders = new AbstractShader[0];
 
     private long window;
 
@@ -76,8 +76,8 @@ public abstract class EngineWindow {
         loop();
 
         dataWatcher.rbCleanUp();
-        for (Shader shader : shaders) {
-            shader.dispose();
+        for (AbstractShader abstractShader : abstractShaders) {
+            abstractShader.dispose();
         }
 
         glfwFreeCallbacks(window);
@@ -196,24 +196,24 @@ public abstract class EngineWindow {
 
     /**
      * Tell the engine to add a new shader
-     * @param shader Shader to add
+     * @param abstractShader Shader to add
      * @return ID of the added shader
      */
-    public int addShader(Shader shader) {
-        shaders = Arrays.copyOf(shaders, shaders.length + 1);
-        shaders[shaders.length - 1] = shader;
-        shader.setShaderId(shaders.length - 1);
-        return shaders.length - 1;
+    public int addShader(AbstractShader abstractShader) {
+        abstractShaders = Arrays.copyOf(abstractShaders, abstractShaders.length + 1);
+        abstractShaders[abstractShaders.length - 1] = abstractShader;
+        abstractShader.setShaderId(abstractShaders.length - 1);
+        return abstractShaders.length - 1;
     }
 
     /**
      * @param type Type of the shader like StandardShader.class
      * @return ID of the shader or null
      */
-    public Integer getIdOfShader(Class<? extends Shader> type) {
-        for (Shader shader : shaders) {
-            if(type.isAssignableFrom(shader.getClass())) {
-                return shader.getShaderId();
+    public Integer getIdOfShader(Class<? extends AbstractShader> type) {
+        for (AbstractShader abstractShader : abstractShaders) {
+            if(type.isAssignableFrom(abstractShader.getClass())) {
+                return abstractShader.getShaderId();
             }
         }
         return null;
@@ -223,10 +223,10 @@ public abstract class EngineWindow {
      * @param type Type of the shader like StandardShader.class
      * @return Shader or null
      */
-    public Shader getShaderOfType(Class<? extends Shader> type) {
-        for (Shader shader : shaders) {
-            if(type.isAssignableFrom(shader.getClass())) {
-                return shader;
+    public AbstractShader getShaderOfType(Class<? extends AbstractShader> type) {
+        for (AbstractShader abstractShader : abstractShaders) {
+            if(type.isAssignableFrom(abstractShader.getClass())) {
+                return abstractShader;
             }
         }
         return null;
@@ -236,8 +236,8 @@ public abstract class EngineWindow {
      * @param id ID of the shader
      * @return Shader instance
      */
-    public Shader getShader(int id) {
-        return shaders[id];
+    public AbstractShader getShader(int id) {
+        return abstractShaders[id];
     }
 
     /**

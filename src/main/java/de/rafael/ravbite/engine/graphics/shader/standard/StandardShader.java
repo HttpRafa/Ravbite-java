@@ -10,12 +10,12 @@ package de.rafael.ravbite.engine.graphics.shader.standard;
 
 import de.rafael.ravbite.engine.exception.ShaderCompilationException;
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
-import de.rafael.ravbite.engine.graphics.shader.Shader;
+import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 
 import java.io.IOException;
 
-public class StandardShader extends Shader {
+public class StandardShader extends AbstractShader {
 
     public StandardShader(EngineWindow engineWindow) {
         super(engineWindow);
