@@ -34,4 +34,9 @@ public class StandardShader extends AbstractShader {
         super.bindAttribute(1, "textureCoords");
     }
 
+    @Override
+    public void updateUniformLocations() {
+
+    }
+
 }
