@@ -8,12 +8,13 @@ package de.rafael.ravbite.engine.graphics.object.scene;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Optional;
 
 public abstract class Scene {
@@ -22,6 +23,8 @@ public abstract class Scene {
     private final String name;
 
     private final GameObject sceneObject;
+
+    private final HashMap<Integer, Object> storedObjects = new HashMap<>();
 
     public Scene(EngineWindow engineWindow, String name) {
         this.engineWindow = engineWindow;
@@ -39,6 +42,18 @@ public abstract class Scene {
      * Delete all GameObjects
      */
     public abstract void dispose();
+
+    public void storeObject(int slot, Object object) {
+        storedObjects.put(slot, object);
+    }
+
+    public Object getStoredObject(int slot) {
+        return storedObjects.getOrDefault(slot, null);
+    }
+
+    public void deleteStoredObject(int slot) {
+        storedObjects.remove(slot);
+    }
 
     /**
      * Called to render the frame
