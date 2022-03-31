@@ -9,6 +9,7 @@ package de.rafael.ravbite.engine.graphics.components.transform;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.math.Maths;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -48,10 +49,8 @@ public class Transform extends Component {
         return this;
     }
 
-    public Transform rotation(float x, float y, float z) {
-        Quaternionf quaternion = new Quaternionf();
-        quaternion.rotateXYZ(x, y, z);
-        this.rotation.set(quaternion);
+    public Transform rotation(Vector3f vector) {
+        this.rotation.mul(Maths.eulerToQuaternion(vector.x, vector.y, vector.z));
         return this;
     }
 
@@ -102,14 +101,22 @@ public class Transform extends Component {
         this.move(vector.x, vector.y, vector.z);
     }
 
+    /**
+     * Rotates the GameObject using euler rotations
+     * @param x X value
+     * @param y Y value
+     * @param z Z value
+     */
     public void rotate(float x, float y, float z) {
-        Quaternionf quaternion = new Quaternionf();
-        quaternion.rotateXYZ(x, y, z);
-        this.rotate(quaternion);
+        this.rotate(Maths.eulerToQuaternion(x, y, z));
     }
 
-    public void rotate(Quaternionf quaternion) {
-        this.rotation.add(quaternion);
+    /**
+     * Rotates the GameObject
+     * @param rotation Quaternion to add
+     */
+    public void rotate(Quaternionf rotation) {
+        this.rotation.mul(rotation);
     }
 
     /**
