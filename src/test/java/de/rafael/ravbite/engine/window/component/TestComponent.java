@@ -1,4 +1,4 @@
-package de.rafael.ravbite.engine.component;
+package de.rafael.ravbite.engine.window.component;
 
 //------------------------------
 //

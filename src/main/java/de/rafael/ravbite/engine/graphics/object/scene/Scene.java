@@ -11,6 +11,7 @@ package de.rafael.ravbite.engine.graphics.object.scene;
 import de.rafael.ravbite.engine.graphics.components.Component;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 
 import java.util.Collection;
@@ -128,6 +129,13 @@ public abstract class Scene {
      */
     public GameObject getSceneObject() {
         return sceneObject;
+    }
+
+    /**
+     * @return Utils class for openGL
+     */
+    public GLUtils getGLUtils() {
+        return this.engineWindow.getGLUtils();
     }
 
 }

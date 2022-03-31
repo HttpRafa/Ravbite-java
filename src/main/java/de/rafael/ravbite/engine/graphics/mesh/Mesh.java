@@ -13,13 +13,18 @@ import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 public class Mesh {
 
     private float[] vertices;
+    private float[] normals;
+    private float[] tangents;
+
     private float[] textureCoords;
     private int[] indices;
 
-    public Mesh(float[] vertices, float[] textureCoords, int[] indices) {
+    public Mesh(float[] vertices, float[] normals, float[] tangents, float[] textureCoords, int[] indices) {
         this.vertices = vertices;
         this.textureCoords = textureCoords;
         this.indices = indices;
+        this.normals = normals;
+        this.tangents = tangents;
     }
 
     /**
@@ -44,6 +49,36 @@ public class Mesh {
      */
     public float[] getVertices() {
         return vertices;
+    }
+
+    /**
+     * Sets the normals
+     * @param normals New normals
+     */
+    public void setNormals(float[] normals) {
+        this.normals = normals;
+    }
+
+    /**
+     * @return Normals in this mesh
+     */
+    public float[] getNormals() {
+        return normals;
+    }
+
+    /**
+     * Sets the tangents
+     * @param tangents New tangents
+     */
+    public void setTangents(float[] tangents) {
+        this.tangents = tangents;
+    }
+
+    /**
+     * @return Tangents in this mesh
+     */
+    public float[] getTangents() {
+        return tangents;
     }
 
     /**

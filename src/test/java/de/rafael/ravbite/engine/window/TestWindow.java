@@ -9,7 +9,7 @@ package de.rafael.ravbite.engine.window;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
-import de.rafael.ravbite.engine.scene.MainScene;
+import de.rafael.ravbite.engine.window.scene.MainScene;
 import org.lwjgl.glfw.GLFW;
 
 public class TestWindow extends EngineWindow {

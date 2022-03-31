@@ -1,4 +1,4 @@
-package de.rafael.ravbite.engine;
+package de.rafael.ravbite.engine.window;
 
 //------------------------------
 //
@@ -8,7 +8,7 @@ package de.rafael.ravbite.engine;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.window.TestWindow;
+import de.rafael.ravbite.engine.Ravbite;
 import org.junit.jupiter.api.Test;
 
 public class WindowTest {

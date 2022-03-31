@@ -1,4 +1,4 @@
-package de.rafael.ravbite.engine.scene;
+package de.rafael.ravbite.engine.window.scene;
 
 //------------------------------
 //
@@ -8,7 +8,6 @@ package de.rafael.ravbite.engine.scene;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.component.TestComponent;
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
@@ -17,9 +16,11 @@ import de.rafael.ravbite.engine.graphics.components.mesh.MeshRendererComponent;
 import de.rafael.ravbite.engine.graphics.material.AlbedoProperty;
 import de.rafael.ravbite.engine.graphics.material.Material;
 import de.rafael.ravbite.engine.graphics.mesh.Mesh;
+import de.rafael.ravbite.engine.graphics.model.ModelUtils;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.window.component.TestComponent;
 
 import java.awt.*;
 import java.io.IOException;
@@ -108,18 +109,24 @@ public class MainScene extends Scene {
                 20,21,23,
                 23,21,22
         };
-        Mesh mesh = new Mesh(vertices, textureCoords, indices);
+        Mesh mesh = new Mesh(vertices, new float[0], new float[0], textureCoords, indices);
         Material material = new Material(this.getEngineWindow());
         try {
-            int textureId = getEngineWindow().getGLUtils().rbLoadTexture(AssetLocation.create("/testTexture.png", AssetLocation.INTERNAL));
+            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/testTexture.png", AssetLocation.INTERNAL));
             material.albedo(new AlbedoProperty(material, new Color(255, 255, 255)).texture(textureId));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
         material.create();
 
+        try {
+            mesh = ModelUtils.rbLoadMeshesFromModel(AssetLocation.create("/models/suzanne.obj", AssetLocation.INTERNAL))[0];
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         GameObject testCube = new GameObject(this, "Test Cube");
-        testCube.getTransform().move(0, 0, -5);
+        testCube.getTransform().move(0, -1, -10);
         testCube.appendComponent(new TestComponent());
         testCube.appendComponent(new MeshComponent(mesh));
         testCube.appendComponent(new MeshRendererComponent());
@@ -135,7 +142,7 @@ public class MainScene extends Scene {
     public void update() {
         GameObject camera = (GameObject) super.getStoredObject(0);
         GameObject testCube = (GameObject) super.getStoredObject(1);
-        testCube.getTransform().rotate(1, 1, 0);
+        testCube.getTransform().rotate(0, 1, 0);
         super.update();
     }
 
