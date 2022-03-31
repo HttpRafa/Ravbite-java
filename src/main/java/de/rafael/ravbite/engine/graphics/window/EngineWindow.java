@@ -264,6 +264,7 @@ public abstract class EngineWindow {
         changeScene(0);
 
         // Set the clear color
+        glEnable(GL_DEPTH_TEST);
         glClearColor(220f/255f,220f/255f,220f/255f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close

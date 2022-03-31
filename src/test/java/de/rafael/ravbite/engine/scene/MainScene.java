@@ -36,24 +36,78 @@ public class MainScene extends Scene {
         camera.appendComponent(new CameraComponent());
 
         float[] vertices = {
-                -0.5f, 0.5f, 0f,//v0
-                -0.5f, -0.5f, 0f,//v1
-                0.5f, -0.5f, 0f,//v2
-                0.5f, 0.5f, 0f,//v3
-        };
+                -0.5f,0.5f,-0.5f,
+                -0.5f,-0.5f,-0.5f,
+                0.5f,-0.5f,-0.5f,
+                0.5f,0.5f,-0.5f,
 
-        int[] indices = {
-                0,1,3,//top left triangle (v0, v1, v3)
-                3,1,2//bottom right triangle (v3, v1, v2)
+                -0.5f,0.5f,0.5f,
+                -0.5f,-0.5f,0.5f,
+                0.5f,-0.5f,0.5f,
+                0.5f,0.5f,0.5f,
+
+                0.5f,0.5f,-0.5f,
+                0.5f,-0.5f,-0.5f,
+                0.5f,-0.5f,0.5f,
+                0.5f,0.5f,0.5f,
+
+                -0.5f,0.5f,-0.5f,
+                -0.5f,-0.5f,-0.5f,
+                -0.5f,-0.5f,0.5f,
+                -0.5f,0.5f,0.5f,
+
+                -0.5f,0.5f,0.5f,
+                -0.5f,0.5f,-0.5f,
+                0.5f,0.5f,-0.5f,
+                0.5f,0.5f,0.5f,
+
+                -0.5f,-0.5f,0.5f,
+                -0.5f,-0.5f,-0.5f,
+                0.5f,-0.5f,-0.5f,
+                0.5f,-0.5f,0.5f
         };
 
         float[] textureCoords = {
                 0,0,
                 0,1,
                 1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
                 1,0
         };
 
+        int[] indices = {
+                0,1,3,
+                3,1,2,
+                4,5,7,
+                7,5,6,
+                8,9,11,
+                11,9,10,
+                12,13,15,
+                15,13,14,
+                16,17,19,
+                19,17,18,
+                20,21,23,
+                23,21,22
+        };
         Mesh mesh = new Mesh(vertices, textureCoords, indices);
         Material material = new Material(this.getEngineWindow());
         try {
@@ -65,7 +119,7 @@ public class MainScene extends Scene {
         material.create();
 
         GameObject testCube = new GameObject(this, "Test Cube");
-        testCube.getTransform().move(0, 0, -1);
+        testCube.getTransform().move(0, 0, -5);
         testCube.appendComponent(new TestComponent());
         testCube.appendComponent(new MeshComponent(mesh));
         testCube.appendComponent(new MeshRendererComponent());
@@ -81,7 +135,7 @@ public class MainScene extends Scene {
     public void update() {
         GameObject camera = (GameObject) super.getStoredObject(0);
         GameObject testCube = (GameObject) super.getStoredObject(1);
-        camera.getTransform().move(0, 0, 0.08f);
+        testCube.getTransform().rotate(1, 1, 0);
         super.update();
     }
 
