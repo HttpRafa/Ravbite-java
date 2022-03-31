@@ -24,6 +24,12 @@ import java.util.Objects;
 
 public class ModelUtils {
 
+    /**
+     * Loads all available meshes from a modelFile
+     * @param assetLocation Path to the modelFile
+     * @return MeshArray
+     * @throws IOException ?
+     */
     public static Mesh[] rbLoadMeshesFromModel(AssetLocation assetLocation) throws IOException {
         AIScene aiScene = ModelUtils.rbLoadScene(assetLocation);
         PointerBuffer pointerBuffer = aiScene.mMeshes();
@@ -36,6 +42,12 @@ public class ModelUtils {
         return meshList.toArray(new Mesh[0]);
     }
 
+    /**
+     * Loads the aiScene from a modelFile
+     * @param assetLocation Path to the modelFile
+     * @return Scene of the model or null
+     * @throws IOException ?
+     */
     public static AIScene rbLoadScene(AssetLocation assetLocation) throws IOException {
         InputStream inputStream = assetLocation.asInputStream();
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(inputStream.available());
@@ -46,6 +58,11 @@ public class ModelUtils {
         return Assimp.aiImportFileFromMemory(byteBuffer, Assimp.aiProcess_Triangulate | Assimp.aiProcess_OptimizeMeshes | Assimp.aiProcess_FlipUVs | Assimp.aiProcess_CalcTangentSpace, "");
     }
 
+    /**
+     * Converts a aiMesh to an engine Mesh
+     * @param aiMesh InputMesh
+     * @return OutputMesh
+     */
     public static Mesh rbProcessMesh(AIMesh aiMesh) {
         List<Float> verticesList = new ArrayList<>();
         List<Float> normalsList = new ArrayList<>();
@@ -69,7 +86,7 @@ public class ModelUtils {
             normalsList.add(normal.z());
         }
 
-        AIVector3D.Buffer tangentsData = aiMesh.mTangents();;
+        AIVector3D.Buffer tangentsData = aiMesh.mTangents();
         for (int i = 0; i < Objects.requireNonNull(tangentsData).limit(); i++) {
             AIVector3D tangent = tangentsData.get(i);
             tangentsList.add(tangent.x());
