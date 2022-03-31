@@ -8,14 +8,9 @@ package de.rafael.ravbite.engine.component;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.Component;
 
 public class TestComponent extends Component {
 
-    @Override
-    public void render(CameraComponent cameraComponent) {
-
-    }
 
 }

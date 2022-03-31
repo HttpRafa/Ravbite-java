@@ -9,6 +9,7 @@ package de.rafael.ravbite.engine.graphics.components.mesh;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.material.Material;
@@ -21,7 +22,7 @@ import org.lwjgl.opengl.GL30;
 
 import java.util.Optional;
 
-public class MeshRendererComponent extends Component {
+public class MeshRendererComponent extends RenderComponent {
 
     @Override
     public void render(CameraComponent cameraComponent) {
@@ -49,7 +50,7 @@ public class MeshRendererComponent extends Component {
             if(material != null) {
                 // Start Shader
                 abstractShader = this.getGameObject().getScene().getEngineWindow().getShader(material.getShaderId());
-                abstractShader.start();
+                abstractShader.bind();
 
                 // Active Texture
                 if(material.getAlbedo() != null) {
@@ -64,7 +65,7 @@ public class MeshRendererComponent extends Component {
             GL20.glDrawElements(GL11.GL_TRIANGLES, mesh.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 
             // Stop Shader
-            if(abstractShader != null) abstractShader.stop();
+            if(abstractShader != null) abstractShader.unbind();
 
             GL20.glDisableVertexAttribArray(0);
             GL20.glDisableVertexAttribArray(1);

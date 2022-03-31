@@ -10,22 +10,37 @@ package de.rafael.ravbite.engine.graphics.shader.standard;
 
 import de.rafael.ravbite.engine.exception.ShaderCompilationException;
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
+import de.rafael.ravbite.engine.graphics.components.RenderComponent;
+import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import org.joml.Matrix4f;
 
 import java.io.IOException;
 
 public class StandardShader extends AbstractShader {
 
+    private int transformationMatrix;
+
     public StandardShader(EngineWindow engineWindow) {
         super(engineWindow);
         try {
-            vertexShader(AssetLocation.create("/shaders/standard/vertexShader.glsl", AssetLocation.INTERNAL));
-            fragmentShader(AssetLocation.create("/shaders/standard/fragmentShader.glsl", AssetLocation.INTERNAL));
-            createProgram();
+            super.vertexShader(AssetLocation.create("/shaders/standard/vertexShader.glsl", AssetLocation.INTERNAL));
+            super.fragmentShader(AssetLocation.create("/shaders/standard/fragmentShader.glsl", AssetLocation.INTERNAL));
+            super.createProgram();
         } catch (IOException | ShaderCompilationException exception) {
             exception.printStackTrace();
         }
+    }
+
+    @Override
+    public void prepareObject(GameObject gameObject, CameraComponent cameraComponent, RenderComponent renderer) {
+
+    }
+
+    private void loadTransformationMatrix(Matrix4f matrix) {
+        super.load(transformationMatrix, matrix);
     }
 
     @Override
@@ -36,7 +51,14 @@ public class StandardShader extends AbstractShader {
 
     @Override
     public void updateUniformLocations() {
+        transformationMatrix = super.getUniformLocation("transformationMatrix");
+    }
 
+    /**
+     * @return Location of the uniform variable transformationMatrix
+     */
+    public int getTransformationMatrix() {
+        return transformationMatrix;
     }
 
 }

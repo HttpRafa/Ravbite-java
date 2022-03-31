@@ -8,7 +8,6 @@ package de.rafael.ravbite.engine.graphics.components;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 
 public abstract class Component {
@@ -45,11 +44,6 @@ public abstract class Component {
      * Called every fixed update(Physics)
      */
     public void fixedUpdate() {}
-
-    /**
-     * Called to render the GameObject
-     */
-    public void render(CameraComponent cameraComponent) {}
 
     /**
      * @return GameObject of the component

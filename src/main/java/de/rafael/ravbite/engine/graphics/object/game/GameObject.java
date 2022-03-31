@@ -9,6 +9,7 @@ package de.rafael.ravbite.engine.graphics.object.game;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 
@@ -109,7 +110,7 @@ public class GameObject {
      */
     public void render(CameraComponent cameraComponent) {
         for (Component objectComponent : objectComponents) {
-            objectComponent.render(cameraComponent);
+            if(objectComponent instanceof RenderComponent renderer) renderer.render(cameraComponent);
         }
     }
 

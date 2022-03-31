@@ -9,58 +9,57 @@ package de.rafael.ravbite.engine.graphics.components.transform;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
-
-public class TransformComponent extends Component {
+public class Transform extends Component {
 
     private final Vector3f position;
     private final Vector3f scale;
-    private final Quat4f rotation;
+    private final Quaternionf rotation;
 
-    public TransformComponent() {
+    public Transform() {
         this.position = new Vector3f(0f, 0f, 0f);
         this.scale = new Vector3f(1f, 1f, 1f);
-        this.rotation = new Quat4f();
+        this.rotation = new Quaternionf();
     }
 
-    public TransformComponent position(float x, float y, float z) {
+    public Transform position(float x, float y, float z) {
         this.position.set(x, y, z);
         return this;
     }
 
-    public TransformComponent position(Vector3f vector) {
+    public Transform position(Vector3f vector) {
         this.position.set(vector);
         return this;
     }
 
-    public TransformComponent rotation(float x, float y, float z, float w) {
+    public Transform rotation(float x, float y, float z, float w) {
         this.rotation.set(x, y, z, w);
         return this;
     }
 
-    public TransformComponent rotation(float x, float y, float z) {
+    public Transform rotation(float x, float y, float z) {
         this.rotation.set(x, y, z, 0f);
         return this;
     }
 
-    public TransformComponent rotation(Quat4f quaternion) {
+    public Transform rotation(Quaternionf quaternion) {
         this.rotation.set(quaternion);
         return this;
     }
 
-    public TransformComponent scale(float x, float y, float z) {
+    public Transform scale(float x, float y, float z) {
         this.scale.set(x, y, z);
         return this;
     }
 
-    public TransformComponent scale(Vector3f vector) {
+    public Transform scale(Vector3f vector) {
         this.scale.set(vector);
         return this;
     }
 
-    public TransformComponent scale(float s) {
+    public Transform scale(float s) {
         this.scale.set(s, s, s);
         return this;
     }
@@ -82,7 +81,7 @@ public class TransformComponent extends Component {
     /**
      * @return Rotation of the GameObject
      */
-    public Quat4f getRotation() {
+    public Quaternionf getRotation() {
         return rotation;
     }
 
