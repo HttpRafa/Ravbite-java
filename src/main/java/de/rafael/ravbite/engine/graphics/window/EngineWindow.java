@@ -15,6 +15,7 @@ import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
 import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -303,6 +304,13 @@ public abstract class EngineWindow {
     }
 
     /**
+     * @return The initial width of the window
+     */
+    public int getInitialWidth() {
+        return initialWidth;
+    }
+
+    /**
      * @return The initial height of the window
      */
     public int getInitialHeight() {
@@ -310,10 +318,34 @@ public abstract class EngineWindow {
     }
 
     /**
-     * @return The initial width of the window
+     * @return Size of the window in IntBuffers
      */
-    public int getInitialWidth() {
-        return initialWidth;
+    public IntBuffer[] getWindowSize() {
+        IntBuffer width = BufferUtils.createIntBuffer(4);
+        IntBuffer height = BufferUtils.createIntBuffer(4);
+        glfwGetWindowSize(window, width, height);
+        return new IntBuffer[] {width, height};
+    }
+
+    /**
+     * @return Width of the window
+     */
+    public int getWidth() {
+        return getWindowSize()[0].get();
+    }
+
+    /**
+     * @return Height of the window
+     */
+    public int getHeight() {
+        return getWindowSize()[1].get();
+    }
+
+    /**
+     * @return AspectRatio of the window
+     */
+    public float getAspectRatio() {
+        return ((float) getWidth()) / ((float) getHeight());
     }
 
     /**

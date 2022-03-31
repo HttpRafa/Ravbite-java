@@ -65,22 +65,22 @@ public class MainScene extends Scene {
         material.create();
 
         GameObject testCube = new GameObject(this, "Test Cube");
-        testCube.getTransform().move(-1, 0, 0);
+        testCube.getTransform().move(0, 0, -1);
         testCube.appendComponent(new TestComponent());
         testCube.appendComponent(new MeshComponent(mesh));
         testCube.appendComponent(new MeshRendererComponent());
         testCube.appendComponent(new MaterialComponent(material));
 
-        super.storeObject(0, testCube);
+        super.storeObject(0, camera);
+        super.storeObject(1, testCube);
 
         getSceneObject().appendChildren(camera, testCube);
     }
 
     @Override
     public void update() {
-        GameObject testCube = (GameObject) super.getStoredObject(0);
-        testCube.getTransform().move(0.004f, 0, 0);
-        testCube.getTransform().rotate(0, 1, 0);
+        GameObject testCube = (GameObject) super.getStoredObject(1);
+        testCube.getTransform().move(0, 0, -0.08f);
         super.update();
     }
 

@@ -24,6 +24,7 @@ import java.io.IOException;
 public class StandardShader extends AbstractShader {
 
     private int transformationMatrix;
+    private int projectionMatrix;
 
     public StandardShader(EngineWindow engineWindow) {
         super(engineWindow);
@@ -38,11 +39,24 @@ public class StandardShader extends AbstractShader {
 
     @Override
     public void prepareObject(GameObject gameObject, CameraComponent cameraComponent, RenderComponent renderer) {
+        loadProjectionMatrix(cameraComponent.getProjectionMatrix());
         loadTransformationMatrix(Maths.createTransformationMatrix(gameObject.getSpecialTransform(Transform.WORLD_SPACE)));
     }
 
-    private void loadTransformationMatrix(Matrix4f matrix) {
-        super.load(transformationMatrix, matrix);
+    /**
+     * Method to load the transformationMatrix into the shader
+     * @param transformationMatrix TransformationMatrix
+     */
+    private void loadTransformationMatrix(Matrix4f transformationMatrix) {
+        super.load(this.transformationMatrix, transformationMatrix);
+    }
+
+    /**
+     * Method to load the projectionMatrix into the shader
+     * @param projectionMatrix ProjectionMatrix
+     */
+    private void loadProjectionMatrix(Matrix4f projectionMatrix) {
+        super.load(this.projectionMatrix, projectionMatrix);
     }
 
     @Override
@@ -54,6 +68,7 @@ public class StandardShader extends AbstractShader {
     @Override
     public void updateUniformLocations() {
         transformationMatrix = super.getUniformLocation("transformationMatrix");
+        projectionMatrix = super.getUniformLocation("projectionMatrix");
     }
 
     /**

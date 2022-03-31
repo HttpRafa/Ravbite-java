@@ -11,10 +11,17 @@ package de.rafael.ravbite.engine.graphics.components.camera;
 import de.rafael.ravbite.engine.graphics.components.Component;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import org.apache.commons.lang3.ArrayUtils;
+import org.joml.Matrix4f;
 
 public class CameraComponent extends Component {
 
     private int[] renderLayers;
+
+    private float fieldOfView = 70;
+    private float nearPlane = 0.1f;
+    private float farPlane = 1000f;
+
+    private Matrix4f projectionMatrix;
 
     public CameraComponent() {
         this.renderLayers = new int[]{0};
@@ -22,6 +29,51 @@ public class CameraComponent extends Component {
 
     public CameraComponent(int... renderLayers) {
         this.renderLayers = renderLayers;
+    }
+
+    public CameraComponent(int[] renderLayers, float fieldOfView, float nearPlane, float farPlane) {
+        this.renderLayers = renderLayers;
+        this.fieldOfView = fieldOfView;
+        this.nearPlane = nearPlane;
+        this.farPlane = farPlane;
+    }
+
+    public CameraComponent fieldOfView(float fieldOfView) {
+        this.fieldOfView = fieldOfView;
+        return this;
+    }
+
+    public CameraComponent nearPlane(float nearPlane) {
+        this.nearPlane = nearPlane;
+        return this;
+    }
+
+    public CameraComponent farPlane(float farPlane) {
+        this.farPlane = farPlane;
+        return this;
+    }
+
+    @Override
+    public void initialize() {
+        updateProjectionMatrix();
+    }
+
+    /**
+     * Updates the projectionMatrix
+     */
+    public void updateProjectionMatrix() {
+        float aspectRatio = this.getGameObject().getScene().getEngineWindow().getAspectRatio();
+        float y_scale = (float) ((1f / Math.tan(Math.toRadians(fieldOfView / 2f))) * aspectRatio);
+        float x_scale = y_scale / aspectRatio;
+        float frustum_length = farPlane - nearPlane;
+
+        projectionMatrix = new Matrix4f();
+        projectionMatrix.m00(x_scale);
+        projectionMatrix.m11(y_scale);
+        projectionMatrix.m22(-((farPlane + nearPlane) / frustum_length));
+        projectionMatrix.m23(-1);
+        projectionMatrix.m32(-((2 * nearPlane * farPlane) / frustum_length));
+        projectionMatrix.m33(0);
     }
 
     /**
@@ -69,6 +121,69 @@ public class CameraComponent extends Component {
      */
     public void setRenderLayers(int[] renderLayers) {
         this.renderLayers = renderLayers;
+    }
+
+    /**
+     * @return FieldOfView of the camera
+     */
+    public float getFieldOfView() {
+        return fieldOfView;
+    }
+
+    /**
+     * Sets the FieldOfView of the camera
+     * @param fieldOfView FieldOfView
+     */
+    public void setFieldOfView(float fieldOfView) {
+        this.fieldOfView = fieldOfView;
+        updateProjectionMatrix();
+    }
+
+    /**
+     * @return NearPlane of the camera
+     */
+    public float getNearPlane() {
+        return nearPlane;
+    }
+
+    /**
+     * Sets the NearPlane of the camera
+     * @param nearPlane NearPlane
+     */
+    public void setNearPlane(float nearPlane) {
+        this.nearPlane = nearPlane;
+        updateProjectionMatrix();
+    }
+
+    /**
+     * @return FarPlane of the camera
+     */
+    public float getFarPlane() {
+        return farPlane;
+    }
+
+    /**
+     * Sets the FarPlane of the camera
+     * @param farPlane FarPlane
+     */
+    public void setFarPlane(float farPlane) {
+        this.farPlane = farPlane;
+        updateProjectionMatrix();
+    }
+
+    /**
+     * @return ProjectionMatrix used by the camera
+     */
+    public Matrix4f getProjectionMatrix() {
+        return projectionMatrix;
+    }
+
+    /**
+     * Sets the projectionMatrix used by the camera
+     * @param projectionMatrix ProjectionMatrix
+     */
+    public void setProjectionMatrix(Matrix4f projectionMatrix) {
+        this.projectionMatrix = projectionMatrix;
     }
 
 }
