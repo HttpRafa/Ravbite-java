@@ -51,6 +51,7 @@ public class MeshRendererComponent extends RenderComponent {
                 // Start Shader
                 abstractShader = this.getGameObject().getScene().getEngineWindow().getShader(material.getShaderId());
                 abstractShader.bind();
+                abstractShader.prepareObject(this.getGameObject(), cameraComponent, this);
 
                 // Active Texture
                 if(material.getAlbedo() != null) {

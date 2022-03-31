@@ -95,23 +95,7 @@ public abstract class AbstractShader {
      */
     public void load(int location, Matrix4f value) {
         FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(16);
-        floatBuffer.put(0, value.m00());
-        floatBuffer.put(1, value.m01());
-        floatBuffer.put(2, value.m02());
-        floatBuffer.put(3, value.m03());
-        floatBuffer.put(4, value.m10());
-        floatBuffer.put(5, value.m11());
-        floatBuffer.put(6, value.m12());
-        floatBuffer.put(7, value.m13());
-        floatBuffer.put(8, value.m20());
-        floatBuffer.put(9, value.m21());
-        floatBuffer.put(10, value.m22());
-        floatBuffer.put(11, value.m23());
-        floatBuffer.put(12, value.m30());
-        floatBuffer.put(13, value.m31());
-        floatBuffer.put(14, value.m32());
-        floatBuffer.put(15, value.m33());
-        floatBuffer.flip();
+        value.get(floatBuffer);
         GL20.glUniformMatrix4fv(location, false, floatBuffer);
     }
 

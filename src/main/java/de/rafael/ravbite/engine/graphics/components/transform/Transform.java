@@ -14,6 +14,9 @@ import org.joml.Vector3f;
 
 public class Transform extends Component {
 
+    public static final int WORLD_SPACE = 0;
+    public static final int OBJECT_SPACE = 1;
+
     private final Vector3f position;
     private final Vector3f scale;
     private final Quaternionf rotation;
@@ -22,6 +25,12 @@ public class Transform extends Component {
         this.position = new Vector3f(0f, 0f, 0f);
         this.scale = new Vector3f(1f, 1f, 1f);
         this.rotation = new Quaternionf();
+    }
+
+    public Transform(Vector3f position, Vector3f scale, Quaternionf rotation) {
+        this.position = position;
+        this.scale = scale;
+        this.rotation = rotation;
     }
 
     public Transform position(float x, float y, float z) {
@@ -40,7 +49,9 @@ public class Transform extends Component {
     }
 
     public Transform rotation(float x, float y, float z) {
-        this.rotation.set(x, y, z, 0f);
+        Quaternionf quaternion = new Quaternionf();
+        quaternion.rotateXYZ(x, y, z);
+        this.rotation.set(quaternion);
         return this;
     }
 
@@ -65,6 +76,43 @@ public class Transform extends Component {
     }
 
     /**
+     * Adds a transform to this transform
+     * @param transform Transform to add
+     */
+    public void add(Transform transform) {
+        this.position.add(transform.getPosition());
+        this.rotation.add(transform.getRotation());
+    }
+
+    /**
+     * Moves the GameObject
+     * @param x X value
+     * @param y Y value
+     * @param z Z value
+     */
+    public void move(float x, float y, float z) {
+        this.position.add(x, y, z);
+    }
+
+    /**
+     * Moves the GameObject
+     * @param vector Vector to add
+     */
+    public void move(Vector3f vector) {
+        this.move(vector.x, vector.y, vector.z);
+    }
+
+    public void rotate(float x, float y, float z) {
+        Quaternionf quaternion = new Quaternionf();
+        quaternion.rotateXYZ(x, y, z);
+        this.rotate(quaternion);
+    }
+
+    public void rotate(Quaternionf quaternion) {
+        this.rotation.add(quaternion);
+    }
+
+    /**
      * @return Position of the GameObject
      */
     public Vector3f getPosition() {
@@ -83,6 +131,20 @@ public class Transform extends Component {
      */
     public Quaternionf getRotation() {
         return rotation;
+    }
+
+    @Override
+    public Transform clone() {
+        return new Transform(new Vector3f(this.position), new Vector3f(this.scale), new Quaternionf(this.rotation));
+    }
+
+    @Override
+    public String toString() {
+        return "Transform{" +
+                "position=" + position +
+                ", scale=" + scale +
+                ", rotation=" + rotation +
+                '}';
     }
 
 }

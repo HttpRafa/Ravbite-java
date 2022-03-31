@@ -11,6 +11,7 @@ package de.rafael.ravbite.engine.graphics.object.game;
 import de.rafael.ravbite.engine.graphics.components.Component;
 import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class GameObject {
 
     private int renderLayer = 0;
 
+    private final Transform transform;
     private final List<Component> objectComponents = new ArrayList<>();
 
     private GameObject parentObject = null;
@@ -33,23 +35,31 @@ public class GameObject {
     public GameObject(Scene scene) {
         this.scene = scene;
         this.name = "GameObject-" + System.currentTimeMillis();
+        this.transform = new Transform();
+        this.objectComponents.add(this.transform);
     }
 
     public GameObject(Scene scene, GameObject parentObject) {
         this.scene = scene;
         this.name = "GameObject-" + System.currentTimeMillis();
         this.parentObject = parentObject;
+        this.transform = new Transform();
+        this.objectComponents.add(this.transform);
     }
 
     public GameObject(Scene scene, String name) {
         this.scene = scene;
         this.name = name;
+        this.transform = new Transform();
+        this.objectComponents.add(this.transform);
     }
 
     public GameObject(Scene scene, String name, GameObject parentObject) {
         this.scene = scene;
         this.name = name;
         this.parentObject = parentObject;
+        this.transform = new Transform();
+        this.objectComponents.add(this.transform);
     }
 
     /**
@@ -78,6 +88,7 @@ public class GameObject {
      * @return GameObject
      */
     public GameObject appendComponent(Component component) {
+        if(component instanceof Transform) return this;
         component.setGameObject(this);
         objectComponents.add(component);
         component.initialize();
@@ -192,6 +203,27 @@ public class GameObject {
      */
     public Collection<GameObject> getChildrenObjects() {
         return childrenObjects;
+    }
+
+    /**
+     * @return Transform stored in the object
+     */
+    public Transform getTransform() {
+        return transform;
+    }
+
+    /**
+     * @param space Space of Transform(WORLD_SPACE, OBJECT_SPACE)
+     * @return Transform
+     */
+    public Transform getSpecialTransform(int space) {
+        if(space == Transform.OBJECT_SPACE) {
+            return this.transform;
+        } else {
+            Transform transform = this.transform.clone();
+            if(parentObject != null) transform.add(parentObject.getSpecialTransform(Transform.WORLD_SPACE));
+            return transform;
+        }
     }
 
 }

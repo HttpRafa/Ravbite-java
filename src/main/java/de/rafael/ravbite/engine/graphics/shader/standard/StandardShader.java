@@ -12,9 +12,11 @@ import de.rafael.ravbite.engine.exception.ShaderCompilationException;
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.math.Maths;
 import org.joml.Matrix4f;
 
 import java.io.IOException;
@@ -36,7 +38,7 @@ public class StandardShader extends AbstractShader {
 
     @Override
     public void prepareObject(GameObject gameObject, CameraComponent cameraComponent, RenderComponent renderer) {
-
+        loadTransformationMatrix(Maths.createTransformationMatrix(gameObject.getSpecialTransform(Transform.WORLD_SPACE)));
     }
 
     private void loadTransformationMatrix(Matrix4f matrix) {

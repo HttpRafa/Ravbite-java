@@ -32,7 +32,6 @@ public class MainScene extends Scene {
 
     @Override
     public void prepare() {
-
         GameObject camera = new GameObject(this, "Camera 1");
         camera.appendComponent(new CameraComponent());
 
@@ -66,6 +65,7 @@ public class MainScene extends Scene {
         material.create();
 
         GameObject testCube = new GameObject(this, "Test Cube");
+        testCube.getTransform().move(-1, 0, 0);
         testCube.appendComponent(new TestComponent());
         testCube.appendComponent(new MeshComponent(mesh));
         testCube.appendComponent(new MeshRendererComponent());
