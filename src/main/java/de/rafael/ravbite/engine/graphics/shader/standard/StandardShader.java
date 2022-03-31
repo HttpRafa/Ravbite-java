@@ -25,6 +25,7 @@ public class StandardShader extends AbstractShader {
 
     private int transformationMatrix;
     private int projectionMatrix;
+    private int viewMatrix;
 
     public StandardShader(EngineWindow engineWindow) {
         super(engineWindow);
@@ -40,6 +41,7 @@ public class StandardShader extends AbstractShader {
     @Override
     public void prepareObject(GameObject gameObject, CameraComponent cameraComponent, RenderComponent renderer) {
         loadProjectionMatrix(cameraComponent.getProjectionMatrix());
+        loadViewMatrix(Maths.createViewMatrix(cameraComponent.getGameObject().getSpecialTransform(Transform.WORLD_SPACE)));
         loadTransformationMatrix(Maths.createTransformationMatrix(gameObject.getSpecialTransform(Transform.WORLD_SPACE)));
     }
 
@@ -59,6 +61,14 @@ public class StandardShader extends AbstractShader {
         super.load(this.projectionMatrix, projectionMatrix);
     }
 
+    /**
+     * Method to load the viewMatrix into the shader
+     * @param viewMatrix ViewMatrix
+     */
+    private void loadViewMatrix(Matrix4f viewMatrix) {
+        super.load(this.viewMatrix, viewMatrix);
+    }
+
     @Override
     public void bindAttributes() {
         super.bindAttribute(0, "position");
@@ -69,6 +79,7 @@ public class StandardShader extends AbstractShader {
     public void updateUniformLocations() {
         transformationMatrix = super.getUniformLocation("transformationMatrix");
         projectionMatrix = super.getUniformLocation("projectionMatrix");
+        viewMatrix = super.getUniformLocation("viewMatrix");
     }
 
     /**

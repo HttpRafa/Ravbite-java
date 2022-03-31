@@ -11,6 +11,7 @@ package de.rafael.ravbite.engine.math;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class Maths {
 
@@ -26,6 +27,20 @@ public class Maths {
         matrix.scale(transform.getScale());
         matrix.rotate(transform.getRotation());
         return matrix;
+    }
+
+    /**
+     * Creates viewMatrix
+     * @param cameraTransform Transform of the camera
+     * @return ViewMatrix
+     */
+    public static Matrix4f createViewMatrix(Transform cameraTransform) {
+        Matrix4f viewMatrix = new Matrix4f();
+        viewMatrix.identity();
+        viewMatrix.rotate(cameraTransform.getRotation());
+        Vector3f position = cameraTransform.getPosition();
+        viewMatrix.translate(new Vector3f(-position.x, -position.y, -position.z));
+        return viewMatrix;
     }
 
     /**

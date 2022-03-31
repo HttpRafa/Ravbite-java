@@ -79,8 +79,9 @@ public class MainScene extends Scene {
 
     @Override
     public void update() {
+        GameObject camera = (GameObject) super.getStoredObject(0);
         GameObject testCube = (GameObject) super.getStoredObject(1);
-        testCube.getTransform().move(0, 0, -0.08f);
+        camera.getTransform().move(0, 0, 0.08f);
         super.update();
     }
 
