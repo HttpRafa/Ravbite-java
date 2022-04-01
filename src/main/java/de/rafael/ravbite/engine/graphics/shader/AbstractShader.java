@@ -12,6 +12,7 @@ import de.rafael.ravbite.engine.exception.ShaderCompilationException;
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import de.rafael.ravbite.engine.graphics.material.Material;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import org.joml.Matrix4f;
@@ -39,7 +40,7 @@ public abstract class AbstractShader {
         this.engineWindow = engineWindow;
     }
 
-    public abstract void prepareObject(GameObject gameObject, CameraComponent cameraComponent, RenderComponent renderer);
+    public abstract void prepareObject(GameObject gameObject, Material material, CameraComponent cameraComponent, RenderComponent renderer);
 
     public abstract void bindAttributes();
     public abstract void updateUniformLocations();

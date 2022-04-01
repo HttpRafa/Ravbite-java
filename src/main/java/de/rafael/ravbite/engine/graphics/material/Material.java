@@ -19,6 +19,8 @@ public class Material {
 
     private Integer shaderId;
     private AlbedoProperty albedo;
+    private float shineDamper = 10f; // TODO: Change to texture based
+    private float reflectivity = 0f; // TODO: Change to texture based
 
     public Material(EngineWindow engineWindow) {
         this.engineWindow = engineWindow;
@@ -31,6 +33,12 @@ public class Material {
 
     public Material albedo(AlbedoProperty albedo) {
         this.albedo = albedo;
+        return this;
+    }
+
+    public Material specular(float shineDamper, float reflectivity) {
+        this.shineDamper = shineDamper;
+        this.reflectivity = reflectivity;
         return this;
     }
 
@@ -63,6 +71,20 @@ public class Material {
      */
     public AlbedoProperty getAlbedo() {
         return albedo;
+    }
+
+    /**
+     * @return ShineDamper value
+     */
+    public float getShineDamper() {
+        return shineDamper;
+    }
+
+    /**
+     * @return Reflectivity value
+     */
+    public float getReflectivity() {
+        return reflectivity;
     }
 
 }

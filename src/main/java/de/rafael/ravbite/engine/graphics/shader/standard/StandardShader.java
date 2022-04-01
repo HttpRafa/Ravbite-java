@@ -14,6 +14,7 @@ import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
+import de.rafael.ravbite.engine.graphics.material.Material;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
@@ -30,6 +31,8 @@ public class StandardShader extends AbstractShader {
 
     private int lightPosition;
     private int lightColor;
+    private int shineDamper;
+    private int reflectivity;
 
     public StandardShader(EngineWindow engineWindow) {
         super(engineWindow);
@@ -43,16 +46,27 @@ public class StandardShader extends AbstractShader {
     }
 
     @Override
-    public void prepareObject(GameObject gameObject, CameraComponent cameraComponent, RenderComponent renderer) {
+    public void prepareObject(GameObject gameObject, Material material, CameraComponent cameraComponent, RenderComponent renderer) {
         Transform cameraTransform = cameraComponent.getGameObject().getSpecialTransform(Transform.WORLD_SPACE);
 
         loadProjectionMatrix(cameraComponent.getProjectionMatrix());
         loadViewMatrix(Maths.createViewMatrix(cameraTransform));
         loadTransformationMatrix(Maths.createTransformationMatrix(gameObject.getSpecialTransform(Transform.WORLD_SPACE)));
 
+        if(material != null) loadSpecular(material.getShineDamper(), material.getReflectivity());
+
         LightComponent[] lights = gameObject.getScene().getLights(15, cameraTransform.getPosition());
         if(lights.length > 0) loadLightsComponent(lights);
+    }
 
+    /**
+     * Method to load the specular values into the shader
+     * @param shineDamper ShineDamper value
+     * @param reflectivity Reflectivity value
+     */
+    private void loadSpecular(float shineDamper, float reflectivity) {
+        super.load(this.shineDamper, shineDamper);
+        super.load(this.reflectivity, reflectivity);
     }
 
     /**
@@ -104,6 +118,8 @@ public class StandardShader extends AbstractShader {
 
         lightPosition = super.getUniformLocation("lightPosition");
         lightColor = super.getUniformLocation("lightColor");
+        shineDamper = super.getUniformLocation("shineDamper");
+        reflectivity = super.getUniformLocation("reflectivity");
     }
 
     /**
