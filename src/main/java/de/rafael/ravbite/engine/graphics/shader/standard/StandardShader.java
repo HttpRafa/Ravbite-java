@@ -59,6 +59,7 @@ public class StandardShader extends AbstractShader {
      * Method to load the lights into the shader
      * @param lightComponents Lights
      */
+    // TODO: Support multiple lights
     private void loadLightsComponent(LightComponent[] lightComponents) {
         super.load(lightPosition, lightComponents[0].getGameObject().getSpecialTransform(Transform.WORLD_SPACE).getPosition());
         super.load(lightColor, lightComponents[0].getColorAsVector());
