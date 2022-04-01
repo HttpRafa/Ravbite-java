@@ -112,7 +112,7 @@ public class MainScene extends Scene {
         Mesh mesh = new Mesh(vertices, new float[0], new float[0], textureCoords, indices);
         Material material = new Material(this.getEngineWindow());
         try {
-            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/testTexture.png", AssetLocation.INTERNAL));
+            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/ground.png", AssetLocation.INTERNAL));
             material.albedo(new AlbedoProperty(material, new Color(255, 255, 255)).texture(textureId));
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -126,7 +126,7 @@ public class MainScene extends Scene {
         }
 
         GameObject testCube = new GameObject(this, "Test Cube");
-        testCube.getTransform().move(0, -1, -10);
+        testCube.getTransform().move(0, -1, -5);
         testCube.appendComponent(new TestComponent());
         testCube.appendComponent(new MeshComponent(mesh));
         testCube.appendComponent(new MeshRendererComponent());
