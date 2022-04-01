@@ -10,12 +10,16 @@ package de.rafael.ravbite.engine.graphics.object.scene;
 
 import de.rafael.ravbite.engine.graphics.components.Component;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
+import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import org.joml.Vector3f;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class Scene {
@@ -108,6 +112,35 @@ public abstract class Scene {
     // TODO: Optimize
     public Collection<GameObject> getGameObjects() {
         return sceneObject.getGameObjects();
+    }
+
+    /**
+     * @param limit Max amount of lights in this array
+     * @param centerPosition Position of the GameObject
+     * @return Light array
+     */
+    // TODO: Optimize
+    public LightComponent[] getLights(int limit, Vector3f centerPosition) {
+        Collection<GameObject> gameObjects = getGameObjects();
+        Collection<GameObject> lights = gameObjects.stream().filter(item -> item.hasComponent(LightComponent.class).isPresent()).toList();
+        List<GameObject> sortedLights = lights.stream().sorted((o1, o2) -> {
+            float o1Distance = centerPosition.distance(o1.getSpecialTransform(Transform.WORLD_SPACE).getPosition());
+            float o2Distance = centerPosition.distance(o2.getSpecialTransform(Transform.WORLD_SPACE).getPosition());
+
+            if (o2Distance > o1Distance) { //  || !light1.hasAttenuation()
+                return -1;
+            } else if (o2Distance < o1Distance) { //  || !light2.hasAttenuation()
+                return 1;
+            } else {
+                return 0;
+            }
+        }).toList();
+
+        LightComponent[] components = new LightComponent[Math.min(sortedLights.size(), limit)];
+        for (int i = 0; i < components.length; i++) {
+            components[i] = (LightComponent) sortedLights.get(i).hasComponent(LightComponent.class).orElseGet(null);
+        }
+        return components;
     }
 
     /**

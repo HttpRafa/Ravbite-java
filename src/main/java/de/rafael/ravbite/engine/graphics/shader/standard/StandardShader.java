@@ -12,6 +12,7 @@ import de.rafael.ravbite.engine.exception.ShaderCompilationException;
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
@@ -27,6 +28,9 @@ public class StandardShader extends AbstractShader {
     private int projectionMatrix;
     private int viewMatrix;
 
+    private int lightPosition;
+    private int lightColor;
+
     public StandardShader(EngineWindow engineWindow) {
         super(engineWindow);
         try {
@@ -40,9 +44,24 @@ public class StandardShader extends AbstractShader {
 
     @Override
     public void prepareObject(GameObject gameObject, CameraComponent cameraComponent, RenderComponent renderer) {
+        Transform cameraTransform = cameraComponent.getGameObject().getSpecialTransform(Transform.WORLD_SPACE);
+
         loadProjectionMatrix(cameraComponent.getProjectionMatrix());
-        loadViewMatrix(Maths.createViewMatrix(cameraComponent.getGameObject().getSpecialTransform(Transform.WORLD_SPACE)));
+        loadViewMatrix(Maths.createViewMatrix(cameraTransform));
         loadTransformationMatrix(Maths.createTransformationMatrix(gameObject.getSpecialTransform(Transform.WORLD_SPACE)));
+
+        LightComponent[] lights = gameObject.getScene().getLights(15, cameraTransform.getPosition());
+        if(lights.length > 0) loadLightsComponent(lights);
+
+    }
+
+    /**
+     * Method to load the lights into the shader
+     * @param lightComponents Lights
+     */
+    private void loadLightsComponent(LightComponent[] lightComponents) {
+        super.load(lightPosition, lightComponents[0].getGameObject().getSpecialTransform(Transform.WORLD_SPACE).getPosition());
+        super.load(lightColor, lightComponents[0].getColorAsVector());
     }
 
     /**
@@ -73,6 +92,7 @@ public class StandardShader extends AbstractShader {
     public void bindAttributes() {
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoords");
+        super.bindAttribute(2, "normal");
     }
 
     @Override
@@ -80,6 +100,9 @@ public class StandardShader extends AbstractShader {
         transformationMatrix = super.getUniformLocation("transformationMatrix");
         projectionMatrix = super.getUniformLocation("projectionMatrix");
         viewMatrix = super.getUniformLocation("viewMatrix");
+
+        lightPosition = super.getUniformLocation("lightPosition");
+        lightColor = super.getUniformLocation("lightColor");
     }
 
     /**

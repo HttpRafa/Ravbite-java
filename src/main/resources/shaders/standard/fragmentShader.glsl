@@ -3,12 +3,24 @@
 in vec3 color;
 in vec2 pass_textureCoords;
 
+in vec3 surfaceNormal;
+in vec3 toLightVector;
+
 out vec4 out_Color;
 
 uniform sampler2D albedo_texture;
 
+uniform vec3 lightColor;
+
 void main(void) {
 
-    out_Color = texture(albedo_texture, pass_textureCoords);
+    vec3 unitNormal = normalize(surfaceNormal);
+    vec3 unitLightVector = normalize(toLightVector);
+
+    float nDot1 = dot(unitNormal, unitLightVector);
+    float brightness = max(nDot1, 0.2);
+    vec3 diffuse = brightness * lightColor;
+
+    out_Color = vec4(diffuse, 1.0) * texture(albedo_texture, pass_textureCoords);
 
 }

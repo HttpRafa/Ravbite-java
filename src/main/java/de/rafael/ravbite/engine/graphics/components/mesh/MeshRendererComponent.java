@@ -40,6 +40,7 @@ public class MeshRendererComponent extends RenderComponent {
             GL30.glBindVertexArray(mesh.getVao());
             GL20.glEnableVertexAttribArray(0);
             GL20.glEnableVertexAttribArray(1);
+            GL20.glEnableVertexAttribArray(2);
 
             // Apply Material
             Material material = null;
@@ -70,6 +71,7 @@ public class MeshRendererComponent extends RenderComponent {
 
             GL20.glDisableVertexAttribArray(0);
             GL20.glDisableVertexAttribArray(1);
+            GL20.glDisableVertexAttribArray(2);
             GL30.glBindVertexArray(0);
         } else {
             // TODO: Warning MeshRender without a meshComponent

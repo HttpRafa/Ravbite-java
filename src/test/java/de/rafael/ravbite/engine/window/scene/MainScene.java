@@ -10,6 +10,7 @@ package de.rafael.ravbite.engine.window.scene;
 
 import de.rafael.ravbite.engine.graphics.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
 import de.rafael.ravbite.engine.graphics.components.mesh.MeshRendererComponent;
@@ -36,80 +37,11 @@ public class MainScene extends Scene {
         GameObject camera = new GameObject(this, "Camera 1");
         camera.appendComponent(new CameraComponent());
 
-        float[] vertices = {
-                -0.5f,0.5f,-0.5f,
-                -0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,-0.5f,
-                0.5f,0.5f,-0.5f,
+        GameObject light = new GameObject(this, "Light");
+        light.getTransform().move(0, 20, 0);
+        light.appendComponent(new LightComponent(new Color(255, 255, 255)));
 
-                -0.5f,0.5f,0.5f,
-                -0.5f,-0.5f,0.5f,
-                0.5f,-0.5f,0.5f,
-                0.5f,0.5f,0.5f,
-
-                0.5f,0.5f,-0.5f,
-                0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,0.5f,
-                0.5f,0.5f,0.5f,
-
-                -0.5f,0.5f,-0.5f,
-                -0.5f,-0.5f,-0.5f,
-                -0.5f,-0.5f,0.5f,
-                -0.5f,0.5f,0.5f,
-
-                -0.5f,0.5f,0.5f,
-                -0.5f,0.5f,-0.5f,
-                0.5f,0.5f,-0.5f,
-                0.5f,0.5f,0.5f,
-
-                -0.5f,-0.5f,0.5f,
-                -0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,0.5f
-        };
-
-        float[] textureCoords = {
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0
-        };
-
-        int[] indices = {
-                0,1,3,
-                3,1,2,
-                4,5,7,
-                7,5,6,
-                8,9,11,
-                11,9,10,
-                12,13,15,
-                15,13,14,
-                16,17,19,
-                19,17,18,
-                20,21,23,
-                23,21,22
-        };
-        Mesh mesh = new Mesh(vertices, new float[0], new float[0], textureCoords, indices);
+        Mesh mesh = null;
         Material material = new Material(this.getEngineWindow());
         try {
             int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/ground.png", AssetLocation.INTERNAL));
@@ -133,15 +65,17 @@ public class MainScene extends Scene {
         testCube.appendComponent(new MaterialComponent(material));
 
         super.storeObject(0, camera);
-        super.storeObject(1, testCube);
+        super.storeObject(1, light);
+        super.storeObject(2, testCube);
 
-        getSceneObject().appendChildren(camera, testCube);
+        getSceneObject().appendChildren(camera, light, testCube);
     }
 
     @Override
     public void update() {
         GameObject camera = (GameObject) super.getStoredObject(0);
-        GameObject testCube = (GameObject) super.getStoredObject(1);
+        GameObject light = (GameObject) super.getStoredObject(1);
+        GameObject testCube = (GameObject) super.getStoredObject(2);
         testCube.getTransform().rotate(0, 1, 0);
         super.update();
     }
