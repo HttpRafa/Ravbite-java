@@ -29,7 +29,7 @@ public class TestWindow extends EngineWindow {
     @Override
     public void render() {
         super.render();
-        if((this.startTime + (1000 * 10)) < System.currentTimeMillis()) {
+        if((this.startTime + (1000 * 25)) < System.currentTimeMillis()) {
             GLFW.glfwSetWindowShouldClose(this.getWindow(), true);
         }
     }
