@@ -56,6 +56,10 @@ public abstract class Scene {
         return storedObjects.getOrDefault(slot, null);
     }
 
+    public HashMap<Integer, Object> getStoredObjects() {
+        return storedObjects;
+    }
+
     public void deleteStoredObject(int slot) {
         storedObjects.remove(slot);
     }

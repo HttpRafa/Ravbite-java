@@ -263,8 +263,12 @@ public abstract class EngineWindow {
         // Trigger prepare method in scene
         changeScene(0);
 
-        // Set the clear color
+        // Enable OpenGL Features
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+
+        // Set the clear color
         glClearColor(220f/255f,220f/255f,220f/255f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close

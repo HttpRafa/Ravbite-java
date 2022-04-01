@@ -25,6 +25,7 @@ import de.rafael.ravbite.engine.window.component.TestComponent;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Random;
 
 public class MainScene extends Scene {
 
@@ -57,26 +58,38 @@ public class MainScene extends Scene {
             e.printStackTrace();
         }
 
-        GameObject testCube = new GameObject(this, "Test Cube");
-        testCube.getTransform().move(0, -1, -5);
-        testCube.appendComponent(new TestComponent());
-        testCube.appendComponent(new MeshComponent(mesh));
-        testCube.appendComponent(new MeshRendererComponent());
-        testCube.appendComponent(new MaterialComponent(material));
+        Random random = new Random();
+        for (int i = 0; i <= 101; i++) {
+            GameObject testModel = new GameObject(this, "Test Model");
+            if(i == 101) {
+                testModel.getTransform().move(0, -1, -5);
+            } else {
+                testModel.getTransform().move(random.nextFloat() * 80 - 40, random.nextFloat() * 40 - 20, -60);
+            }
+            testModel.appendComponent(new TestComponent());
+            testModel.appendComponent(new MeshComponent(mesh));
+            testModel.appendComponent(new MeshRendererComponent());
+            testModel.appendComponent(new MaterialComponent(material));
+            getSceneObject().appendChildren(testModel);
+            super.storeObject(2 + i, testModel);
+        }
 
         super.storeObject(0, camera);
         super.storeObject(1, light);
-        super.storeObject(2, testCube);
 
-        getSceneObject().appendChildren(camera, light, testCube);
+        getSceneObject().appendChildren(camera, light);
     }
 
     @Override
     public void update() {
         GameObject camera = (GameObject) super.getStoredObject(0);
         GameObject light = (GameObject) super.getStoredObject(1);
-        GameObject testCube = (GameObject) super.getStoredObject(2);
-        testCube.getTransform().rotate(0, 1, 0);
+        for (int i = 0; i < super.getStoredObjects().values().size(); i++) {
+            if(i >= 2) {
+                GameObject testModel = (GameObject) super.getStoredObject(i);
+                testModel.getTransform().rotate(0, i == (2 + 101) ? 1 : ((i % 2) == 0) ? -1 : 1, 0);
+            }
+        }
         super.update();
     }
 
