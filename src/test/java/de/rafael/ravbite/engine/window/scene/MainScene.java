@@ -44,7 +44,7 @@ public class MainScene extends Scene {
         Mesh mesh = null;
         Material material = new Material(this.getEngineWindow());
         try {
-            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/ground.png", AssetLocation.INTERNAL));
+            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/textures/ground.png", AssetLocation.INTERNAL));
             material.albedo(new AlbedoProperty(material, new Color(255, 255, 255)).texture(textureId));
         } catch (IOException exception) {
             exception.printStackTrace();
