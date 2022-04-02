@@ -21,7 +21,9 @@ import de.rafael.ravbite.engine.graphics.model.ModelUtils;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.input.callbacks.KeyCallback;
 import de.rafael.ravbite.engine.window.component.TestComponent;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.IOException;
@@ -37,6 +39,22 @@ public class MainScene extends Scene {
     public void prepare() {
         GameObject camera = new GameObject(this, "Camera 1");
         camera.appendComponent(new CameraComponent());
+        getInputSystem().listen(new KeyCallback() {
+            @Override
+            public void pressed(int key, long window, int scancode, int action, int mods) {
+                if(key == GLFW.GLFW_KEY_UP) {
+                    camera.getTransform().move(0, 0, -0.5f);
+                }
+                if(key == GLFW.GLFW_KEY_DOWN) {
+                    camera.getTransform().move(0, 0, 0.5f);
+                }
+            }
+
+            @Override
+            public void released(int key, long window, int scancode, int action, int mods) {
+                System.out.println(key + " released");
+            }
+        });
 
         GameObject light = new GameObject(this, "Light");
         light.getTransform().move(0, 20, 0);
@@ -90,6 +108,27 @@ public class MainScene extends Scene {
                 testModel.getTransform().rotate(0, i == (2 + 101) ? 1 : ((i % 2) == 0) ? -1 : 1, 0);
             }
         }
+
+        // Move camera
+        if(getInputSystem().keyDown(GLFW.GLFW_KEY_W)) {
+            camera.getTransform().move(0, 0, -0.1f);
+        }
+        if(getInputSystem().keyDown(GLFW.GLFW_KEY_S)) {
+            camera.getTransform().move(0, 0, 0.1f);
+        }
+        if(getInputSystem().keyDown(GLFW.GLFW_KEY_D)) {
+            camera.getTransform().move(0.1f, 0, 0);
+        }
+        if(getInputSystem().keyDown(GLFW.GLFW_KEY_A)) {
+            camera.getTransform().move(-0.1f, 0, 0);
+        }
+        if(getInputSystem().keyDown(GLFW.GLFW_KEY_SPACE)) {
+            camera.getTransform().move(0, 0.1f, 0);
+        }
+        if(getInputSystem().keyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            camera.getTransform().move(0, -0.1f, 0);
+        }
+
         super.update();
     }
 

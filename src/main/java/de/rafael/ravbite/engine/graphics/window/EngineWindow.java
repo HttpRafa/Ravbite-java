@@ -15,6 +15,7 @@ import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
 import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
+import de.rafael.ravbite.engine.input.InputSystem;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -44,6 +45,7 @@ public abstract class EngineWindow {
     private AbstractShader[] abstractShaders = new AbstractShader[0];
 
     private long window;
+    private InputSystem inputSystem;
 
     private int defaultTexture = 0;
 
@@ -98,7 +100,7 @@ public abstract class EngineWindow {
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW. Most GLFW functions will not work before doing this
-        if ( !glfwInit() )
+        if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Configure GLFW
@@ -142,6 +144,9 @@ public abstract class EngineWindow {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+
+        // Setup inputSystem
+        inputSystem = new InputSystem(this);
 
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
@@ -248,8 +253,13 @@ public abstract class EngineWindow {
      */
     public int changeScene(int index) {
         int old = currentScene;
+
+        // Cleanup old scene
         scenes[currentScene].dispose();
+        inputSystem.delTempCallbacks();
         if(dataWatcher != null) dataWatcher.rbCleanUp();
+
+        // Prepare new scene
         dataWatcher = new DataWatcher();
         currentScene = index;
         scenes[currentScene].prepare();
@@ -365,6 +375,13 @@ public abstract class EngineWindow {
      */
     public long getWindow() {
         return window;
+    }
+
+    /**
+     * @return InputSystem for this window
+     */
+    public InputSystem getInputSystem() {
+        return inputSystem;
     }
 
     /**

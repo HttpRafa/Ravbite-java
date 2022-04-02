@@ -15,6 +15,7 @@ import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.input.InputSystem;
 import org.joml.Vector3f;
 
 import java.util.Collection;
@@ -152,6 +153,13 @@ public abstract class Scene {
      */
     public EngineWindow getEngineWindow() {
         return engineWindow;
+    }
+
+    /**
+     * @return InputSystem for this scene
+     */
+    public InputSystem getInputSystem() {
+        return engineWindow.getInputSystem();
     }
 
     /**
