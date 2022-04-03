@@ -40,6 +40,7 @@ package de.rafael.ravbite.engine.input;
 
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.engine.input.callbacks.KeyCallback;
+import de.rafael.ravbite.engine.input.mouse.Mouse;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -50,8 +51,13 @@ public class InputSystem {
     private final EngineWindow engineWindow;
     private final List<KeyCallback> callbacks = new ArrayList<>();
 
+    private final Mouse mouse;
+
     public InputSystem(EngineWindow engineWindow) {
         this.engineWindow = engineWindow;
+
+        mouse = new Mouse(this);
+        mouse.addToggleKey(GLFW.GLFW_KEY_ESCAPE);
 
         GLFW.glfwSetKeyCallback(engineWindow.getWindow(), (window, key, scancode, action, mods) -> {
             for (KeyCallback callback : callbacks) {
@@ -100,7 +106,6 @@ public class InputSystem {
     }
 
     /**
-     *
      * @param key GLFW.GLFW_KEY_***
      * @return This method returns true if the key is pressed
      */
@@ -109,12 +114,18 @@ public class InputSystem {
     }
 
     /**
-     *
      * @param key GLFW.GLFW_KEY_***
      * @return This method returns false if the key is pressed
      */
     public boolean keyUp(int key) {
         return GLFW.glfwGetKey(engineWindow.getWindow(), key) == 0;
+    }
+
+    /**
+     * @return Mouse
+     */
+    public Mouse getMouse() {
+        return mouse;
     }
 
     /**

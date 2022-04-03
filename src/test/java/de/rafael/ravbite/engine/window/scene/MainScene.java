@@ -52,6 +52,7 @@ import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.engine.input.callbacks.KeyCallback;
+import de.rafael.ravbite.engine.input.mouse.state.MouseState;
 import de.rafael.ravbite.engine.window.component.TestComponent;
 import org.lwjgl.glfw.GLFW;
 
@@ -82,7 +83,7 @@ public class MainScene extends Scene {
 
             @Override
             public void released(int key, long window, int scancode, int action, int mods) {
-                System.out.println(key + " released");
+
             }
         });
 
@@ -135,7 +136,7 @@ public class MainScene extends Scene {
         for (int i = 0; i < super.getStoredObjects().values().size(); i++) {
             if(i >= 2) {
                 GameObject testModel = (GameObject) super.getStoredObject(i);
-                testModel.getTransform().rotate(0, i == (2 + 101) ? 1 : ((i % 2) == 0) ? -1 : 1, 0);
+                testModel.getTransform().rotate(0f, i == (2 + 101) ? 1 : ((i % 2) == 0) ? -1 : 1, 0f);
             }
         }
 
@@ -158,6 +159,12 @@ public class MainScene extends Scene {
         if(getInputSystem().keyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             camera.getTransform().move(0, -0.1f, 0);
         }
+
+        if(getInputSystem().keyDown(GLFW.GLFW_KEY_O)) {
+            getInputSystem().getMouse().changeState(MouseState.LOCKED_HIDDEN);
+        }
+
+        camera.getTransform().rotate((float) getInputSystem().getMouse().getDeltaY() * 0.1f, (float) getInputSystem().getMouse().getDeltaX() * 0.1f, 0f); //  * Time.deltaTime
 
         super.update();
     }

@@ -88,9 +88,11 @@ public class Maths {
 
         //Create a quaternion with the delta rotation values
         Quaternionf rotationDelta = new Quaternionf();
-        rotationDelta.rotationXYZ(newX, newY, newZ);
+        rotationDelta.rotateX(newX);
+        rotationDelta.rotateY(newY);
+        rotationDelta.rotateZ(newZ);
 
-        return new Quaternionf().mul(rotationDelta);
+        return rotationDelta;
     }
 
 }

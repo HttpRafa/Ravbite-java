@@ -316,6 +316,7 @@ public abstract class EngineWindow {
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+            if(inputSystem != null) inputSystem.getMouse().update();
             render();
 
             glfwSwapBuffers(window); // swap the color buffers
