@@ -43,7 +43,7 @@ import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
-import de.rafael.ravbite.engine.graphics.components.mesh.MeshRendererComponent;
+import de.rafael.ravbite.engine.graphics.components.rendering.mesh.MeshRendererComponent;
 import de.rafael.ravbite.engine.graphics.material.AlbedoProperty;
 import de.rafael.ravbite.engine.graphics.material.Material;
 import de.rafael.ravbite.engine.graphics.mesh.Mesh;
