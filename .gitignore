@@ -1,2 +1,7 @@
 /.idea/
 /.gradle/
+/utilities/build/
+/engine/build/
+/app/build/
+/buildSrc/build/
+/buildSrc/.gradle/
