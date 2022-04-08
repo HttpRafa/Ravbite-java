@@ -8,15 +8,3 @@ plugins {
 dependencies {
     implementation project(':engine')
 }
-
-application {
-    // Define the main class for the application.
-    mainClass = 'de.rafael.ravbite.app.App'
-}
-
-/*jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}*/

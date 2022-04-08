@@ -67,6 +67,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class EngineWindow {
 
+    public static boolean DEBUG_MODE = false;
+
     private final int initialWidth, initialHeight;
 
     private int currentScene = 0;
@@ -76,6 +78,11 @@ public abstract class EngineWindow {
 
     private long window;
     private InputSystem inputSystem;
+
+    private long startTime = 0;
+
+    private long frameTime = 0;
+    private float deltaTime = 0;
 
     private int defaultTexture = 0;
 
@@ -300,6 +307,8 @@ public abstract class EngineWindow {
      * Starts the render loop
      */
     public void loop() {
+        startTime = System.currentTimeMillis();
+
         // Trigger prepare method in scene
         changeScene(0);
 
@@ -313,7 +322,10 @@ public abstract class EngineWindow {
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
+        long nextDebugUpdate = 0;
         while (!glfwWindowShouldClose(window)) {
+            long frameStart = System.currentTimeMillis();
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             if(inputSystem != null) inputSystem.getMouse().update();
@@ -324,6 +336,15 @@ public abstract class EngineWindow {
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
+
+            long frameEnd = System.currentTimeMillis();
+            frameTime = frameEnd - frameStart;
+            deltaTime = frameTime / 1000f;
+
+            if(nextDebugUpdate < System.currentTimeMillis()) {
+                nextDebugUpdate = System.currentTimeMillis() + 500;
+                if(DEBUG_MODE) glfwSetWindowTitle(window, "Ravbite Engine | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
+            }
         }
     }
 
