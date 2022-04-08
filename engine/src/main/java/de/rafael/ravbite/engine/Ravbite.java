@@ -39,18 +39,42 @@ package de.rafael.ravbite.engine;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import org.lwjgl.glfw.GLFWErrorCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 
 public class Ravbite {
 
     private final List<EngineWindow> windows = new ArrayList<>();
 
     /**
+     * Initializes GLFW
+     */
+    public void initialize() {
+        // Set up an error callback. The default implementation
+        // will print the error message in System.err.
+        GLFWErrorCallback.createPrint(System.err).set();
+
+        // Initialize GLFW. Most GLFW functions will not work before doing this
+        if (!glfwInit())
+            throw new IllegalStateException("Unable to initialize GLFW");
+
+        // Configure GLFW
+        glfwDefaultWindowHints(); // optional, the current window hints are already the default
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+    }
+
+    /**
      * Runs every window
      */
     public void run() {
+        initialize();
+
         for (int i = 0; i < windows.size(); i++) {
             if(i == (windows.size() - 1)) {
                 windows.get(i).run();

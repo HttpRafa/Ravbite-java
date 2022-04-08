@@ -143,19 +143,6 @@ public abstract class EngineWindow {
             debugWindow.getFrame().setVisible(true);
         }
 
-        // Set up an error callback. The default implementation
-        // will print the error message in System.err.
-        GLFWErrorCallback.createPrint(System.err).set();
-
-        // Initialize GLFW. Most GLFW functions will not work before doing this
-        if (!glfwInit())
-            throw new IllegalStateException("Unable to initialize GLFW");
-
-        // Configure GLFW
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-
         // Create the window
         window = glfwCreateWindow(initialWidth, initialHeight, "Ravbite Engine", NULL, NULL);
         if (window == NULL)
