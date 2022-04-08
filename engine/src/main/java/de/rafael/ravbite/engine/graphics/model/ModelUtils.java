@@ -39,7 +39,7 @@ package de.rafael.ravbite.engine.graphics.model;
 //------------------------------
 
 import de.rafael.ravbite.utils.asset.AssetLocation;
-import de.rafael.ravbite.engine.graphics.mesh.Mesh;
+import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;

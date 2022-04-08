@@ -39,7 +39,7 @@ package de.rafael.ravbite.engine.graphics.components.transform;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
-import de.rafael.ravbite.engine.math.Maths;
+import de.rafael.ravbite.engine.utils.math.Maths;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 

@@ -39,6 +39,7 @@ package de.rafael.ravbite.engine.graphics.components.terrain;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.object.game.terrain.Terrain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,28 @@ public class TerrainGridComponent extends Component {
     private float terrainSize = 800;
     private int vertexCount = 128;
 
-    private List<TerrainComponent> terrains = new ArrayList<>();
+    private final List<Terrain> terrains = new ArrayList<>();
+
+    public TerrainGridComponent() {
+    }
+
+    public TerrainGridComponent(float terrainSize, int vertexCount) {
+        this.terrainSize = terrainSize;
+        this.vertexCount = vertexCount;
+    }
+
+    /**
+     * @return Size of the terrain
+     */
+    public float getTerrainSize() {
+        return terrainSize;
+    }
+
+    /**
+     * @return Amount of vertices on each side
+     */
+    public int getVertexCount() {
+        return vertexCount;
+    }
 
 }

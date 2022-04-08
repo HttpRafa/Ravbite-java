@@ -39,10 +39,10 @@ package de.rafael.ravbite.engine.graphics.utils;
 //------------------------------
 
 import de.matthiasmann.twl.utils.PNGDecoder;
-import de.rafael.ravbite.engine.exception.ShaderCompilationException;
+import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.utils.asset.AssetLocation;
-import de.rafael.ravbite.engine.graphics.mesh.Mesh;
-import de.rafael.ravbite.engine.graphics.mesh.StoredMesh;
+import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
+import de.rafael.ravbite.engine.graphics.object.game.mesh.StoredMesh;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;

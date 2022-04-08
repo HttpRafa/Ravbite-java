@@ -38,6 +38,8 @@ package de.rafael.ravbite.engine.graphics.window;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.window.executor.ThreadExecutor;
+import de.rafael.ravbite.engine.utils.debug.DebugWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
@@ -79,6 +81,7 @@ public abstract class EngineWindow {
     private long window;
     private InputSystem inputSystem;
 
+    private DebugWindow debugWindow = null;
     private long startTime = 0;
 
     private long frameTime = 0;
@@ -88,6 +91,7 @@ public abstract class EngineWindow {
 
     private DataWatcher dataWatcher;
     private final GLUtils glUtils;
+    private final ThreadExecutor threadExecutor;
 
     /**
      * WARNING: Not in the render thread
@@ -99,6 +103,7 @@ public abstract class EngineWindow {
         initialWidth = width;
 
         glUtils = new GLUtils(this);
+        threadExecutor = new ThreadExecutor();
     }
 
     public void runThreaded() {
@@ -132,6 +137,10 @@ public abstract class EngineWindow {
      * Initializes the GLFW window and shows it
      */
     public void initialize() {
+        // Initialize debug
+        debugWindow = new DebugWindow(this);
+        debugWindow.getFrame().setVisible(true);
+
         // Set up an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -177,6 +186,7 @@ public abstract class EngineWindow {
         // Set default icon
         try {
             BufferedImage iconImage = ImageUtils.loadImage(new AssetLocation("/textures/icon/icon128.png", AssetLocation.INTERNAL));
+            debugWindow.getFrame().setIconImage(iconImage);
             setIcon(iconImage);
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -337,13 +347,19 @@ public abstract class EngineWindow {
             // invoked during this call.
             glfwPollEvents();
 
+            // Execute all tasks stored in the stack
+            threadExecutor.executeAllTasksInStack();
+
             long frameEnd = System.currentTimeMillis();
             frameTime = frameEnd - frameStart;
             deltaTime = frameTime / 1000f;
 
+            if(debugWindow != null) debugWindow.updateGameObjects();
             if(nextDebugUpdate < System.currentTimeMillis()) {
                 nextDebugUpdate = System.currentTimeMillis() + 500;
-                if(DEBUG_MODE) glfwSetWindowTitle(window, "Ravbite Engine | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
+                if(DEBUG_MODE) {
+                    glfwSetWindowTitle(window, "Ravbite Engine | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
+                }
             }
         }
     }
@@ -437,6 +453,34 @@ public abstract class EngineWindow {
     }
 
     /**
+     * @return DebugWindow if debugMode is enabled
+     */
+    public DebugWindow getDebugWindow() {
+        return debugWindow;
+    }
+
+    /**
+     * @return Time were the window started to render
+     */
+    public long getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * @return Last renderTime
+     */
+    public long getFrameTime() {
+        return frameTime;
+    }
+
+    /**
+     * @return Last renderTime in seconds
+     */
+    public float getDeltaTime() {
+        return deltaTime;
+    }
+
+    /**
      * @return ID of defaultTexture
      */
     public int getDefaultTexture() {
@@ -457,4 +501,10 @@ public abstract class EngineWindow {
         return glUtils;
     }
 
+    /**
+     * @return Executor to run tasks in the renderThread
+     */
+    public ThreadExecutor getThreadExecutor() {
+        return threadExecutor;
+    }
 }

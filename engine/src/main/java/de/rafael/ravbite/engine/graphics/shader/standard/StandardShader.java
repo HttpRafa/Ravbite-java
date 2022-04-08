@@ -38,17 +38,17 @@ package de.rafael.ravbite.engine.graphics.shader.standard;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.exception.ShaderCompilationException;
+import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
-import de.rafael.ravbite.engine.graphics.material.Material;
+import de.rafael.ravbite.engine.graphics.object.game.material.Material;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
-import de.rafael.ravbite.engine.math.Maths;
+import de.rafael.ravbite.engine.utils.math.Maths;
 import org.joml.Matrix4f;
 
 import java.io.IOException;

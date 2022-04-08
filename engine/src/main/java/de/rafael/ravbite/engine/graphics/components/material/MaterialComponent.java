@@ -39,7 +39,7 @@ package de.rafael.ravbite.engine.graphics.components.material;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
-import de.rafael.ravbite.engine.graphics.material.Material;
+import de.rafael.ravbite.engine.graphics.object.game.material.Material;
 
 public class MaterialComponent extends Component {
 

@@ -43,9 +43,9 @@ import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
 import de.rafael.ravbite.engine.graphics.components.rendering.mesh.MeshRendererComponent;
-import de.rafael.ravbite.engine.graphics.material.AlbedoProperty;
-import de.rafael.ravbite.engine.graphics.material.Material;
-import de.rafael.ravbite.engine.graphics.mesh.Mesh;
+import de.rafael.ravbite.engine.graphics.object.game.material.AlbedoProperty;
+import de.rafael.ravbite.engine.graphics.object.game.material.Material;
+import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.model.ModelUtils;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
@@ -70,6 +70,8 @@ public class MainScene extends Scene {
     public void prepare() {
         GameObject camera = new GameObject(this, "Camera 1");
         camera.appendComponent(new CameraComponent());
+        getEngineWindow().getDebugWindow().addGameObject(camera);
+
         getInputSystem().listen(new KeyCallback() {
             @Override
             public void pressed(int key, long window, int scancode, int action, int mods) {
@@ -90,6 +92,7 @@ public class MainScene extends Scene {
         GameObject light = new GameObject(this, "Light");
         light.getTransform().move(0, 20, 0);
         light.appendComponent(new LightComponent(new Color(255, 255, 255)));
+        getEngineWindow().getDebugWindow().addGameObject(light);
 
         Mesh mesh = null;
         Material material = new Material(this.getEngineWindow());
@@ -112,6 +115,7 @@ public class MainScene extends Scene {
             GameObject testModel = new GameObject(this, "Test Model");
             if(i == 101) {
                 testModel.getTransform().move(0, -1, -5);
+                getEngineWindow().getDebugWindow().addGameObject(testModel);
             } else {
                 testModel.getTransform().move(random.nextFloat() * 80 - 40, random.nextFloat() * 40 - 20, -60);
             }
