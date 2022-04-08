@@ -138,8 +138,10 @@ public abstract class EngineWindow {
      */
     public void initialize() {
         // Initialize debug
-        debugWindow = new DebugWindow(this);
-        debugWindow.getFrame().setVisible(true);
+        if(DEBUG_MODE) {
+            debugWindow = new DebugWindow(this);
+            debugWindow.getFrame().setVisible(true);
+        }
 
         // Set up an error callback. The default implementation
         // will print the error message in System.err.
@@ -186,7 +188,7 @@ public abstract class EngineWindow {
         // Set default icon
         try {
             BufferedImage iconImage = ImageUtils.loadImage(new AssetLocation("/textures/icon/icon128.png", AssetLocation.INTERNAL));
-            debugWindow.getFrame().setIconImage(iconImage);
+            if(debugWindow != null) debugWindow.getFrame().setIconImage(iconImage);
             setIcon(iconImage);
         } catch (IOException exception) {
             exception.printStackTrace();
