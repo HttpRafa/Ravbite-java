@@ -151,7 +151,10 @@ public class GameObject {
      */
     public void render(CameraComponent cameraComponent) {
         for (Component objectComponent : objectComponents) {
-            if(objectComponent instanceof RenderComponent renderer) renderer.render(cameraComponent);
+            if(objectComponent instanceof RenderComponent) {
+                RenderComponent renderer = (RenderComponent) objectComponent;
+                renderer.render(cameraComponent);
+            }
         }
     }
 

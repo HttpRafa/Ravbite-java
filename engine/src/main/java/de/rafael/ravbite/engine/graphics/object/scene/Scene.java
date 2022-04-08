@@ -52,6 +52,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public abstract class Scene {
 
@@ -157,7 +158,7 @@ public abstract class Scene {
     // TODO: Optimize
     public LightComponent[] getLights(int limit, Vector3f centerPosition) {
         Collection<GameObject> gameObjects = getGameObjects();
-        Collection<GameObject> lights = gameObjects.stream().filter(item -> item.hasComponent(LightComponent.class).isPresent()).toList();
+        Collection<GameObject> lights = gameObjects.stream().filter(item -> item.hasComponent(LightComponent.class).isPresent()).collect(Collectors.toList());
         List<GameObject> sortedLights = lights.stream().sorted((o1, o2) -> {
             float o1Distance = centerPosition.distance(o1.getSpecialTransform(Transform.WORLD_SPACE).getPosition());
             float o2Distance = centerPosition.distance(o2.getSpecialTransform(Transform.WORLD_SPACE).getPosition());
@@ -169,7 +170,7 @@ public abstract class Scene {
             } else {
                 return 0;
             }
-        }).toList();
+        }).collect(Collectors.toList());
 
         LightComponent[] components = new LightComponent[Math.min(sortedLights.size(), limit)];
         for (int i = 0; i < components.length; i++) {

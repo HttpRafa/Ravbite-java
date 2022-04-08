@@ -28,24 +28,20 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.exception;
+package de.rafael.ravbite.engine.graphics.components.terrain;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/27/2022 at 1:55 PM
+// On 4/5/2022 at 7:13 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.utils.asset.AssetLocation;
+import de.rafael.ravbite.engine.graphics.components.Component;
 
-public class ShaderCompilationException extends Exception {
+public class TerrainComponent extends Component {
 
-    private static final long serialVersionUID = -997853943823790472L;
 
-    public ShaderCompilationException(String glError, AssetLocation assetLocation) {
-        super("Failed to compile shader[" + assetLocation.toString() + "]: " + glError);
-    }
 
 }

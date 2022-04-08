@@ -53,7 +53,13 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public record GLUtils(EngineWindow engineWindow) {
+public class GLUtils {
+
+    private final EngineWindow engineWindow;
+
+    public GLUtils(EngineWindow engineWindow) {
+        this.engineWindow = engineWindow;
+    }
 
     // Ravbite
 
