@@ -90,14 +90,14 @@ public class MainScene extends Scene {
         });
 
         GameObject light = new GameObject(this, "Light");
-        light.getTransform().move(0, 20, 0);
+        light.getTransform().move(0, 15, 0);
         light.appendComponent(new LightComponent(new Color(255, 255, 255)));
         getEngineWindow().getDebugWindow().addGameObject(light);
 
         Mesh mesh = null;
         Material material = new Material(this.getEngineWindow());
         try {
-            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/textures/ground.png", AssetLocation.INTERNAL));
+            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/textures/fiber.png", AssetLocation.INTERNAL));
             material.albedo(new AlbedoProperty(material, new Color(255, 255, 255)).texture(textureId));
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -105,12 +105,26 @@ public class MainScene extends Scene {
         material.create();
 
         try {
-            mesh = ModelUtils.rbLoadMeshesFromModel(AssetLocation.create("/models/suzanne.obj", AssetLocation.INTERNAL))[0];
+            Mesh[] meshes = ModelUtils.rbLoadMeshesFromModel(AssetLocation.create("/models/car.obj", AssetLocation.INTERNAL));
+            System.out.println("Meshes: " + meshes.length);
+            mesh = meshes[0];
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        Random random = new Random();
+        GameObject carObject = new GameObject(this, "Car");
+        carObject.getTransform().move(0, -2, -15);
+        carObject.getTransform().scale(2f);
+        carObject.appendComponent(new TestComponent());
+        carObject.appendComponent(new MeshComponent(mesh));
+        carObject.appendComponent(new MeshRendererComponent());
+        carObject.appendComponent(new MaterialComponent(material));
+        getEngineWindow().getDebugWindow().addGameObject(carObject);
+        getSceneObject().appendChildren(carObject);
+
+        super.storeObject(2, carObject);
+
+        /*Random random = new Random();
         for (int i = 0; i <= 101; i++) {
             GameObject testModel = new GameObject(this, "Test Model");
             if(i == 101) {
@@ -126,6 +140,7 @@ public class MainScene extends Scene {
             getSceneObject().appendChildren(testModel);
             super.storeObject(2 + i, testModel);
         }
+         */
 
         super.storeObject(0, camera);
         super.storeObject(1, light);
@@ -137,12 +152,15 @@ public class MainScene extends Scene {
     public void update() {
         GameObject camera = (GameObject) super.getStoredObject(0);
         GameObject light = (GameObject) super.getStoredObject(1);
-        for (int i = 0; i < super.getStoredObjects().values().size(); i++) {
+        GameObject carObject = (GameObject) super.getStoredObject(2);
+
+        carObject.getTransform().rotate(0f, 0.25f, 0f);
+        /*for (int i = 0; i < super.getStoredObjects().values().size(); i++) {
             if(i >= 2) {
                 GameObject testModel = (GameObject) super.getStoredObject(i);
                 testModel.getTransform().rotate(0f, i == (2 + 101) ? 1 : ((i % 2) == 0) ? -1 : 1, 0f);
             }
-        }
+        }*/
 
         // Move camera
         if(getInputSystem().keyDown(GLFW.GLFW_KEY_W)) {
