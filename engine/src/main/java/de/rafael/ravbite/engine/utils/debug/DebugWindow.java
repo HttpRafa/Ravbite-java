@@ -131,6 +131,26 @@ public class DebugWindow {
         jPanel.add(transformYValueLocal);
         JLabel transformZValueLocal = new JLabel("000");
         jPanel.add(transformZValueLocal);
+
+        JButton changeTransformLocal = new JButton("Change XYZ");
+        changeTransformLocal.addActionListener(actionEvent -> {
+            JTextField xValue = new JTextField(transformXValueLocal.getText());
+            JTextField yValue = new JTextField(transformYValueLocal.getText());
+            JTextField zValue = new JTextField(transformZValueLocal.getText());
+            final JComponent[] inputs = new JComponent[] {
+                    new JLabel("X"),
+                    xValue,
+                    new JLabel("Y"),
+                    yValue,
+                    new JLabel("Z"),
+                    zValue
+            };
+            int result = JOptionPane.showConfirmDialog(gameObjectFrame, inputs, "Change local XYZ", JOptionPane.DEFAULT_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                gameObject.getTransform().getPosition().set(new float[] {Float.parseFloat(xValue.getText()), Float.parseFloat(yValue.getText()), Float.parseFloat(zValue.getText())});
+            }
+        });
+        jPanel.add(changeTransformLocal);
         jPanel.add(new JLabel(") /"));
 
         JLabel transformXValue = new JLabel("000");
@@ -150,26 +170,12 @@ public class DebugWindow {
 
         JButton changeTextureId = new JButton("Change");
         changeTextureId.addActionListener(actionEvent -> {
-            JDialog dialog = new JDialog(gameObjectFrame, "Change textureId");
-            JPanel dialogPanel = new JPanel();
-            JTextArea jTextField = new JTextArea("");
-            JButton jButton = new JButton("Change");
-            jButton.addActionListener(actionEvent1 -> {
-                Optional<Component> component = gameObject.hasComponent(MaterialComponent.class);
-                if(component.isPresent()) {
-                    MaterialComponent materialComponent = (MaterialComponent) component.get();
-                    materialComponent.getMaterial().getAlbedo().texture(Integer.parseInt(jTextField.getText()));
-                }
-
-                dialog.dispose();
-            });
-
-            dialogPanel.add(jTextField);
-            dialogPanel.add(jButton);
-            dialog.add(dialogPanel);
-            dialog.setResizable(false);
-            dialog.setSize(200, 100);
-            dialog.setVisible(true);
+            String input = JOptionPane.showInputDialog(gameObjectFrame, "Change textureId");
+            Optional<Component> component = gameObject.hasComponent(MaterialComponent.class);
+            if(component.isPresent()) {
+                MaterialComponent materialComponent = (MaterialComponent) component.get();
+                materialComponent.getMaterial().getAlbedo().texture(Integer.parseInt(input));
+            }
         });
         jPanel.add(changeTextureId);
         jPanel.add(new JLabel(")"));

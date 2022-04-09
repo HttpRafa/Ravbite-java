@@ -38,9 +38,12 @@ package de.rafael.ravbite.engine;
 //
 //------------------------------
 
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.IntelliJTheme;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +58,14 @@ public class Ravbite {
      * Initializes GLFW
      */
     public void initialize() {
+        // Set swing theme
+        try {
+            UIManager.setLookAndFeel(new FlatIntelliJLaf());
+        } catch (UnsupportedLookAndFeelException exception) {
+            exception.printStackTrace();
+        }
+        IntelliJTheme.setup(Ravbite.class.getResourceAsStream("/swing/themes/Atom One Dark.json"));
+
         // Set up an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
