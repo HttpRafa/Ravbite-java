@@ -28,49 +28,22 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.components.terrain;
+package de.rafael.ravbite.engine.graphics.object.game.material;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 4/7/2022 at 11:18 AM
+// On 04/09/2022 at 10:39 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.Component;
-import de.rafael.ravbite.engine.graphics.object.game.terrain.Terrain;
+import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 
-import java.util.ArrayList;
-import java.util.List;
+public interface IMaterial {
 
-public class TerrainGridComponent extends Component {
+    EngineWindow getEngineWindow();
 
-    private float terrainSize = 800;
-    private int vertexCount = 128;
-
-    private final List<Terrain> terrains = new ArrayList<>();
-
-    public TerrainGridComponent() {
-    }
-
-    public TerrainGridComponent(float terrainSize, int vertexCount) {
-        this.terrainSize = terrainSize;
-        this.vertexCount = vertexCount;
-    }
-
-    /**
-     * @return Size of the terrain
-     */
-    public float getTerrainSize() {
-        return terrainSize;
-    }
-
-    /**
-     * @return Amount of vertices on each side
-     */
-    public int getVertexCount() {
-        return vertexCount;
-    }
+    int getShaderId();
 
 }

@@ -49,7 +49,6 @@ import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
 import de.rafael.ravbite.engine.input.InputSystem;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;

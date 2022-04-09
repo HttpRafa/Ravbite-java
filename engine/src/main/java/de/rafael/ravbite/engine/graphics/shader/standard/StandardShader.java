@@ -38,13 +38,14 @@ package de.rafael.ravbite.engine.graphics.shader.standard;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
 import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
-import de.rafael.ravbite.engine.graphics.object.game.material.Material;
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
@@ -76,7 +77,9 @@ public class StandardShader extends AbstractShader {
     }
 
     @Override
-    public void prepareObject(GameObject gameObject, Material material, CameraComponent cameraComponent, RenderComponent renderer) {
+    public void prepareObject(GameObject gameObject, IMaterial universalMaterial, CameraComponent cameraComponent, RenderComponent renderer) {
+        Material material = (Material) universalMaterial;
+
         Transform cameraTransform = cameraComponent.getGameObject().getSpecialTransform(Transform.WORLD_SPACE);
 
         loadProjectionMatrix(cameraComponent.getProjectionMatrix());

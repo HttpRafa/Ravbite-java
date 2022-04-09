@@ -28,93 +28,55 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.object.game.material;
+package de.rafael.ravbite.engine.graphics.components.rendering.terrain;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/26/2022 at 7:06 PM
+// On 4/7/2022 at 11:18 AM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.components.RenderComponent;
+import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import de.rafael.ravbite.engine.graphics.object.game.terrain.Terrain;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Material {
+public class TerrainComponent extends RenderComponent {
 
-    private final EngineWindow engineWindow;
+    private float terrainSize = 800;
+    private int vertexCount = 128;
 
-    private Integer shaderId;
-    private AlbedoProperty albedo;
-    private float shineDamper = 10f; // TODO: Change to texture based
-    private float reflectivity = 0f; // TODO: Change to texture based
+    private final List<Terrain> terrains = new ArrayList<>();
 
-    public Material(EngineWindow engineWindow) {
-        this.engineWindow = engineWindow;
+    public TerrainComponent() {
     }
 
-    public Material shader(int id) {
-        shaderId = id;
-        return this;
+    public TerrainComponent(float terrainSize, int vertexCount) {
+        this.terrainSize = terrainSize;
+        this.vertexCount = vertexCount;
     }
 
-    public Material albedo(AlbedoProperty albedo) {
-        this.albedo = albedo;
-        return this;
-    }
+    @Override
+    public void render(CameraComponent cameraComponent) {
 
-    public Material specular(float shineDamper, float reflectivity) {
-        this.shineDamper = shineDamper;
-        this.reflectivity = reflectivity;
-        return this;
-    }
-
-    public Material create() {
-        if(this.shaderId == null) {
-            this.shaderId = engineWindow.getIdOfShader(StandardShader.class);
-        }
-        if(this.albedo == null) {
-            this.albedo = new AlbedoProperty(this, new Color(0, 0, 0));
-        }
-        return this;
     }
 
     /**
-     * @return EngineWindow
+     * @return Size of the terrain
      */
-    public EngineWindow getEngineWindow() {
-        return engineWindow;
+    public float getTerrainSize() {
+        return terrainSize;
     }
 
     /**
-     * @return ID of the shader the material is using
+     * @return Amount of vertices on each side
      */
-    public int getShaderId() {
-        return shaderId;
-    }
-
-    /**
-     * @return AlbedoProperty
-     */
-    public AlbedoProperty getAlbedo() {
-        return albedo;
-    }
-
-    /**
-     * @return ShineDamper value
-     */
-    public float getShineDamper() {
-        return shineDamper;
-    }
-
-    /**
-     * @return Reflectivity value
-     */
-    public float getReflectivity() {
-        return reflectivity;
+    public int getVertexCount() {
+        return vertexCount;
     }
 
 }

@@ -28,61 +28,96 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.object.game.terrain;
+package de.rafael.ravbite.engine.graphics.object.game.material.standard;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/08/2022 at 7:09 PM
+// On 3/26/2022 at 7:06 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.rendering.terrain.TerrainComponent;
-import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
-import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
-import de.rafael.ravbite.engine.graphics.object.game.mesh.MeshGenerator;
+import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
+import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
+import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 
-public class Terrain {
+import java.awt.*;
 
-    private float x;
-    private float z;
+public class Material implements IMaterial {
 
-    private final Mesh mesh;
-    private Material material;
+    private final EngineWindow engineWindow;
 
-    public Terrain(float gridX, float gridZ, Material material, TerrainComponent terrainComponent) {
-        this.x = gridX * terrainComponent.getTerrainSize();
-        this.z = gridZ * terrainComponent.getTerrainSize();
-        this.mesh = MeshGenerator.generateSimpleTerrainMesh(terrainComponent.getVertexCount(), terrainComponent.getTerrainSize());
+    private Integer shaderId;
+    private AlbedoProperty albedo;
+    private float shineDamper = 10f; // TODO: Change to texture based
+    private float reflectivity = 0f; // TODO: Change to texture based
+
+    public Material(EngineWindow engineWindow) {
+        this.engineWindow = engineWindow;
+    }
+
+    public Material shader(int id) {
+        shaderId = id;
+        return this;
+    }
+
+    public Material albedo(AlbedoProperty albedo) {
+        this.albedo = albedo;
+        return this;
+    }
+
+    public Material specular(float shineDamper, float reflectivity) {
+        this.shineDamper = shineDamper;
+        this.reflectivity = reflectivity;
+        return this;
+    }
+
+    public Material create() {
+        if(this.shaderId == null) {
+            this.shaderId = engineWindow.getIdOfShader(StandardShader.class);
+        }
+        if(this.albedo == null) {
+            this.albedo = new AlbedoProperty(this, new Color(0, 0, 0));
+        }
+        return this;
     }
 
     /**
-     * @return X coords of the terrain
+     * @return EngineWindow
      */
-    public float getX() {
-        return x;
+    @Override
+    public EngineWindow getEngineWindow() {
+        return engineWindow;
     }
 
     /**
-     * @return Z coords of the terrain
+     * @return ID of the shader the material is using
      */
-    public float getZ() {
-        return z;
+    @Override
+    public int getShaderId() {
+        return shaderId;
     }
 
     /**
-     * @return Material of the terrain
+     * @return AlbedoProperty
      */
-    public Material getMaterial() {
-        return material;
+    public AlbedoProperty getAlbedo() {
+        return albedo;
     }
 
     /**
-     * @return Mesh of the terrain
+     * @return ShineDamper value
      */
-    public Mesh getMesh() {
-        return mesh;
+    public float getShineDamper() {
+        return shineDamper;
+    }
+
+    /**
+     * @return Reflectivity value
+     */
+    public float getReflectivity() {
+        return reflectivity;
     }
 
 }

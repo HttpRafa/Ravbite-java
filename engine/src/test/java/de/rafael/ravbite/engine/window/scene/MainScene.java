@@ -43,8 +43,8 @@ import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
 import de.rafael.ravbite.engine.graphics.components.rendering.mesh.MeshRendererComponent;
-import de.rafael.ravbite.engine.graphics.object.game.material.AlbedoProperty;
-import de.rafael.ravbite.engine.graphics.object.game.material.Material;
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.AlbedoProperty;
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.model.ModelUtils;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
@@ -58,7 +58,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Random;
 
 public class MainScene extends Scene {
 
@@ -112,17 +111,17 @@ public class MainScene extends Scene {
             e.printStackTrace();
         }
 
-        GameObject carObject = new GameObject(this, "Car");
-        carObject.getTransform().move(0, -1, -10);
-        carObject.getTransform().scale(2f);
-        carObject.appendComponent(new TestComponent());
-        carObject.appendComponent(new MeshComponent(mesh));
-        carObject.appendComponent(new MeshRendererComponent());
-        carObject.appendComponent(new MaterialComponent(material));
-        getEngineWindow().getDebugWindow().addGameObject(carObject);
-        getSceneObject().appendChildren(carObject);
+        GameObject testModel = new GameObject(this, "Test Model");
+        testModel.getTransform().move(0, -1, -10);
+        testModel.getTransform().scale(2f);
+        testModel.appendComponent(new TestComponent());
+        testModel.appendComponent(new MeshComponent(mesh));
+        testModel.appendComponent(new MeshRendererComponent());
+        testModel.appendComponent(new MaterialComponent(material));
+        getEngineWindow().getDebugWindow().addGameObject(testModel);
+        getSceneObject().appendChildren(testModel);
 
-        super.storeObject(2, carObject);
+        super.storeObject(2, testModel);
 
         /*Random random = new Random();
         for (int i = 0; i <= 101; i++) {
@@ -152,9 +151,9 @@ public class MainScene extends Scene {
     public void update() {
         GameObject camera = (GameObject) super.getStoredObject(0);
         GameObject light = (GameObject) super.getStoredObject(1);
-        GameObject carObject = (GameObject) super.getStoredObject(2);
+        GameObject testModel = (GameObject) super.getStoredObject(2);
 
-        carObject.getTransform().rotate(0f, 0.25f, 0f);
+        testModel.getTransform().rotate(0f, 0.25f, 0f);
         /*for (int i = 0; i < super.getStoredObjects().values().size(); i++) {
             if(i >= 2) {
                 GameObject testModel = (GameObject) super.getStoredObject(i);

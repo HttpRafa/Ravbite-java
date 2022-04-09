@@ -43,7 +43,8 @@ import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
-import de.rafael.ravbite.engine.graphics.object.game.material.Material;
+import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.StoredMesh;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import org.lwjgl.opengl.GL11;
@@ -76,7 +77,7 @@ public class MeshRendererComponent extends RenderComponent {
             // Apply Material
             Material material = null;
             if(materialComponent != null) {
-                material = materialComponent.getMaterial();
+                material = (Material) materialComponent.getMaterial();
             }
             AbstractShader abstractShader = null;
             if(material != null) {

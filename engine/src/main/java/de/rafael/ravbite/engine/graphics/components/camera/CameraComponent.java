@@ -125,8 +125,8 @@ public class CameraComponent extends Component {
      * @param gameObject GameObject
      * @return If the camera is responsible
      */
-    public boolean isResponsableFor(GameObject gameObject) {
-        return isResponsableFor(gameObject.getRenderLayer());
+    public boolean isResponsibleFor(GameObject gameObject) {
+        return isResponsibleFor(gameObject.getRenderLayer());
     }
 
     /**
@@ -134,7 +134,7 @@ public class CameraComponent extends Component {
      * @param layer LayerId
      * @return If the camera is responsible
      */
-    public boolean isResponsableFor(int layer) {
+    public boolean isResponsibleFor(int layer) {
         return ArrayUtils.contains(renderLayers, layer);
     }
 

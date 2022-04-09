@@ -39,11 +39,12 @@ package de.rafael.ravbite.engine.graphics.components.material;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
-import de.rafael.ravbite.engine.graphics.object.game.material.Material;
+import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 
 public class MaterialComponent extends Component {
 
-    private Material material;
+    private IMaterial material;
 
     public MaterialComponent(Material material) {
         this.material = material;
@@ -52,7 +53,7 @@ public class MaterialComponent extends Component {
     /**
      * @return Material of the GameObject
      */
-    public Material getMaterial() {
+    public IMaterial getMaterial() {
         return material;
     }
 

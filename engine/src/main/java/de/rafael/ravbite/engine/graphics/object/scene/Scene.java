@@ -119,7 +119,7 @@ public abstract class Scene {
      */
     private void renderCamera(Collection<GameObject> gameObjects, CameraComponent cameraComponent) {
         for (GameObject gameObject : gameObjects) {
-            if(cameraComponent.isResponsableFor(gameObject)) {
+            if(cameraComponent.isResponsibleFor(gameObject)) {
                 gameObject.render(cameraComponent);
             }
         }

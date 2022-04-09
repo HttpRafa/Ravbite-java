@@ -42,6 +42,7 @@ import de.rafael.ravbite.engine.graphics.components.Component;
 import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.lwjgl.glfw.GLFW;
@@ -174,7 +175,9 @@ public class DebugWindow {
             Optional<Component> component = gameObject.hasComponent(MaterialComponent.class);
             if(component.isPresent()) {
                 MaterialComponent materialComponent = (MaterialComponent) component.get();
-                materialComponent.getMaterial().getAlbedo().texture(Integer.parseInt(input));
+                if(materialComponent.getMaterial() instanceof Material material) {
+                    material.getAlbedo().texture(Integer.parseInt(input));
+                }
             }
         });
         jPanel.add(changeTextureId);
@@ -197,7 +200,9 @@ public class DebugWindow {
             Optional<Component> component = gameObject.hasComponent(MaterialComponent.class);
             if(component.isPresent()) {
                 MaterialComponent materialComponent = (MaterialComponent) component.get();
-                window.materialAlbedoTextureId.setText(materialComponent.getMaterial().getAlbedo().getTextureId() + "");
+                if(materialComponent.getMaterial() instanceof Material material) {
+                    window.materialAlbedoTextureId.setText(material.getAlbedo().getTextureId() + "");
+                }
             }
 
             Transform worldTransform = gameObject.getSpecialTransform(Transform.WORLD_SPACE);
