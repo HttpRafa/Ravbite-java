@@ -28,83 +28,63 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine;
+package de.rafael.ravbite.utils.swing;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/22/2022 at 5:12 PM
+// On 04/09/2022 at 11:58 PM
 // In the project Ravbite
 //
 //------------------------------
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.IntelliJTheme;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
-import de.rafael.ravbite.utils.swing.SwingUtils;
-import org.lwjgl.glfw.GLFWErrorCallback;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
+public class SwingUtils {
 
-public class Ravbite {
+    public static void initSwing(SwingThemes theme) {
 
-    private final List<EngineWindow> windows = new ArrayList<>();
-
-    /**
-     * Initializes GLFW
-     */
-    public void initialize() {
-        // Set swing theme
-        SwingUtils.initSwing(SwingUtils.SwingThemes.ATOM_ONE_DARK);
-
-        // Set up an error callback. The default implementation
-        // will print the error message in System.err.
-        GLFWErrorCallback.createPrint(System.err).set();
-
-        // Initialize GLFW. Most GLFW functions will not work before doing this
-        if (!glfwInit())
-            throw new IllegalStateException("Unable to initialize GLFW");
-
-        // Configure GLFW
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-    }
-
-    /**
-     * Runs every window
-     */
-    public void run() {
-        initialize();
-
-        for (int i = 0; i < windows.size(); i++) {
-            if(i == (windows.size() - 1)) {
-                windows.get(i).run();
-            } else {
-                windows.get(i).runThreaded();
-            }
+        try {
+            UIManager.setLookAndFeel(new FlatIntelliJLaf());
+        } catch (UnsupportedLookAndFeelException exception) {
+            exception.printStackTrace();
         }
+        IntelliJTheme.setup(SwingUtils.class.getResourceAsStream("/swing/themes/" + theme.fileName));
+
     }
 
-    /**
-     * Adds a window to the engine manager
-     * @param window Window to add
-     */
-    public void addWindow(EngineWindow window) {
-        windows.add(window);
-    }
+    public static enum SwingThemes {
 
-    /**
-     *
-     * @return All registered windows
-     */
-    public List<EngineWindow> getWindows() {
-        return windows;
+        ATOM_ONE_DARK("Atom One Dark", "Atom One Dark.theme.json"),
+        LIGHT_FLAT("Light Flat", "LightFlatTheme.theme.json"),
+        MATERIAL_DEEP_OCEAN("Material Deep Ocean", "Material Deep Ocean.theme.json"),
+        NIGHT_OWL("Night Owl", "Night Owl.theme.json");
+
+        private final String name;
+        private final String fileName;
+
+        SwingThemes(String name, String fileName) {
+            this.name = name;
+            this.fileName = fileName;
+        }
+
+        /**
+         * @return Name of the theme
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * @return Filename of the theme
+         */
+        public String getFileName() {
+            return fileName;
+        }
+
     }
 
 }
