@@ -113,7 +113,7 @@ public class MainScene extends Scene {
         }
 
         GameObject carObject = new GameObject(this, "Car");
-        carObject.getTransform().move(0, -2, -15);
+        carObject.getTransform().move(0, -2, -10);
         carObject.getTransform().scale(2f);
         carObject.appendComponent(new TestComponent());
         carObject.appendComponent(new MeshComponent(mesh));
