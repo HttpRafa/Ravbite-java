@@ -97,7 +97,7 @@ public class MainScene extends Scene {
         Mesh mesh = null;
         Material material = new Material(this.getEngineWindow());
         try {
-            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/textures/fiber.png", AssetLocation.INTERNAL));
+            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/textures/ground.png", AssetLocation.INTERNAL));
             material.albedo(new AlbedoProperty(material, new Color(255, 255, 255)).texture(textureId));
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -105,7 +105,7 @@ public class MainScene extends Scene {
         material.create();
 
         try {
-            Mesh[] meshes = ModelUtils.rbLoadMeshesFromModel(AssetLocation.create("/models/car.obj", AssetLocation.INTERNAL));
+            Mesh[] meshes = ModelUtils.rbLoadMeshesFromModel(AssetLocation.create("/models/chair.obj", AssetLocation.INTERNAL));
             System.out.println("Meshes: " + meshes.length);
             mesh = meshes[0];
         } catch (IOException e) {
@@ -113,7 +113,7 @@ public class MainScene extends Scene {
         }
 
         GameObject carObject = new GameObject(this, "Car");
-        carObject.getTransform().move(0, -2, -10);
+        carObject.getTransform().move(0, -1, -10);
         carObject.getTransform().scale(2f);
         carObject.appendComponent(new TestComponent());
         carObject.appendComponent(new MeshComponent(mesh));
