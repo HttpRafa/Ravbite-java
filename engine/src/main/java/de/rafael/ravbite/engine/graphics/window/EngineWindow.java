@@ -139,7 +139,6 @@ public abstract class EngineWindow {
         // Initialize debug
         if(DEBUG_MODE) {
             debugWindow = new DebugWindow(this);
-            debugWindow.getFrame().setVisible(true);
         }
 
         // Create the window
@@ -174,7 +173,6 @@ public abstract class EngineWindow {
         // Set default icon
         try {
             BufferedImage iconImage = ImageUtils.loadImage(new AssetLocation("/textures/icon/icon128.png", AssetLocation.INTERNAL));
-            if(debugWindow != null) debugWindow.getFrame().setIconImage(iconImage);
             setIcon(iconImage);
         } catch (IOException exception) {
             exception.printStackTrace();

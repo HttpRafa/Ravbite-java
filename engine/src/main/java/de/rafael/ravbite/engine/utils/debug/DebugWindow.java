@@ -39,30 +39,33 @@ package de.rafael.ravbite.engine.utils.debug;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
-import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
-import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
-import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
+import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.utils.debug.windows.EngineDebugOptionsWindow;
+import de.rafael.ravbite.engine.utils.debug.windows.GameObjectOptionsWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.lwjgl.glfw.GLFW;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class DebugWindow {
 
     private final EngineWindow engineWindow;
 
-    private final HashMap<GameObject, GameObjectDebugWindow> debugGameObjects = new HashMap<>();
+    private List<GameObjectOptionsWindow> gameObjectOptionsWindowList = new ArrayList<>();
 
-    private final JFrame engineTestFrame;
+    private final EngineDebugOptionsWindow engineDebugOptionsWindow;
+
+    private String imagePath;
 
     /**
      * Used to test the engine
@@ -71,49 +74,8 @@ public class DebugWindow {
     public DebugWindow(EngineWindow engineWindow) {
         this.engineWindow = engineWindow;
 
-        this.engineTestFrame = new JFrame("Ravbite Debug / Engine");
-        this.engineTestFrame.setSize(350, 80);
-        this.engineTestFrame.setResizable(false);
-
-        JPanel jPanel = new JPanel();
-
-        JTextField textureIdLabel = new JTextField("null");
-        textureIdLabel.setEditable(false);
-        jPanel.add(textureIdLabel);
-        JButton loadTextureButton = new JButton("Load Texture");
-        loadTextureButton.addActionListener(actionEvent -> {
-            JFileChooser jFileChooser = new JFileChooser(".");
-            jFileChooser.setDialogTitle("Select texture file");
-            jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG image", "png");
-            jFileChooser.setFileFilter(filter);
-            int returnValue = jFileChooser.showOpenDialog(jPanel);
-
-            if(returnValue == JFileChooser.APPROVE_OPTION) {
-                File file = jFileChooser.getSelectedFile();
-
-                engineWindow.getThreadExecutor().addTask(() -> {
-                    try {
-                        int textureId = engineWindow.getGLUtils().rbLoadTexture(AssetLocation.create(file.getAbsolutePath(), AssetLocation.EXTERNAL));
-                        textureIdLabel.setText(textureId + "");
-                    } catch (IOException exception) {
-                        exception.printStackTrace();
-                        System.exit(0);
-                    }
-                });
-            }
-        });
-        jPanel.add(loadTextureButton);
-
-        JButton exitButton = new JButton("Exit");
-        exitButton.addActionListener(actionEvent -> {
-            engineWindow.getThreadExecutor().addTask(() -> {
-                GLFW.glfwSetWindowShouldClose(engineWindow.getWindow(), true);
-            });
-        });
-        jPanel.add(exitButton);
-
-        this.engineTestFrame.add(jPanel);
+        engineDebugOptionsWindow = new EngineDebugOptionsWindow(this);
+        engineDebugOptionsWindow.setVisible(true);
     }
 
     /**
@@ -121,123 +83,79 @@ public class DebugWindow {
      * @param gameObject GameObject
      */
     public void addGameObject(GameObject gameObject) {
-        JFrame gameObjectFrame = new JFrame("Ravbite Debug / " + gameObject.getName());
-        gameObjectFrame.setSize(600, 400);
-        gameObjectFrame.setIconImage(engineTestFrame.getIconImage());
-
-        JPanel jPanel = new JPanel();
-
-        JLabel transformXValueLocal = new JLabel("000");
-        jPanel.add(new JLabel("Local XYZ ("));
-        jPanel.add(transformXValueLocal);
-        JLabel transformYValueLocal = new JLabel("000");
-        jPanel.add(transformYValueLocal);
-        JLabel transformZValueLocal = new JLabel("000");
-        jPanel.add(transformZValueLocal);
-
-        JButton changeTransformLocal = new JButton("Change XYZ");
-        changeTransformLocal.addActionListener(actionEvent -> {
-            JTextField xValue = new JTextField(transformXValueLocal.getText());
-            JTextField yValue = new JTextField(transformYValueLocal.getText());
-            JTextField zValue = new JTextField(transformZValueLocal.getText());
-            final JComponent[] inputs = new JComponent[] {
-                    new JLabel("X"),
-                    xValue,
-                    new JLabel("Y"),
-                    yValue,
-                    new JLabel("Z"),
-                    zValue
-            };
-            int result = JOptionPane.showConfirmDialog(gameObjectFrame, inputs, "Change local XYZ", JOptionPane.DEFAULT_OPTION);
-            if (result == JOptionPane.OK_OPTION) {
-                gameObject.getTransform().getPosition().set(new float[] {Float.parseFloat(xValue.getText()), Float.parseFloat(yValue.getText()), Float.parseFloat(zValue.getText())});
+        GameObjectOptionsWindow gameObjectOptionsWindow = new GameObjectOptionsWindow(gameObject);
+        gameObjectOptionsWindow.setTitle(gameObject.getName());
+        gameObjectOptionsWindow.setVisible(true);
+        gameObjectOptionsWindow.componentsList.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return gameObject.getObjectComponents().size();
+            }
+            public String getElementAt(int i) {
+                return gameObject.getObjectComponents().get(i).getClass().getSimpleName().replaceAll("Component", "");
             }
         });
-        jPanel.add(changeTransformLocal);
-        jPanel.add(new JLabel(") /"));
 
-        JLabel transformXValue = new JLabel("000");
-        jPanel.add(new JLabel("World XYZ ("));
-        jPanel.add(transformXValue);
-        JLabel transformYValue = new JLabel("000");
-        jPanel.add(transformYValue);
-        JLabel transformZValue = new JLabel("000");
-        jPanel.add(transformZValue);
-        jPanel.add(new JLabel(")"));
+        gameObjectOptionsWindowList.add(gameObjectOptionsWindow);
 
-        Optional<Component> component = gameObject.hasComponent(MeshComponent.class);
-        if(component.isPresent()) {
-            MeshComponent meshComponent = (MeshComponent) component.get();
+        updateTransformTable(gameObject.getTransform(), gameObjectOptionsWindow.transformTable);
+    }
 
-            String[][] data = new String[meshComponent.getMesh().collectMeshes().length][6];
-            Mesh[] meshes = meshComponent.getMesh().collectMeshes();
-            for (int i = 0; i < meshes.length; i++) {
-                Mesh mesh = meshes[i];
-                data[i][0] = mesh.getName();
-                data[i][1] = mesh.getVertices().length + "";
-                data[i][2] = mesh.getNormals().length + "";
-                data[i][3] = mesh.getTangents().length + "";
-                data[i][4] = mesh.getTextureCoords().length + "";
-                data[i][5] = mesh.getIndices().length + "";
-            }
-            String[] column = new String[]{"Name", "Positions", "Normals", "Tangents", "TextureCoords", "Indices"};
+    public void updateTransformTable(Transform transform, JTable table) {
+        table.getModel().setValueAt(cutNumber(transform.getPosition().x), 0, 1);
+        table.getModel().setValueAt(cutNumber(transform.getPosition().y), 0, 2);
+        table.getModel().setValueAt(cutNumber(transform.getPosition().z), 0, 3);
 
-            JTable meshesTable = new JTable(data, column);
-            meshesTable.setBounds(40,40,500,300);
-            JScrollPane jScrollPane = new JScrollPane(meshesTable);
-            jPanel.add(jScrollPane);
-        }
+        table.getModel().setValueAt(cutNumber(transform.getRotation().x), 1, 1);
+        table.getModel().setValueAt(cutNumber(transform.getRotation().y), 1, 2);
+        table.getModel().setValueAt(cutNumber(transform.getRotation().z), 1, 3);
 
-        /*JButton changeTextureId = new JButton("Change");
-        changeTextureId.addActionListener(actionEvent -> {
-            String input = JOptionPane.showInputDialog(gameObjectFrame, "Change textureId");
-            Optional<Component> component = gameObject.hasComponent(MaterialComponent.class);
-            if(component.isPresent()) {
-                MaterialComponent materialComponent = (MaterialComponent) component.get();
-                if(materialComponent.getMaterial() instanceof Material material) {
-                    material.getAlbedo().texture(Integer.parseInt(input));
-                }
-            }
-        });
-        jPanel.add(changeTextureId);
-
-         */
-
-        gameObjectFrame.add(jPanel);
-        gameObjectFrame.setVisible(true);
-        this.debugGameObjects.put(gameObject, new GameObjectDebugWindow(gameObjectFrame, transformXValueLocal, transformYValueLocal, transformZValueLocal, transformXValue, transformYValue, transformZValue));
+        table.getModel().setValueAt(cutNumber(transform.getScale().x), 2, 1);
+        table.getModel().setValueAt(cutNumber(transform.getScale().y), 2, 2);
+        table.getModel().setValueAt(cutNumber(transform.getScale().z), 2, 3);
     }
 
     /**
      * Updates all values in windows
      */
     public void updateGameObjects() {
-        for (GameObject gameObject : debugGameObjects.keySet()) {
-            GameObjectDebugWindow window = debugGameObjects.get(gameObject);
-
-            /*Optional<Component> component = gameObject.hasComponent(MaterialComponent.class);
-            if(component.isPresent()) {
-                MaterialComponent materialComponent = (MaterialComponent) component.get();
-                if(materialComponent.getMaterial() instanceof Material material) {
-                    window.materialAlbedoTextureId.setText(material.getAlbedo().getTextureId() + "");
-                }
-            }
-
-             */
-
-            Transform worldTransform = gameObject.getSpecialTransform(Transform.WORLD_SPACE);
-            window.transformXValue.setText(cutNumber(worldTransform.getPosition().x));
-            window.transformYValue.setText(cutNumber(worldTransform.getPosition().y));
-            window.transformZValue.setText(cutNumber(worldTransform.getPosition().z));
-
-            window.transformXValueLocal.setText(cutNumber(gameObject.getTransform().getPosition().x));
-            window.transformYValueLocal.setText(cutNumber(gameObject.getTransform().getPosition().y));
-            window.transformZValueLocal.setText(cutNumber(gameObject.getTransform().getPosition().z));
-
-            window.jFrame.repaint();
+        for (GameObjectOptionsWindow gameObjectOptionsWindow : gameObjectOptionsWindowList) {
+            updateTransformTable(gameObjectOptionsWindow.gameObject.getTransform(), gameObjectOptionsWindow.transformTable);
         }
     }
 
+    public void loadIntoOpenGL() {
+        if(imagePath != null) {
+            engineWindow.getThreadExecutor().addTask(() -> {
+                try {
+                    int textureId = engineWindow.getGLUtils().rbLoadTexture(AssetLocation.create(imagePath, AssetLocation.EXTERNAL));
+                    engineDebugOptionsWindow.textureIdLabel.setText(textureId + "");
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+            });
+        }
+    }
+
+    public void openTextureSelection() {
+        JFileChooser jFileChooser = new JFileChooser(".");
+        jFileChooser.setDialogTitle("Select texture file");
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG image", "png");
+        jFileChooser.setFileFilter(filter);
+        int returnValue = jFileChooser.showOpenDialog(engineDebugOptionsWindow);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File file = jFileChooser.getSelectedFile();
+            try {
+                BufferedImage loadedImage = ImageIO.read(file);
+                imagePath = file.getPath();
+
+                engineDebugOptionsWindow.textureLabel.setIcon(new ImageIcon(loadedImage));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
     /**
      * Cuts the number
      * @param number Number to cut
@@ -254,16 +172,5 @@ public class DebugWindow {
     public EngineWindow getEngineWindow() {
         return engineWindow;
     }
-
-    /**
-     * @return Engine debugWindow
-     */
-    public JFrame getFrame() {
-        return engineTestFrame;
-    }
-
-    public record GameObjectDebugWindow(JFrame jFrame, JLabel transformXValueLocal,
-                                        JLabel transformYValueLocal, JLabel transformZValueLocal, JLabel transformXValue,
-                                        JLabel transformYValue, JLabel transformZValue) {}
 
 }

@@ -220,7 +220,7 @@ public class GameObject {
     /**
      * @return List of components
      */
-    public Collection<Component> getObjectComponents() {
+    public List<Component> getObjectComponents() {
         return objectComponents;
     }
 
@@ -234,7 +234,7 @@ public class GameObject {
     /**
      * @return List of children
      */
-    public Collection<GameObject> getChildrenObjects() {
+    public List<GameObject> getChildrenObjects() {
         return childrenObjects;
     }
 
