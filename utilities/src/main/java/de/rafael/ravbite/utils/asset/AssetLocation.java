@@ -38,6 +38,8 @@ package de.rafael.ravbite.utils.asset;
 //
 //------------------------------
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class AssetLocation {
@@ -94,6 +96,18 @@ public class AssetLocation {
             inputStream = new FileInputStream(path);
         }
         return inputStream;
+    }
+
+    /**
+     * @return Trys to load the image from the assetLocation
+     */
+    public BufferedImage loadImage() {
+        try {
+            return ImageIO.read(asInputStream());
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        return null;
     }
 
     /**
