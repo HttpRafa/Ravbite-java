@@ -41,10 +41,10 @@ package de.rafael.ravbite.engine.graphics.components.rendering.mesh;
 import de.rafael.ravbite.engine.graphics.components.Component;
 import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
-import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
 import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
 import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
+import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.StoredMesh;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import org.lwjgl.opengl.GL11;
@@ -63,48 +63,48 @@ public class MeshRendererComponent extends RenderComponent {
         if(componentOptional.isPresent()) {
             // Mesh
             MeshComponent meshComponent = (MeshComponent) componentOptional.get();
-            StoredMesh mesh = meshComponent.getStoredMesh();
+            Mesh[] meshes = meshComponent.getMesh().collectMeshes();
+            for (Mesh engineMesh : meshes) {
+                StoredMesh mesh = engineMesh.getStoredMesh();
 
-            // Material
-            Optional<Component> materialComponentOptional = getGameObject().hasComponent(MaterialComponent.class);
-            MaterialComponent materialComponent = (MaterialComponent) materialComponentOptional.orElse(null);
+                // Material
+                IMaterial material = engineMesh.getMaterial();
 
-            GL30.glBindVertexArray(mesh.getVao());
-            GL20.glEnableVertexAttribArray(0);
-            GL20.glEnableVertexAttribArray(1);
-            GL20.glEnableVertexAttribArray(2);
+                GL30.glBindVertexArray(mesh.getVao());
+                GL20.glEnableVertexAttribArray(0);
+                GL20.glEnableVertexAttribArray(1);
+                GL20.glEnableVertexAttribArray(2);
 
-            // Apply Material
-            Material material = null;
-            if(materialComponent != null) {
-                material = (Material) materialComponent.getMaterial();
-            }
-            AbstractShader abstractShader = null;
-            if(material != null) {
-                // Start Shader
-                abstractShader = getGameObject().getScene().getEngineWindow().getShader(material.getShaderId());
-                abstractShader.bind();
-                abstractShader.prepareObject(this.getGameObject(), material, cameraComponent, this);
+                // Apply Material
+                AbstractShader abstractShader = null;
+                if(material != null) {
+                    // Start Shader
+                    abstractShader = getGameObject().getScene().getEngineWindow().getShader(material.getShaderId());
+                    abstractShader.bind();
+                    abstractShader.prepareObject(this.getGameObject(), material, cameraComponent, this);
 
-                // Active Texture
-                if(material.getAlbedo() != null) {
-                    // TODO: Implement material.getAlbedo().getColor()
+                    if(material instanceof Material standardMaterial) {
+                        // Active Texture
+                        if(standardMaterial.getDiffuse() != null) {
+                            // TODO: Implement material.getAlbedo().getColor()
 
-                    GL13.glActiveTexture(GL13.GL_TEXTURE0);
-                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, material.getAlbedo().getTextureId());
+                            GL13.glActiveTexture(GL13.GL_TEXTURE0);
+                            GL11.glBindTexture(GL11.GL_TEXTURE_2D, standardMaterial.getDiffuse().getDiffuseTextureId());
+                        }
+                    }
                 }
+
+                // Render the mesh
+                GL20.glDrawElements(GL11.GL_TRIANGLES, mesh.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+
+                // Stop Shader
+                if(abstractShader != null) abstractShader.unbind();
+
+                GL20.glDisableVertexAttribArray(0);
+                GL20.glDisableVertexAttribArray(1);
+                GL20.glDisableVertexAttribArray(2);
+                GL30.glBindVertexArray(0);
             }
-
-            // Render the mesh
-            GL20.glDrawElements(GL11.GL_TRIANGLES, mesh.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-
-            // Stop Shader
-            if(abstractShader != null) abstractShader.unbind();
-
-            GL20.glDisableVertexAttribArray(0);
-            GL20.glDisableVertexAttribArray(1);
-            GL20.glDisableVertexAttribArray(2);
-            GL30.glBindVertexArray(0);
         } else {
             // TODO: Warning MeshRender without a meshComponent
         }

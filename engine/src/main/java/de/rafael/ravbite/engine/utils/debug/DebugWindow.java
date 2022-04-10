@@ -39,10 +39,11 @@ package de.rafael.ravbite.engine.utils.debug;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.Component;
-import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
+import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
+import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.lwjgl.glfw.GLFW;
@@ -52,6 +53,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 public class DebugWindow {
@@ -163,13 +165,30 @@ public class DebugWindow {
         jPanel.add(transformZValue);
         jPanel.add(new JLabel(")"));
 
-        jPanel.add(new JLabel(" # "));
-        jPanel.add(new JLabel("Material ["));
-        jPanel.add(new JLabel("textureId ("));
-        JLabel materialAlbedoTextureId = new JLabel();
-        jPanel.add(materialAlbedoTextureId);
+        Optional<Component> component = gameObject.hasComponent(MeshComponent.class);
+        if(component.isPresent()) {
+            MeshComponent meshComponent = (MeshComponent) component.get();
 
-        JButton changeTextureId = new JButton("Change");
+            String[][] data = new String[meshComponent.getMesh().collectMeshes().length][6];
+            Mesh[] meshes = meshComponent.getMesh().collectMeshes();
+            for (int i = 0; i < meshes.length; i++) {
+                Mesh mesh = meshes[i];
+                data[i][0] = mesh.getName();
+                data[i][1] = mesh.getVertices().length + "";
+                data[i][2] = mesh.getNormals().length + "";
+                data[i][3] = mesh.getTangents().length + "";
+                data[i][4] = mesh.getTextureCoords().length + "";
+                data[i][5] = mesh.getIndices().length + "";
+            }
+            String[] column = new String[]{"Name", "Positions", "Normals", "Tangents", "TextureCoords", "Indices"};
+
+            JTable meshesTable = new JTable(data, column);
+            meshesTable.setBounds(40,40,500,300);
+            JScrollPane jScrollPane = new JScrollPane(meshesTable);
+            jPanel.add(jScrollPane);
+        }
+
+        /*JButton changeTextureId = new JButton("Change");
         changeTextureId.addActionListener(actionEvent -> {
             String input = JOptionPane.showInputDialog(gameObjectFrame, "Change textureId");
             Optional<Component> component = gameObject.hasComponent(MaterialComponent.class);
@@ -181,13 +200,12 @@ public class DebugWindow {
             }
         });
         jPanel.add(changeTextureId);
-        jPanel.add(new JLabel(")"));
-        jPanel.add(new JLabel("]"));
+
+         */
 
         gameObjectFrame.add(jPanel);
-        gameObjectFrame.setResizable(false);
         gameObjectFrame.setVisible(true);
-        this.debugGameObjects.put(gameObject, new GameObjectDebugWindow(gameObjectFrame, transformXValueLocal, transformYValueLocal, transformZValueLocal, transformXValue, transformYValue, transformZValue, materialAlbedoTextureId));
+        this.debugGameObjects.put(gameObject, new GameObjectDebugWindow(gameObjectFrame, transformXValueLocal, transformYValueLocal, transformZValueLocal, transformXValue, transformYValue, transformZValue));
     }
 
     /**
@@ -197,13 +215,15 @@ public class DebugWindow {
         for (GameObject gameObject : debugGameObjects.keySet()) {
             GameObjectDebugWindow window = debugGameObjects.get(gameObject);
 
-            Optional<Component> component = gameObject.hasComponent(MaterialComponent.class);
+            /*Optional<Component> component = gameObject.hasComponent(MaterialComponent.class);
             if(component.isPresent()) {
                 MaterialComponent materialComponent = (MaterialComponent) component.get();
                 if(materialComponent.getMaterial() instanceof Material material) {
                     window.materialAlbedoTextureId.setText(material.getAlbedo().getTextureId() + "");
                 }
             }
+
+             */
 
             Transform worldTransform = gameObject.getSpecialTransform(Transform.WORLD_SPACE);
             window.transformXValue.setText(cutNumber(worldTransform.getPosition().x));
@@ -244,6 +264,6 @@ public class DebugWindow {
 
     public record GameObjectDebugWindow(JFrame jFrame, JLabel transformXValueLocal,
                                         JLabel transformYValueLocal, JLabel transformZValueLocal, JLabel transformXValue,
-                                        JLabel transformYValue, JLabel transformZValue, JLabel materialAlbedoTextureId) {}
+                                        JLabel transformYValue, JLabel transformZValue) {}
 
 }

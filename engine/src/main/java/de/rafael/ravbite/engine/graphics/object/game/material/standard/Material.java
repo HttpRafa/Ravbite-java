@@ -49,7 +49,7 @@ public class Material implements IMaterial {
     private final EngineWindow engineWindow;
 
     private Integer shaderId;
-    private AlbedoProperty albedo;
+    private DiffuseProperty diffuse;
     private float shineDamper = 10f; // TODO: Change to texture based
     private float reflectivity = 0f; // TODO: Change to texture based
 
@@ -62,8 +62,8 @@ public class Material implements IMaterial {
         return this;
     }
 
-    public Material albedo(AlbedoProperty albedo) {
-        this.albedo = albedo;
+    public Material diffuse(DiffuseProperty albedo) {
+        this.diffuse = albedo;
         return this;
     }
 
@@ -77,8 +77,8 @@ public class Material implements IMaterial {
         if(this.shaderId == null) {
             this.shaderId = engineWindow.getIdOfShader(StandardShader.class);
         }
-        if(this.albedo == null) {
-            this.albedo = new AlbedoProperty(this, new Color(0, 0, 0));
+        if(this.diffuse == null) {
+            this.diffuse = new DiffuseProperty(this, new Color(0, 0, 0));
         }
         return this;
     }
@@ -100,10 +100,10 @@ public class Material implements IMaterial {
     }
 
     /**
-     * @return AlbedoProperty
+     * @return DiffuseProperty
      */
-    public AlbedoProperty getAlbedo() {
-        return albedo;
+    public DiffuseProperty getDiffuse() {
+        return diffuse;
     }
 
     /**

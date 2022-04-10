@@ -40,20 +40,20 @@ package de.rafael.ravbite.engine.graphics.object.game.material.standard;
 
 import java.awt.*;
 
-public class AlbedoProperty {
+public class DiffuseProperty {
 
     private final Material material;
 
-    private Integer textureId;
+    private Integer diffuseTextureId;
     private Color color;
 
-    public AlbedoProperty(Material material, Color color) {
+    public DiffuseProperty(Material material, Color color) {
         this.material = material;
         this.color = color;
     }
 
-    public AlbedoProperty texture(int id) {
-        this.textureId = id;
+    public DiffuseProperty texture(int id) {
+        this.diffuseTextureId = id;
         return this;
     }
 
@@ -67,11 +67,11 @@ public class AlbedoProperty {
     /**
      * @return ID of the texture
      */
-    public Integer getTextureId() {
-        if(textureId == null) {
+    public Integer getDiffuseTextureId() {
+        if(diffuseTextureId == null) {
             return material.getEngineWindow().getDefaultTexture();
         }
-        return textureId;
+        return diffuseTextureId;
     }
 
     /**
@@ -83,10 +83,10 @@ public class AlbedoProperty {
 
     /**
      * Sets textureId
-     * @param textureId New textureId
+     * @param diffuseTextureId New textureId
      */
-    public void setTextureId(int textureId) {
-        this.textureId = textureId;
+    public void setDiffuseTextureId(int diffuseTextureId) {
+        this.diffuseTextureId = diffuseTextureId;
     }
 
     /**

@@ -38,12 +38,17 @@ package de.rafael.ravbite.engine.graphics.model;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.DiffuseProperty;
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
+import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -60,16 +65,21 @@ public class ModelUtils {
      * @return MeshArray
      * @throws IOException ?
      */
-    public static Mesh[] rbLoadMeshesFromModel(AssetLocation assetLocation) throws IOException {
+    public static Mesh rbLoadMeshFromModel(AssetLocation assetLocation, EngineWindow engineWindow) throws IOException {
         AIScene aiScene = ModelUtils.rbLoadScene(assetLocation);
         PointerBuffer pointerBuffer = aiScene.mMeshes();
-        List<Mesh> meshList = new ArrayList<>();
+        Mesh mesh = null;
         for (int i = 0; i < Objects.requireNonNull(pointerBuffer).limit(); i++) {
             AIMesh aiMesh = AIMesh.create(pointerBuffer.get(i));
-            Mesh mesh = ModelUtils.rbProcessMesh(aiMesh);
-            meshList.add(mesh);
+            Mesh loadedMesh = ModelUtils.rbProcessMesh(aiScene, aiMesh, assetLocation, engineWindow);
+            if(mesh == null) {
+                mesh = loadedMesh;
+            } else {
+                mesh.addSubMesh(loadedMesh);
+            }
         }
-        return meshList.toArray(new Mesh[0]);
+        Assimp.aiReleaseImport(aiScene);
+        return mesh;
     }
 
     /**
@@ -92,8 +102,9 @@ public class ModelUtils {
      * Converts a aiMesh to an engine Mesh
      * @param aiMesh InputMesh
      * @return OutputMesh
+     * @throws IOException ?
      */
-    public static Mesh rbProcessMesh(AIMesh aiMesh) {
+    public static Mesh rbProcessMesh(AIScene aiScene, AIMesh aiMesh, AssetLocation modelLocation, EngineWindow engineWindow) throws IOException {
         List<Float> verticesList = new ArrayList<>();
         List<Float> normalsList = new ArrayList<>();
         List<Float> tangentsList = new ArrayList<>();
@@ -146,7 +157,53 @@ public class ModelUtils {
         float[] textureCoords = new float[textureCoordsList.size()]; for (int i = 0; i < textureCoordsList.size(); i++) {textureCoords[i] = textureCoordsList.get(i);}
         int[] indices = new int[indicesList.size()]; for (int i = 0; i < indicesList.size(); i++) {indices[i] = indicesList.get(i);}
 
-        return new Mesh(vertices, normals, tangents, textureCoords, indices);
+        AIMaterial aiMaterial = null;
+        PointerBuffer materialData = aiScene.mMaterials();
+        for (int i = 0; i < Objects.requireNonNull(materialData).limit(); i++) {
+            if(i == aiMesh.mMaterialIndex()) {
+                aiMaterial = AIMaterial.create(materialData.get(i));
+            }
+        }
+
+        Material material = new Material(engineWindow).create();
+        if(aiMaterial != null) {
+            material = new Material(engineWindow);
+
+            int textureCount = Assimp.aiGetMaterialTextureCount(aiMaterial, Assimp.aiTextureType_DIFFUSE);
+            if(textureCount > 1) {
+                System.out.println("More than one texture per mesh is currently not supported. Mesh[" + aiMesh.mName() + "]");
+            }
+
+            System.out.println(textureCount);
+            if(textureCount > 0) {
+                AIString pathString = AIString.create();
+                Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, pathString, (IntBuffer) null, null, null, null, null, null);
+                String path = pathString.dataString();
+
+                AssetLocation assetLocation = AssetLocation.create(new File(modelLocation.getPath()).getParentFile().getPath() + "/" + path, AssetLocation.INTERNAL);
+                int textureId = engineWindow.getGLUtils().rbLoadTexture(assetLocation);
+
+                AIColor4D color = AIColor4D.create();
+                Color diffuseColor = new Color(0, 0, 0);
+                int result = Assimp.aiGetMaterialColor(aiMaterial, Assimp.AI_MATKEY_COLOR_DIFFUSE, Assimp.aiTextureType_NONE, 0, color);
+                if (result == 0) {
+                    diffuseColor = new Color(color.r(), color.g(), color.b(), color.a());
+                }
+
+                DiffuseProperty diffuseProperty = new DiffuseProperty(material, diffuseColor);
+                diffuseProperty.texture(textureId);
+                material.diffuse(diffuseProperty);
+            }
+
+            PointerBuffer properties = aiMaterial.mProperties();
+            for (int i = 0; i < properties.limit(); i++) {
+                AIMaterialProperty property = AIMaterialProperty.create(properties.get(i));
+            }
+
+            material.create();
+        }
+
+        return new Mesh(aiMesh.mName().dataString(), material, vertices, normals, tangents, textureCoords, indices);
     }
 
 }

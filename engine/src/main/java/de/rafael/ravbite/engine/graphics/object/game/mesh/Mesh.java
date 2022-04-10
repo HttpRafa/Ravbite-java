@@ -38,9 +38,21 @@ package de.rafael.ravbite.engine.graphics.object.game.mesh;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Mesh {
+
+    private String name = "Mesh";
+
+    private Mesh parentMesh;
+    private StoredMesh storedMesh;
+
+    private IMaterial material;
 
     private float[] vertices;
     private float[] normals;
@@ -49,7 +61,20 @@ public class Mesh {
     private float[] textureCoords;
     private int[] indices;
 
-    public Mesh(float[] vertices, float[] normals, float[] tangents, float[] textureCoords, int[] indices) {
+    private Mesh[] subMeshes = new Mesh[] {};
+
+    public Mesh(IMaterial material, float[] vertices, float[] normals, float[] tangents, float[] textureCoords, int[] indices) {
+        this.material = material;
+        this.vertices = vertices;
+        this.textureCoords = textureCoords;
+        this.indices = indices;
+        this.normals = normals;
+        this.tangents = tangents;
+    }
+
+    public Mesh(String name, IMaterial material, float[] vertices, float[] normals, float[] tangents, float[] textureCoords, int[] indices) {
+        this.name = name;
+        this.material = material;
         this.vertices = vertices;
         this.textureCoords = textureCoords;
         this.indices = indices;
@@ -60,10 +85,112 @@ public class Mesh {
     /**
      * Store the meshData into openGL VAOs and VBOs
      * @param engineWindow Window to handle the VAOs and VBOs
+     */
+    public void store(EngineWindow engineWindow) {
+        storedMesh = engineWindow.getGLUtils().rbLoadToVAO(this);
+    }
+
+    /**
+     * Stores all meshes in OpenGL
+     * @param engineWindow Window to handle the VAOs and VBOs
+     */
+    public void storeMeshes(EngineWindow engineWindow) {
+        store(engineWindow);
+        for (Mesh subMesh : subMeshes) {
+            subMesh.storeMeshes(engineWindow);
+        }
+    }
+
+    /**
+     * @return All subMesh and the mesh
+     */
+    public Mesh[] collectMeshes() {
+        List<Mesh> meshList = new ArrayList<>();
+        meshList.add(this);
+        for (Mesh subMesh : subMeshes) {
+            meshList.addAll(List.of(subMesh.collectMeshes()));
+        }
+        return meshList.toArray(new Mesh[0]);
+    }
+
+    /**
+     * Adds a new subMesh to the mesh
+     * @param subMesh subMesh
+     */
+    public void addSubMesh(Mesh subMesh) {
+        subMeshes = Arrays.copyOf(subMeshes, subMeshes.length + 1);
+        subMeshes[subMeshes.length - 1] = subMesh;
+        subMesh.setParentMesh(this);
+    }
+
+    /**
+     * Sets the name of the mesh
+     * @param name New name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return Name of the mesh
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the parentMesh
+     * @param parentMesh parentMesh
+     */
+    public void setParentMesh(Mesh parentMesh) {
+        this.parentMesh = parentMesh;
+    }
+
+    /**
+     * @return parentMesh
+     */
+    public Mesh getParentMesh() {
+        return parentMesh;
+    }
+
+    /**
+     * Sets the storedMesh
+     * @param storedMesh Stored version of the mesh
+     */
+    public void setStoredMesh(StoredMesh storedMesh) {
+        this.storedMesh = storedMesh;
+    }
+
+    /**
      * @return Stored version of the mesh
      */
-    public StoredMesh store(EngineWindow engineWindow) {
-        return engineWindow.getGLUtils().rbLoadToVAO(this);
+    public StoredMesh getStoredMesh() {
+        return storedMesh;
+    }
+
+    /**
+     * Sets the material of the mesh
+     * @param material Material
+     */
+    public void setMaterial(IMaterial material) {
+        this.material = material;
+    }
+
+    /**
+     * Sets the material of every mesh to ...
+     * @param material Material
+     */
+    public void overwriteMaterials(IMaterial material) {
+        for (Mesh mesh : collectMeshes()) {
+            mesh.setMaterial(material);
+        }
+    }
+
+    /**
+     * @return Material of the mesh
+     */
+    public IMaterial getMaterial() {
+        return material;
     }
 
     /**
@@ -139,6 +266,21 @@ public class Mesh {
      */
     public int[] getIndices() {
         return indices;
+    }
+
+    /**
+     * Sets the subMesh array
+     * @param subMeshes New subMeshes array for the mesh
+     */
+    public void setSubMeshes(Mesh[] subMeshes) {
+        this.subMeshes = subMeshes;
+    }
+
+    /**
+     * @return All subMeshes for this mesh
+     */
+    public Mesh[] getSubMeshes() {
+        return subMeshes;
     }
 
 }

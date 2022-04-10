@@ -38,6 +38,9 @@ package de.rafael.ravbite.engine.graphics.object.game.mesh;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
+import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+
 public class MeshGenerator {
 
     /**
@@ -46,7 +49,7 @@ public class MeshGenerator {
      * @param terrainSize Size of the terrain in the world
      * @return Mesh of the terrain
      */
-    public static Mesh generateSimpleTerrainMesh(int vertexCount, float terrainSize) {
+    public static Mesh generateSimpleTerrainMesh(int vertexCount, float terrainSize, EngineWindow engineWindow) {
         int count = vertexCount * vertexCount;
         float[] vertices = new float[count * 3];
         float[] normals = new float[count * 3];
@@ -82,7 +85,7 @@ public class MeshGenerator {
             }
         }
         // TODO: Generate tangents and other data
-        return new Mesh(vertices, normals, new float[] {}, textureCoords, indices);
+        return new Mesh(new Material(engineWindow).create(), vertices, normals, new float[] {}, textureCoords, indices);
     }
 
 }

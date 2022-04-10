@@ -45,7 +45,6 @@ import de.rafael.ravbite.engine.graphics.object.game.mesh.StoredMesh;
 public class MeshComponent extends Component {
 
     private Mesh mesh;
-    private StoredMesh storedMesh;
 
     public MeshComponent(Mesh mesh) {
         this.mesh = mesh;
@@ -53,7 +52,7 @@ public class MeshComponent extends Component {
 
     @Override
     public void initialize() {
-        this.storedMesh = this.mesh.store(getGameObject().getScene().getEngineWindow());
+        this.mesh.storeMeshes(getGameObject().getScene().getEngineWindow());
     }
 
     /**
@@ -64,20 +63,13 @@ public class MeshComponent extends Component {
     }
 
     /**
-     * @return Mesh stored in OpenGL
-     */
-    public StoredMesh getStoredMesh() {
-        return storedMesh;
-    }
-
-    /**
      * Sets the mesh handled by the Component
      * @param mesh New Mesh
      */
     public void setMesh(Mesh mesh) {
         // TODO: Dispose/Delete old mesh from OpenGL
         this.mesh = mesh;
-        this.storedMesh = mesh.store(getGameObject().getScene().getEngineWindow());
+        mesh.storeMeshes(getGameObject().getScene().getEngineWindow());
     }
 
 }

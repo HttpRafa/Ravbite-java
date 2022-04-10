@@ -40,10 +40,9 @@ package de.rafael.ravbite.engine.window.scene;
 
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
-import de.rafael.ravbite.engine.graphics.components.material.MaterialComponent;
 import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
 import de.rafael.ravbite.engine.graphics.components.rendering.mesh.MeshRendererComponent;
-import de.rafael.ravbite.engine.graphics.object.game.material.standard.AlbedoProperty;
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.DiffuseProperty;
 import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.model.ModelUtils;
@@ -97,16 +96,15 @@ public class MainScene extends Scene {
         Material material = new Material(this.getEngineWindow());
         try {
             int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/textures/ground.png", AssetLocation.INTERNAL));
-            material.albedo(new AlbedoProperty(material, new Color(255, 255, 255)).texture(textureId));
+            material.diffuse(new DiffuseProperty(material, new Color(255, 255, 255)).texture(textureId));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
         material.create();
 
         try {
-            Mesh[] meshes = ModelUtils.rbLoadMeshesFromModel(AssetLocation.create("/models/chair.obj", AssetLocation.INTERNAL));
-            System.out.println("Meshes: " + meshes.length);
-            mesh = meshes[0];
+            mesh = ModelUtils.rbLoadMeshFromModel(AssetLocation.create("/models/chair.obj", AssetLocation.INTERNAL), getEngineWindow());
+            //mesh.overwriteMaterials(material);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,7 +115,6 @@ public class MainScene extends Scene {
         testModel.appendComponent(new TestComponent());
         testModel.appendComponent(new MeshComponent(mesh));
         testModel.appendComponent(new MeshRendererComponent());
-        testModel.appendComponent(new MaterialComponent(material));
         getEngineWindow().getDebugWindow().addGameObject(testModel);
         getSceneObject().appendChildren(testModel);
 
