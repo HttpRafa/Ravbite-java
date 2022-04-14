@@ -45,13 +45,14 @@ import de.rafael.ravbite.engine.graphics.object.game.mesh.MeshGenerator;
 
 public class Terrain {
 
-    private float x;
-    private float z;
+    private final float x;
+    private final float z;
 
     private final Mesh mesh;
-    private Material material;
+    private final Material material;
 
     public Terrain(float gridX, float gridZ, Material material, TerrainComponent terrainComponent) {
+        this.material = material;
         this.x = gridX * terrainComponent.getTerrainSize();
         this.z = gridZ * terrainComponent.getTerrainSize();
         this.mesh = MeshGenerator.generateSimpleTerrainMesh(terrainComponent.getVertexCount(), terrainComponent.getTerrainSize(), terrainComponent.getGameObject().getScene().getEngineWindow());

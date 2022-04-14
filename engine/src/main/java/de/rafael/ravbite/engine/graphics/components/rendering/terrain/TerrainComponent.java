@@ -46,10 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TerrainComponent extends RenderComponent {
-
     private float terrainSize = 800;
     private int vertexCount = 128;
-
     private final List<Terrain> terrains = new ArrayList<>();
 
     public TerrainComponent() {

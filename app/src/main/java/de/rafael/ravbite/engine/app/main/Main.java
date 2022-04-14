@@ -38,18 +38,12 @@ package de.rafael.ravbite.engine.app.main;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.windows.projects.ProjectsWindow;
 import de.rafael.ravbite.utils.swing.SwingUtils;
-
-import java.io.IOException;
 
 public class Main {
 
     public static void main(String[] args) {
         SwingUtils.initSwing(SwingUtils.SwingThemes.ATOM_ONE_DARK);
-
-        ProjectsWindow projectsWindow = new ProjectsWindow();
-        projectsWindow.setVisible(true);
     }
 
 }
