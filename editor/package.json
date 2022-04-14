@@ -1,8 +1,8 @@
 {
   "name": "editor",
-  "productName": "editor",
+  "productName": "Ravbite Engine",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Editor for the engine",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
