@@ -45,6 +45,8 @@ import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 
+import java.util.Arrays;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -87,12 +89,10 @@ public class EditorWindow extends Window {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             imGuiGlfw.newFrame();
+
             ImGui.newFrame();
 
-            ImGui.begin("Cool Window");
-            if(ImGui.button("I am a button")) {
-                System.out.println("Test");
-            }
+            ImGui.begin("Components");
             ImGui.end();
 
             ImGui.render();
