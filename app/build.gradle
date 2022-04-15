@@ -11,6 +11,4 @@ application {
 
 dependencies {
     implementation project(':engine')
-
-    implementation "io.github.spair:imgui-java-app:1.81.0"
 }

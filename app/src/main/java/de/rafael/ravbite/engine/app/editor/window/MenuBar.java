@@ -28,82 +28,38 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.components;
+package de.rafael.ravbite.engine.app.editor.window;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/25/2022 at 3:39 PM
+// On 04/15/2022 at 6:36 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.utils.gui.IGui;
+import imgui.ImGui;
 
-public abstract class Component implements IGui {
+public class MenuBar implements IGui {
 
-    private GameObject gameObject;
-    private boolean enabled = true;
+    @Override
+    public void gui() {
+        ImGui.beginMainMenuBar();
 
-    public Component() {
+        if (ImGui.beginMenu("File")) {
+            if (ImGui.menuItem("Save", "Ctrl+S")) {
 
-    }
+            }
 
-    public Component(GameObject gameObject) {
-        this.gameObject = gameObject;
-    }
+            if (ImGui.menuItem("Load", "Ctrl+O")) {
 
-    public Component(GameObject gameObject, boolean enabled) {
-        this.gameObject = gameObject;
-        this.enabled = enabled;
-    }
+            }
 
-    /**
-     * Called when the component gets added to a GameObject
-     */
-    public void initialize() {
+            ImGui.endMenu();
+        }
 
-    }
-
-    /**
-     * Called every frame
-     */
-    public void update() {}
-
-    /**
-     * Called every fixed update(Physics)
-     */
-    public void fixedUpdate() {}
-
-    /**
-     * @return GameObject of the component
-     */
-    public GameObject getGameObject() {
-        return gameObject;
-    }
-
-    /**
-     * Sets to parent GameObject
-     * @param gameObject GameObject
-     */
-    public void setGameObject(GameObject gameObject) {
-        this.gameObject = gameObject;
-    }
-
-    /**
-     * @return If the component is enabled
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * Sets the enabled state
-     * @param enabled New State
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        ImGui.endMainMenuBar();
     }
 
 }

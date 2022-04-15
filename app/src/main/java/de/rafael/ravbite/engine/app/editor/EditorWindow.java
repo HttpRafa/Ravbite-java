@@ -38,18 +38,14 @@ package de.rafael.ravbite.engine.app.editor;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.frame.GuiUtils;
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.engine.app.editor.window.InspectorWindow;
+import de.rafael.ravbite.engine.app.editor.window.MenuBar;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiConfigFlags;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-import imgui.type.ImBoolean;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -60,8 +56,6 @@ public class EditorWindow extends Window {
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
     private String glslVersion = null;
-
-    private GameObject testGameObject = new GameObject(null, "Scene 1");
 
     public EditorWindow() {
         super(1900, 1000);
@@ -88,12 +82,10 @@ public class EditorWindow extends Window {
 
         imGuiGlfw.init(getWindow(), true);
         imGuiGl3.init(glslVersion);
-
-        ImGui.setWindowSize("Scene", 829,572);
-
-        testGameObject.appendChild(new GameObject(null, "Test 2").appendChild(new GameObject(null, "Test3")));
-        testGameObject.appendChild(new GameObject(null, "Camera"));
     }
+
+    private MenuBar menuBar = new MenuBar();
+    private InspectorWindow inspector = new InspectorWindow();
 
     @Override
     public void loop() {
@@ -104,30 +96,8 @@ public class EditorWindow extends Window {
             imGuiGlfw.newFrame();
             ImGui.newFrame();
 
-            GuiUtils.menuBar(() -> {
-                GuiUtils.menu("File", () -> {
-                    if(ImGui.menuItem("Open", "Ctrl+O")) {
-
-                    }
-                });
-            });
-
-            GuiUtils.frame("Scene", () -> {
-
-            });
-            GuiUtils.frame("Scene Browser", () -> {
-                GuiUtils.renderGameObject(testGameObject);
-            });
-            GuiUtils.frame("Stats", () -> {
-
-            });
-            GuiUtils.frame("Inspector", () -> {
-
-            });
-
-            GuiUtils.frame("Assets Browser", () -> {
-
-            });
+            menuBar.gui();
+            inspector.gui();
 
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());

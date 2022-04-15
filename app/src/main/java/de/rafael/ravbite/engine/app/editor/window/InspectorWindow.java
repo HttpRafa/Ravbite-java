@@ -28,51 +28,28 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.editor.frame;
+package de.rafael.ravbite.engine.app.editor.window;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/15/2022 at 5:02 PM
+// On 04/15/2022 at 6:29 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
 
-public class GuiUtils {
+public class InspectorWindow implements IGui {
 
-    public static void frame(String title, Runnable runnable) {
-        ImGui.begin(title);
-        runnable.run();
+    @Override
+    public void gui() {
+        ImGui.begin("Inspector");
+
+
+
         ImGui.end();
-    }
-
-    public static void menuBar(Runnable runnable) {
-        if(ImGui.beginMainMenuBar()) {
-            runnable.run();
-            ImGui.endMainMenuBar();
-        }
-    }
-
-    public static void menu(String name, Runnable runnable) {
-        if(ImGui.beginMenu(name)) {
-            runnable.run();
-            ImGui.endMenu();
-        }
-    }
-
-    public static void renderGameObject(GameObject gameObject) {
-        if(ImGui.treeNode(gameObject.getName())) {
-            if(ImGui.button("Inspect")) {
-
-            }
-            for (GameObject childrenObject : gameObject.getChildrenObjects()) {
-                renderGameObject(childrenObject);
-            }
-            ImGui.treePop();
-        }
     }
 
 }
