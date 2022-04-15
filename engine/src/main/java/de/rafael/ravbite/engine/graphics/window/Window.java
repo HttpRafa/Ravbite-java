@@ -70,7 +70,7 @@ public abstract class Window {
     /**
      * Initializes the GLFW window and shows it
      */
-    public void initializeGLFW() {
+    public void initialize() {
         // Create the window
         window = glfwCreateWindow(initialWidth, initialHeight, "Ravbite Engine", NULL, NULL);
         if (window == NULL)
@@ -118,7 +118,7 @@ public abstract class Window {
 
     public abstract void loop();
 
-    public void cleanUp() {
+    public void destroy() {
         glfwFreeCallbacks(getWindow());
         glfwDestroyWindow(getWindow());
 

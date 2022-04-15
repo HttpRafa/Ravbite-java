@@ -38,12 +38,19 @@ package de.rafael.ravbite.engine.app.main;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.Ravbite;
+import de.rafael.ravbite.engine.app.editor.EditorWindow;
 import de.rafael.ravbite.utils.swing.SwingUtils;
 
 public class Main {
-
     public static void main(String[] args) {
         SwingUtils.initSwing(SwingUtils.SwingThemes.ATOM_ONE_DARK);
+
+        new Ravbite().initialize();
+        EditorWindow editorWindow = new EditorWindow();
+        editorWindow.initialize();
+        editorWindow.loop();
+        editorWindow.destroy();
     }
 
 }

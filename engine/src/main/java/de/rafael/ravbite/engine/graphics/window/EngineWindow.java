@@ -46,25 +46,13 @@ import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
 import de.rafael.ravbite.engine.graphics.utils.GLUtils;
-import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
 import de.rafael.ravbite.engine.input.InputSystem;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.IntBuffer;
 import java.util.Arrays;
-import java.util.Objects;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class EngineWindow extends Window {
 
@@ -120,7 +108,7 @@ public abstract class EngineWindow extends Window {
             abstractShader.dispose();
         }
 
-        cleanUp();
+        destroy();
     }
 
     public void initialize() {
@@ -129,7 +117,7 @@ public abstract class EngineWindow extends Window {
             debugWindow = new DebugWindow(this);
         }
 
-        initializeGLFW();
+        super.initialize();
 
         // Setup inputSystem
         inputSystem = new InputSystem(this);
