@@ -66,18 +66,15 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public abstract class EngineWindow {
+public abstract class EngineWindow extends Window {
 
     public static boolean DEBUG_MODE = false;
-
-    private final int initialWidth, initialHeight;
 
     private int currentScene = 0;
     private Scene[] scenes = new Scene[0];
 
     private AbstractShader[] abstractShaders = new AbstractShader[0];
 
-    private long window;
     private InputSystem inputSystem;
 
     private DebugWindow debugWindow = null;
@@ -98,8 +95,7 @@ public abstract class EngineWindow {
      * @param height Height of the window
      */
     public EngineWindow(int width, int height) {
-        initialHeight = height;
-        initialWidth = width;
+        super(width, height);
 
         glUtils = new GLUtils(this);
         threadExecutor = new ThreadExecutor();
@@ -124,69 +120,19 @@ public abstract class EngineWindow {
             abstractShader.dispose();
         }
 
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+        cleanUp();
     }
 
-    /**
-     * Initializes the GLFW window and shows it
-     */
     public void initialize() {
         // Initialize debug
         if(DEBUG_MODE) {
             debugWindow = new DebugWindow(this);
         }
 
-        // Create the window
-        window = glfwCreateWindow(initialWidth, initialHeight, "Ravbite Engine", NULL, NULL);
-        if (window == NULL)
-            throw new RuntimeException("Failed to create the GLFW window");
-
-        // Get the thread stack and push a new frame
-        try (MemoryStack stack = stackPush()) {
-            IntBuffer pWidth = stack.mallocInt(1); // int*
-            IntBuffer pHeight = stack.mallocInt(1); // int*
-
-            // Get the window size passed to glfwCreateWindow
-            glfwGetWindowSize(window, pWidth, pHeight);
-
-            // Get the resolution of the primary monitor
-            GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-            // Center the window
-            assert videoMode != null;
-            glfwSetWindowPos(window, (videoMode.width() - pWidth.get(0)) / 2, (videoMode.height() - pHeight.get(0)) / 2);
-        } // the stack frame is popped automatically
-
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(window);
-        // Enable v-sync
-        glfwSwapInterval(1);
-
-        // Make the window visible
-        glfwShowWindow(window);
-
-        // Set default icon
-        try {
-            BufferedImage iconImage = ImageUtils.loadImage(new AssetLocation("/textures/icon/icon128.png", AssetLocation.INTERNAL));
-            setIcon(iconImage);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+        initializeGLFW();
 
         // Setup inputSystem
         inputSystem = new InputSystem(this);
-
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
-        GL.createCapabilities();
 
         // Load default assets
         try {
@@ -194,20 +140,7 @@ public abstract class EngineWindow {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-    }
 
-    public void setIcon(BufferedImage bufferedImage) {
-        this.setIcons(new BufferedImage[] {bufferedImage});
-    }
-
-    public void setIcons(BufferedImage[] bufferedImages) {
-        GLFWImage[] glfwImages = ImageUtils.bufferedImageArrayToGLFWImageArray(bufferedImages);
-        try(GLFWImage.Buffer iconBuffer = GLFWImage.malloc(glfwImages.length)) {
-            for (int i = 0; i < glfwImages.length; i++) {
-                iconBuffer.put(i, glfwImages[i]);
-            }
-            glfwSetWindowIcon(window, iconBuffer);
-        }
     }
 
     /**
@@ -302,6 +235,7 @@ public abstract class EngineWindow {
     /**
      * Starts the render loop
      */
+    @Override
     public void loop() {
         startTime = System.currentTimeMillis();
 
@@ -319,7 +253,7 @@ public abstract class EngineWindow {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         long nextDebugUpdate = 0;
-        while (!glfwWindowShouldClose(window)) {
+        while (!glfwWindowShouldClose(getWindow())) {
             long frameStart = System.currentTimeMillis();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
@@ -327,7 +261,7 @@ public abstract class EngineWindow {
             if(inputSystem != null) inputSystem.getMouse().update();
             render();
 
-            glfwSwapBuffers(window); // swap the color buffers
+            glfwSwapBuffers(getWindow()); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
@@ -344,7 +278,7 @@ public abstract class EngineWindow {
             if(nextDebugUpdate < System.currentTimeMillis()) {
                 nextDebugUpdate = System.currentTimeMillis() + 500;
                 if(DEBUG_MODE) {
-                    glfwSetWindowTitle(window, "Ravbite Engine | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
+                    glfwSetWindowTitle(getWindow(), "Ravbite Engine | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
                 }
             }
         }
@@ -373,62 +307,10 @@ public abstract class EngineWindow {
     }
 
     /**
-     * @return The initial width of the window
-     */
-    public int getInitialWidth() {
-        return initialWidth;
-    }
-
-    /**
-     * @return The initial height of the window
-     */
-    public int getInitialHeight() {
-        return initialHeight;
-    }
-
-    /**
-     * @return Size of the window in IntBuffers
-     */
-    public IntBuffer[] getWindowSize() {
-        IntBuffer width = BufferUtils.createIntBuffer(4);
-        IntBuffer height = BufferUtils.createIntBuffer(4);
-        glfwGetWindowSize(window, width, height);
-        return new IntBuffer[] {width, height};
-    }
-
-    /**
-     * @return Width of the window
-     */
-    public int getWidth() {
-        return getWindowSize()[0].get();
-    }
-
-    /**
-     * @return Height of the window
-     */
-    public int getHeight() {
-        return getWindowSize()[1].get();
-    }
-
-    /**
-     * @return AspectRatio of the window
-     */
-    public float getAspectRatio() {
-        return ((float) getWidth()) / ((float) getHeight());
-    }
-
-    /**
      * @return All scenes handled by the Engine
      */
     public Scene[] getScenes() {
         return scenes;
-    }
-
-    /**
-     * @return WindowId of window created by GLFW
-     */
-    public long getWindow() {
-        return window;
     }
 
     /**
