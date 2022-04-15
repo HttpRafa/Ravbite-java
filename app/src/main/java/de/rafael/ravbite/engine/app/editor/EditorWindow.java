@@ -38,14 +38,18 @@ package de.rafael.ravbite.engine.app.editor;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.editor.frame.GuiUtils;
+import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
 import imgui.ImGuiIO;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-
-import java.util.Arrays;
+import imgui.type.ImBoolean;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -57,21 +61,10 @@ public class EditorWindow extends Window {
 
     private String glslVersion = null;
 
+    private GameObject testGameObject = new GameObject(null, "Scene 1");
+
     public EditorWindow() {
-        super(1920/2, 1080/2);
-    }
-
-    @Override
-    public void initialize() {
-        glslVersion = "#version 130";
-
-        super.initialize();
-        ImGui.createContext();
-        ImGuiIO io = ImGui.getIO();
-        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
-
-        imGuiGlfw.init(getWindow(), true);
-        imGuiGl3.init(glslVersion);
+        super(1900, 1000);
     }
 
     @Override
@@ -83,17 +76,58 @@ public class EditorWindow extends Window {
     }
 
     @Override
+    public void initialize() {
+        glslVersion = "#version 130";
+
+        super.initialize();
+        glfwMaximizeWindow(getWindow());
+
+        ImGui.createContext();
+        ImGuiIO io = ImGui.getIO();
+        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+
+        imGuiGlfw.init(getWindow(), true);
+        imGuiGl3.init(glslVersion);
+
+        ImGui.setWindowSize("Scene", 829,572);
+
+        testGameObject.appendChild(new GameObject(null, "Test 2").appendChild(new GameObject(null, "Test3")));
+        testGameObject.appendChild(new GameObject(null, "Camera"));
+    }
+
+    @Override
     public void loop() {
         while (!glfwWindowShouldClose(getWindow())) {
             glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             imGuiGlfw.newFrame();
-
             ImGui.newFrame();
 
-            ImGui.begin("Components");
-            ImGui.end();
+            GuiUtils.menuBar(() -> {
+                GuiUtils.menu("File", () -> {
+                    if(ImGui.menuItem("Open", "Ctrl+O")) {
+
+                    }
+                });
+            });
+
+            GuiUtils.frame("Scene", () -> {
+
+            });
+            GuiUtils.frame("Scene Browser", () -> {
+                GuiUtils.renderGameObject(testGameObject);
+            });
+            GuiUtils.frame("Stats", () -> {
+
+            });
+            GuiUtils.frame("Inspector", () -> {
+
+            });
+
+            GuiUtils.frame("Assets Browser", () -> {
+
+            });
 
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());
