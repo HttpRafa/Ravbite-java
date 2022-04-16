@@ -44,12 +44,14 @@ import imgui.ImGui;
 public class InspectorWindow implements IGui {
 
     @Override
-    public void gui() {
+    public boolean gui() {
         ImGui.begin("Inspector");
 
 
 
         ImGui.end();
+
+        return false;
     }
 
 }

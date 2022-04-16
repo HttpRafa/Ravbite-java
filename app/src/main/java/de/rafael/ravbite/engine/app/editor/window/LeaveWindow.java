@@ -28,87 +28,41 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.components;
+package de.rafael.ravbite.engine.app.editor.window;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/25/2022 at 3:39 PM
+// On 04/16/2022 at 12:08 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.utils.gui.IGui;
+import imgui.ImGui;
 
-public abstract class Component implements IGui {
-
-    private GameObject gameObject;
-    private boolean enabled = true;
-
-    public Component() {
-
-    }
-
-    public Component(GameObject gameObject) {
-        this.gameObject = gameObject;
-    }
-
-    public Component(GameObject gameObject, boolean enabled) {
-        this.gameObject = gameObject;
-        this.enabled = enabled;
-    }
+public class LeaveWindow implements IGui {
 
     @Override
     public boolean gui() {
-        return false;
-    }
+        boolean close = false;
 
-    /**
-     * Called when the component gets added to a GameObject
-     */
-    public void initialize() {
+        ImGui.begin("Leave");
+        ImGui.text("Do you want to save your changes?");
+        if(ImGui.button("Yes")) {
+            System.exit(0);
+        }
+        ImGui.sameLine();
+        if(ImGui.button("No")) {
+            System.exit(0);
+        }
+        ImGui.sameLine();
+        if(ImGui.button("Cancel")) {
+            close = true;
+        }
+        ImGui.end();
 
-    }
-
-    /**
-     * Called every frame
-     */
-    public void update() {}
-
-    /**
-     * Called every fixed update(Physics)
-     */
-    public void fixedUpdate() {}
-
-    /**
-     * @return GameObject of the component
-     */
-    public GameObject getGameObject() {
-        return gameObject;
-    }
-
-    /**
-     * Sets to parent GameObject
-     * @param gameObject GameObject
-     */
-    public void setGameObject(GameObject gameObject) {
-        this.gameObject = gameObject;
-    }
-
-    /**
-     * @return If the component is enabled
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * Sets the enabled state
-     * @param enabled New State
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        return close;
     }
 
 }

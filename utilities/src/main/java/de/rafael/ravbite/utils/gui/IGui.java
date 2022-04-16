@@ -40,6 +40,9 @@ package de.rafael.ravbite.utils.gui;
 
 public interface IGui {
 
-    void gui();
+    /**
+     * Render gui
+     */
+    boolean gui();
 
 }

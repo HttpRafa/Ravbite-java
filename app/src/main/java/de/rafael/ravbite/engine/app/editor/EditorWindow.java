@@ -39,6 +39,7 @@ package de.rafael.ravbite.engine.app.editor;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.window.InspectorWindow;
+import de.rafael.ravbite.engine.app.editor.window.LeaveWindow;
 import de.rafael.ravbite.engine.app.editor.window.MenuBar;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
@@ -56,6 +57,8 @@ public class EditorWindow extends Window {
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
     private String glslVersion = null;
+
+    private LeaveWindow leaveWindow = null;
 
     public EditorWindow() {
         super(1900, 1000);
@@ -89,7 +92,12 @@ public class EditorWindow extends Window {
 
     @Override
     public void loop() {
-        while (!glfwWindowShouldClose(getWindow())) {
+        while (true) {
+            if(glfwWindowShouldClose(getWindow())) {
+                glfwSetWindowShouldClose(getWindow(), false);
+                leaveWindow = new LeaveWindow();
+            }
+
             glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -98,6 +106,11 @@ public class EditorWindow extends Window {
 
             menuBar.gui();
             inspector.gui();
+            if(leaveWindow != null) {
+                if(leaveWindow.gui()) {
+                    leaveWindow = null;
+                }
+            }
 
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());

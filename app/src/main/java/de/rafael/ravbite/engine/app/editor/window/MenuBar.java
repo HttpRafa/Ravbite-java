@@ -44,22 +44,86 @@ import imgui.ImGui;
 public class MenuBar implements IGui {
 
     @Override
-    public void gui() {
+    public boolean gui() {
         ImGui.beginMainMenuBar();
 
         if (ImGui.beginMenu("File")) {
-            if (ImGui.menuItem("Save", "Ctrl+S")) {
+            if (ImGui.menuItem("New Scene", "Ctrl+N")) {
 
             }
-
-            if (ImGui.menuItem("Load", "Ctrl+O")) {
+            if (ImGui.menuItem("Open Scene", "Ctrl+O")) {
 
             }
+            ImGui.separator();
+            if(ImGui.menuItem("Save", "Ctrl+S")) {
 
+            }
+            if(ImGui.menuItem("Save As", "Ctrl+Shift+S")) {
+
+            }
+            ImGui.separator();
+            if(ImGui.menuItem("New Project")) {
+
+            }
+            if(ImGui.menuItem("Open Project")) {
+
+            }
+            ImGui.endMenu();
+        }
+        if (ImGui.beginMenu("Edit")) {
+            if (ImGui.menuItem("Undo", "Ctrl+Z")) {
+
+            }
+            if (ImGui.menuItem("Redo", "Ctrl+Y")) {
+
+            }
+            ImGui.separator();
+            if(ImGui.menuItem("Cut", "Ctrl+X")) {
+
+            }
+            if(ImGui.menuItem("Copy", "Ctrl+C")) {
+
+            }
+            if(ImGui.menuItem("Paste", "Ctrl+V")) {
+
+            }
+            ImGui.endMenu();
+        }
+        if (ImGui.beginMenu("Project")) {
+            if (ImGui.menuItem("Project Settings")) {
+
+            }
+            ImGui.endMenu();
+        }
+        if (ImGui.beginMenu("Run")) {
+            if(ImGui.menuItem("Play", "Ctrl+P")) {
+
+            }
+            if(ImGui.menuItem("Pause", "Ctrl+Shift+P")) {
+
+            }
+            if(ImGui.menuItem("Stop", "Ctrl+Alt+P")) {
+
+            }
+            ImGui.endMenu();
+        }
+        if (ImGui.beginMenu("Build")) {
+            if (ImGui.menuItem("Build Settings")) {
+
+            }
+            ImGui.separator();
+            if (ImGui.menuItem("Build", "Ctrl+B")) {
+
+            }
+            if (ImGui.menuItem("Build And Run", "Ctrl+Shift+B")) {
+
+            }
             ImGui.endMenu();
         }
 
         ImGui.endMainMenuBar();
+
+        return false;
     }
 
 }

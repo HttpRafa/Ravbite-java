@@ -28,87 +28,38 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.components;
+package de.rafael.ravbite.engine.app.project;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/25/2022 at 3:39 PM
+// On 04/15/2022 at 7:13 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
-import de.rafael.ravbite.utils.gui.IGui;
+import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 
-public abstract class Component implements IGui {
+import java.util.Arrays;
 
-    private GameObject gameObject;
-    private boolean enabled = true;
+public class EditorProject {
 
-    public Component() {
+    private String name;
 
+    private Scene[] scenes = new Scene[0];
+
+    public EditorProject(String name) {
+        this.name = name;
+
+        this.scenes = new Scene[] {};
     }
 
-    public Component(GameObject gameObject) {
-        this.gameObject = gameObject;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Component(GameObject gameObject, boolean enabled) {
-        this.gameObject = gameObject;
-        this.enabled = enabled;
-    }
-
-    @Override
-    public boolean gui() {
-        return false;
-    }
-
-    /**
-     * Called when the component gets added to a GameObject
-     */
-    public void initialize() {
-
-    }
-
-    /**
-     * Called every frame
-     */
-    public void update() {}
-
-    /**
-     * Called every fixed update(Physics)
-     */
-    public void fixedUpdate() {}
-
-    /**
-     * @return GameObject of the component
-     */
-    public GameObject getGameObject() {
-        return gameObject;
-    }
-
-    /**
-     * Sets to parent GameObject
-     * @param gameObject GameObject
-     */
-    public void setGameObject(GameObject gameObject) {
-        this.gameObject = gameObject;
-    }
-
-    /**
-     * @return If the component is enabled
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * Sets the enabled state
-     * @param enabled New State
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public String getName() {
+        return name;
     }
 
 }
