@@ -41,6 +41,10 @@ package de.rafael.ravbite.engine.app.editor;
 import de.rafael.ravbite.engine.app.editor.window.InspectorWindow;
 import de.rafael.ravbite.engine.app.editor.window.LeaveWindow;
 import de.rafael.ravbite.engine.app.editor.window.MenuBar;
+import de.rafael.ravbite.engine.app.editor.window.project.CreateProjectWindow;
+import de.rafael.ravbite.engine.app.editor.window.project.OpenProjectWindow;
+import de.rafael.ravbite.engine.app.project.EditorProject;
+import de.rafael.ravbite.engine.app.project.ProjectManager;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
 import imgui.ImGuiIO;
@@ -48,10 +52,15 @@ import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 
+import java.io.IOException;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class EditorWindow extends Window {
+
+    private final ProjectManager projectManager;
+    private EditorProject project;
 
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
@@ -60,8 +69,20 @@ public class EditorWindow extends Window {
 
     private LeaveWindow leaveWindow = null;
 
-    public EditorWindow() {
+    public EditorWindow() throws IOException {
         super(1900, 1000);
+
+        this.projectManager = new ProjectManager();
+        this.projectManager.loadProjects();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                projectManager.storeProjects();
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
+        }));
+
     }
 
     @Override
@@ -87,13 +108,18 @@ public class EditorWindow extends Window {
         imGuiGl3.init(glslVersion);
     }
 
-    private MenuBar menuBar = new MenuBar();
-    private InspectorWindow inspector = new InspectorWindow();
+    private final MenuBar menuBar = new MenuBar();
+    private final InspectorWindow inspector = new InspectorWindow();
+    private CreateProjectWindow createProjectWindow;
 
     @Override
     public void loop() {
+
+        OpenProjectWindow openProjectWindow = new OpenProjectWindow(this);
+
         while (true) {
             if(glfwWindowShouldClose(getWindow())) {
+                if(project == null) break;
                 glfwSetWindowShouldClose(getWindow(), false);
                 leaveWindow = new LeaveWindow();
             }
@@ -104,11 +130,21 @@ public class EditorWindow extends Window {
             imGuiGlfw.newFrame();
             ImGui.newFrame();
 
-            menuBar.gui();
-            inspector.gui();
-            if(leaveWindow != null) {
-                if(leaveWindow.gui()) {
-                    leaveWindow = null;
+            if(project != null) {
+                menuBar.gui();
+                inspector.gui();
+                if(leaveWindow != null) {
+                    if(leaveWindow.gui()) {
+                        leaveWindow = null;
+                    }
+                }
+            } else {
+                openProjectWindow.gui();
+            }
+
+            if(createProjectWindow != null) {
+                if(createProjectWindow.gui()) {
+                    createProjectWindow = null;
                 }
             }
 
@@ -125,6 +161,14 @@ public class EditorWindow extends Window {
             glfwSwapBuffers(getWindow());
             glfwPollEvents();
         }
+    }
+
+    public void openCreateProjectWindow() {
+        createProjectWindow = new CreateProjectWindow(this);
+    }
+
+    public ProjectManager getProjectManager() {
+        return projectManager;
     }
 
 }

@@ -40,26 +40,14 @@ package de.rafael.ravbite.engine.app.project;
 
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 
-import java.util.Arrays;
+public class EditorProject extends EditorProjectDescription {
 
-public class EditorProject {
+    private Scene[] scenes;
 
-    private String name;
-
-    private Scene[] scenes = new Scene[0];
-
-    public EditorProject(String name) {
-        this.name = name;
+    public EditorProject(String name, String path) {
+        super(name, path);
 
         this.scenes = new Scene[] {};
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
 }

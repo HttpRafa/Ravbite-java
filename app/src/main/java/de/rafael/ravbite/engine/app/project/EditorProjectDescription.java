@@ -28,31 +28,51 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.main;
+package de.rafael.ravbite.engine.app.project;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/09/2022 at 11:26 PM
+// On 04/16/2022 at 7:37 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.Ravbite;
-import de.rafael.ravbite.engine.app.editor.EditorWindow;
-import de.rafael.ravbite.utils.swing.SwingUtils;
+public class EditorProjectDescription {
 
-import java.io.IOException;
+    private String name;
+    private String path;
+    private long lastUsed;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
-        SwingUtils.initSwing(SwingUtils.SwingThemes.ATOM_ONE_DARK);
+    public EditorProjectDescription(String name, String path) {
+        this.name = name;
+        this.path = path;
 
-        new Ravbite().initialize();
-        EditorWindow editorWindow = new EditorWindow();
-        editorWindow.initialize();
-        editorWindow.loop();
-        editorWindow.destroy();
+        this.lastUsed = System.currentTimeMillis();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setLastUsed(long lastUsed) {
+        this.lastUsed = lastUsed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public long getLastUsed() {
+        return lastUsed;
     }
 
 }

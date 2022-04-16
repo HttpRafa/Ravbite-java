@@ -46,9 +46,6 @@ public class InspectorWindow implements IGui {
     @Override
     public boolean gui() {
         ImGui.begin("Inspector");
-
-
-
         ImGui.end();
 
         return false;

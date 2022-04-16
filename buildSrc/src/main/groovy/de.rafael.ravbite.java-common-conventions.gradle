@@ -44,7 +44,9 @@ dependencies {
     implementation "com.github.stephengold:jbullet:1.0.2"
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'com.formdev:flatlaf:1.6'
-    implementation "io.github.spair:imgui-java-app:1.81.0"
+    implementation "io.github.spair:imgui-java-app:1.86.4"
+    implementation "io.github.spair:imgui-java-binding:1.86.4"
+    implementation 'com.google.code.gson:gson:2.7'
 
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"

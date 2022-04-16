@@ -28,31 +28,56 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.main;
+package de.rafael.ravbite.engine.app.editor.window.project;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/09/2022 at 11:26 PM
+// On 04/16/2022 at 2:12 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.Ravbite;
 import de.rafael.ravbite.engine.app.editor.EditorWindow;
-import de.rafael.ravbite.utils.swing.SwingUtils;
+import de.rafael.ravbite.engine.app.project.EditorProjectDescription;
+import de.rafael.ravbite.utils.gui.IGui;
+import imgui.ImGui;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
-        SwingUtils.initSwing(SwingUtils.SwingThemes.ATOM_ONE_DARK);
+public record OpenProjectWindow(EditorWindow editorWindow) implements IGui {
 
-        new Ravbite().initialize();
-        EditorWindow editorWindow = new EditorWindow();
-        editorWindow.initialize();
-        editorWindow.loop();
-        editorWindow.destroy();
+    @Override
+    public boolean gui() {
+        ImGui.begin("Open Project");
+
+        for (EditorProjectDescription project : editorWindow.getProjectManager().getProjects()) {
+            if (ImGui.collapsingHeader(project.getName())) {
+                ImGui.text("Path: " + project.getPath());
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+                ImGui.text("Last used: " + simpleDateFormat.format(new Date(project.getLastUsed())));
+                ImGui.separator();
+
+                if (ImGui.button("Open")) {
+
+                }
+                ImGui.sameLine();
+                if (ImGui.button("Delete")) {
+
+                }
+            }
+        }
+
+        ImGui.spacing();
+        if (ImGui.button("Create Project")) {
+            editorWindow.openCreateProjectWindow();
+        }
+
+        ImGui.end();
+
+        return false;
     }
 
 }
