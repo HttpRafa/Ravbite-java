@@ -1,24 +1,3 @@
 {
-  "projects": [
-    {
-      "name": "Test 1",
-      "path": "test/"
-    },
-    {
-      "name": "Test 2",
-      "path": "test/"
-    },
-    {
-      "name": "Test 3",
-      "path": "test/"
-    },
-    {
-      "name": "Test 4",
-      "path": "test/"
-    },
-    {
-      "name": "Test 5",
-      "path": "test/"
-    }
-  ]
+  "projects": []
 }

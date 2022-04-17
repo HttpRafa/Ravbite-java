@@ -63,10 +63,12 @@ public class ProjectManager {
 
         projects.clear();
         JsonObject jsonObject = new JsonParser().parse(new InputStreamReader(new FileInputStream(projectsFile))).getAsJsonObject();
-        JsonArray projectsArray = jsonObject.get("projects").getAsJsonArray();
-        for (JsonElement jsonElement : projectsArray) {
-            EditorProjectDescription editorDescription = gson.fromJson(jsonElement, EditorProjectDescription.class);
-            projects.add(editorDescription);
+        if(jsonObject.has("projects")) {
+            JsonArray projectsArray = jsonObject.get("projects").getAsJsonArray();
+            for (JsonElement jsonElement : projectsArray) {
+                EditorProjectDescription editorDescription = gson.fromJson(jsonElement, EditorProjectDescription.class);
+                projects.add(editorDescription);
+            }
         }
 
     }
@@ -86,7 +88,6 @@ public class ProjectManager {
         JsonArray projectsArray = new JsonArray();
 
         for (EditorProjectDescription project : projects) {
-            System.out.println(project.getName());
             projectsArray.add(new JsonParser().parse(gson.toJson(project)));
         }
 
@@ -97,6 +98,10 @@ public class ProjectManager {
             fileWriter.flush();
         }
 
+    }
+
+    public void createProject(String name, String path, int dimension) {
+        projects.add(new EditorProjectDescription(name, path));
     }
 
     public List<EditorProjectDescription> getProjects() {

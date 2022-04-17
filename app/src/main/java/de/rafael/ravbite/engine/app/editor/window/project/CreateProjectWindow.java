@@ -41,13 +41,28 @@ package de.rafael.ravbite.engine.app.editor.window.project;
 import de.rafael.ravbite.engine.app.editor.EditorWindow;
 import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
-import imgui.type.ImDouble;
+import imgui.extension.imguifiledialog.ImGuiFileDialog;
+import imgui.extension.imguifiledialog.flag.ImGuiFileDialogFlags;
+import imgui.type.ImBoolean;
 import imgui.type.ImString;
 
-import javax.swing.*;
 import java.io.File;
 
-public record CreateProjectWindow(EditorWindow editorWindow) implements IGui {
+public class CreateProjectWindow implements IGui {
+
+    private final EditorWindow editorWindow;
+
+    private long userData = 0;
+
+    public CreateProjectWindow(EditorWindow editorWindow) {
+        this.editorWindow = editorWindow;
+    }
+
+    private final ImString pathString = new ImString(new File(".").getAbsolutePath());
+    private final ImString nameString = new ImString();
+
+    private ImBoolean checkbox2D = new ImBoolean();
+    private ImBoolean checkbox3D = new ImBoolean(true);
 
     @Override
     public boolean gui() {
@@ -56,19 +71,54 @@ public record CreateProjectWindow(EditorWindow editorWindow) implements IGui {
 
         ImGui.begin("Create Project");
 
-        ImString nameString = new ImString();
-        if(ImGui.inputText("Name", nameString)) {
+        if (ImGui.inputText("Name", nameString)) {
 
         }
-        ImString pathString = new ImString();
-        if(ImGui.inputText("Path", pathString)) {
+        if (ImGui.inputText("Path", pathString)) {
 
         }
         ImGui.sameLine();
-        if(ImGui.button("Choose")) {
-
+        if (ImGui.button("Choose")) {
+            ImGuiFileDialog.openDialog("browse-folder-key", "Choose Folder", null, ".", "", 1, 7, ImGuiFileDialogFlags.None);
+        }
+        if (ImGuiFileDialog.display("browse-folder-key", ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
+            if (ImGuiFileDialog.isOk()) {
+                pathString.set(ImGuiFileDialog.getSelection().values().stream().findFirst().orElse(null));
+                userData = ImGuiFileDialog.getUserDatas();
+            }
+            ImGuiFileDialog.close();
         }
 
+        ImGui.spacing();
+        ImGui.separator();
+        ImGui.spacing();
+        ImGui.text("Engine Settings");
+
+        if(ImGui.checkbox("2D", checkbox2D)) {
+            if(checkbox2D.get() && checkbox3D.get()) {
+                checkbox3D.set(false);
+            }
+            if(!checkbox2D.get() && !checkbox3D.get()) {
+                checkbox3D.set(true);
+            }
+        }
+        ImGui.sameLine();
+        if(ImGui.checkbox("3D", checkbox3D)) {
+            if(checkbox2D.get() && checkbox3D.get()) {
+                checkbox2D.set(false);
+            }
+            if(!checkbox2D.get() && !checkbox3D.get()) {
+                checkbox2D.set(true);
+            }
+        }
+
+        ImGui.spacing();
+        ImGui.separator();
+        ImGui.spacing();
+        if (ImGui.button("Create")) {
+            editorWindow.getProjectManager().createProject(nameString.get(), pathString.get(), checkbox2D.get() ? 2 : 3);
+        }
+        ImGui.sameLine();
         if (ImGui.button("Cancel")) {
             exit = true;
         }
@@ -76,6 +126,18 @@ public record CreateProjectWindow(EditorWindow editorWindow) implements IGui {
         ImGui.end();
 
         return exit;
+    }
+
+    public EditorWindow getEditorWindow() {
+        return editorWindow;
+    }
+
+    public ImString getPathString() {
+        return pathString;
+    }
+
+    public long getUserData() {
+        return userData;
     }
 
 }
