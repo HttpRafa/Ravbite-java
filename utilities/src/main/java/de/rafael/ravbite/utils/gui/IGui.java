@@ -43,6 +43,6 @@ public interface IGui {
     /**
      * Render gui
      */
-    boolean gui();
+    void gui();
 
 }

@@ -65,8 +65,6 @@ public class EditorWindow extends Window {
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
-    private String glslVersion = null;
-
     private LeaveWindow leaveWindow = null;
 
     public EditorWindow() throws IOException {
@@ -95,7 +93,7 @@ public class EditorWindow extends Window {
 
     @Override
     public void initialize() {
-        glslVersion = "#version 130";
+        String glslVersion = "#version 130";
 
         super.initialize();
         glfwMaximizeWindow(getWindow());
@@ -108,13 +106,11 @@ public class EditorWindow extends Window {
         imGuiGl3.init(glslVersion);
     }
 
-    private final MenuBar menuBar = new MenuBar();
-    private final InspectorWindow inspector = new InspectorWindow();
-    private CreateProjectWindow createProjectWindow;
-
     @Override
     public void loop() {
 
+        MenuBar menuBar = new MenuBar();
+        InspectorWindow inspector = new InspectorWindow();
         OpenProjectWindow openProjectWindow = new OpenProjectWindow(this);
 
         while (true) {
@@ -133,20 +129,9 @@ public class EditorWindow extends Window {
             if(project != null) {
                 menuBar.gui();
                 inspector.gui();
-                if(leaveWindow != null) {
-                    if(leaveWindow.gui()) {
-                        leaveWindow = null;
-                    }
-                }
-            } else {
-                openProjectWindow.gui();
+                leaveWindow.gui();
             }
-
-            if(createProjectWindow != null) {
-                if(createProjectWindow.gui()) {
-                    createProjectWindow = null;
-                }
-            }
+            openProjectWindow.gui();
 
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());
@@ -161,10 +146,6 @@ public class EditorWindow extends Window {
             glfwSwapBuffers(getWindow());
             glfwPollEvents();
         }
-    }
-
-    public void openCreateProjectWindow() {
-        createProjectWindow = new CreateProjectWindow(this);
     }
 
     public ProjectManager getProjectManager() {

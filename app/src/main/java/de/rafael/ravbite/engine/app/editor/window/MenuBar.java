@@ -44,7 +44,7 @@ import imgui.ImGui;
 public class MenuBar implements IGui {
 
     @Override
-    public boolean gui() {
+    public void gui() {
         ImGui.beginMainMenuBar();
 
         if (ImGui.beginMenu("File")) {
@@ -123,7 +123,6 @@ public class MenuBar implements IGui {
 
         ImGui.endMainMenuBar();
 
-        return false;
     }
 
 }

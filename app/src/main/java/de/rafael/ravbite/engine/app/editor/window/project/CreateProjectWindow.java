@@ -58,81 +58,90 @@ public class CreateProjectWindow implements IGui {
         this.editorWindow = editorWindow;
     }
 
-    private final ImString pathString = new ImString(new File(".").getAbsolutePath());
-    private final ImString nameString = new ImString();
+    private String pathString = new File(".").getAbsolutePath();
+    private ImString nameString = new ImString();
 
     private ImBoolean checkbox2D = new ImBoolean();
     private ImBoolean checkbox3D = new ImBoolean(true);
 
+    private String errorString = null;
+
+
     @Override
-    public boolean gui() {
+    public void gui() {
+        if(ImGui.beginPopupModal("Create Project")) {
+            if (ImGui.inputText("Name", nameString)) {
 
-        boolean exit = false;
-
-        ImGui.begin("Create Project");
-
-        if (ImGui.inputText("Name", nameString)) {
-
-        }
-        if (ImGui.inputText("Path", pathString)) {
-
-        }
-        ImGui.sameLine();
-        if (ImGui.button("Choose")) {
-            ImGuiFileDialog.openDialog("browse-folder-key", "Choose Folder", null, ".", "", 1, 7, ImGuiFileDialogFlags.None);
-        }
-        if (ImGuiFileDialog.display("browse-folder-key", ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
-            if (ImGuiFileDialog.isOk()) {
-                pathString.set(ImGuiFileDialog.getSelection().values().stream().findFirst().orElse(null));
-                userData = ImGuiFileDialog.getUserDatas();
             }
-            ImGuiFileDialog.close();
-        }
-
-        ImGui.spacing();
-        ImGui.separator();
-        ImGui.spacing();
-        ImGui.text("Engine Settings");
-
-        if(ImGui.checkbox("2D", checkbox2D)) {
-            if(checkbox2D.get() && checkbox3D.get()) {
-                checkbox3D.set(false);
+            ImGui.text(pathString);
+            ImGui.sameLine();
+            if (ImGui.button("Choose")) {
+                ImGuiFileDialog.openDialog("browse-folder-key", "Choose Folder", null, ".", "", 1, 7, ImGuiFileDialogFlags.None);
             }
-            if(!checkbox2D.get() && !checkbox3D.get()) {
-                checkbox3D.set(true);
+            if (ImGuiFileDialog.display("browse-folder-key", ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
+                if (ImGuiFileDialog.isOk()) {
+                    pathString = ImGuiFileDialog.getSelection().values().stream().findFirst().orElse(null);
+                    userData = ImGuiFileDialog.getUserDatas();
+                }
+                ImGuiFileDialog.close();
             }
-        }
-        ImGui.sameLine();
-        if(ImGui.checkbox("3D", checkbox3D)) {
-            if(checkbox2D.get() && checkbox3D.get()) {
-                checkbox2D.set(false);
+
+            ImGui.spacing();
+            ImGui.separator();
+            ImGui.spacing();
+            ImGui.text("Engine Settings");
+
+            if(ImGui.checkbox("2D", checkbox2D)) {
+                if(checkbox2D.get() && checkbox3D.get()) {
+                    checkbox3D.set(false);
+                }
+                if(!checkbox2D.get() && !checkbox3D.get()) {
+                    checkbox3D.set(true);
+                }
             }
-            if(!checkbox2D.get() && !checkbox3D.get()) {
-                checkbox2D.set(true);
+            ImGui.sameLine();
+            if(ImGui.checkbox("3D", checkbox3D)) {
+                if(checkbox2D.get() && checkbox3D.get()) {
+                    checkbox2D.set(false);
+                }
+                if(!checkbox2D.get() && !checkbox3D.get()) {
+                    checkbox2D.set(true);
+                }
             }
+
+            ImGui.spacing();
+            ImGui.separator();
+            ImGui.spacing();
+            if (ImGui.button("Create")) {
+                String name = nameString.get();
+
+                if(name.isBlank() || name.isEmpty()) {
+                    errorString = "Name is invalid";
+                } else if(checkbox2D.get()) {
+                    errorString = "2D is not supported yet";
+                } else if(!editorWindow.getProjectManager().isNameFree(name)) {
+                    errorString = "Name is already in use";
+                } else {
+                    if(editorWindow.getProjectManager().createProject(name, pathString, checkbox2D.get() ? 2 : 3)) {
+                        ImGui.closeCurrentPopup();
+                    }
+                }
+            }
+            ImGui.sameLine();
+            if (ImGui.button("Cancel")) {
+                ImGui.closeCurrentPopup();
+            }
+            if(errorString != null) ImGui.textColored(255, 50, 50, 255, errorString);
+            ImGui.endPopup();
         }
 
-        ImGui.spacing();
-        ImGui.separator();
-        ImGui.spacing();
-        if (ImGui.button("Create")) {
-            editorWindow.getProjectManager().createProject(nameString.get(), pathString.get(), checkbox2D.get() ? 2 : 3);
-        }
-        ImGui.sameLine();
-        if (ImGui.button("Cancel")) {
-            exit = true;
-        }
-
-        ImGui.end();
-
-        return exit;
     }
 
     public EditorWindow getEditorWindow() {
         return editorWindow;
     }
 
-    public ImString getPathString() {
+    public String getPathString() {
         return pathString;
     }
 

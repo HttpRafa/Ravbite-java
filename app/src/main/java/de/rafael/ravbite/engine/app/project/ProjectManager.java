@@ -100,8 +100,18 @@ public class ProjectManager {
 
     }
 
-    public void createProject(String name, String path, int dimension) {
+    public boolean createProject(String name, String path, int dimension) {
         projects.add(new EditorProjectDescription(name, path));
+
+        return true;
+    }
+
+    public void deleteProject(String name) {
+
+    }
+
+    public boolean isNameFree(String name) {
+        return projects.stream().noneMatch(item -> item.getName().equalsIgnoreCase(name));
     }
 
     public List<EditorProjectDescription> getProjects() {

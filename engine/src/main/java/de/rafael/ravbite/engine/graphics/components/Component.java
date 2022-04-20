@@ -60,8 +60,7 @@ public abstract class Component implements IGui {
     }
 
     @Override
-    public boolean gui() {
-        return false;
+    public void gui() {
     }
 
     /**

@@ -44,7 +44,7 @@ import imgui.ImGui;
 public class LeaveWindow implements IGui {
 
     @Override
-    public boolean gui() {
+    public void gui() {
         boolean close = false;
 
         ImGui.begin("Leave");
@@ -62,7 +62,6 @@ public class LeaveWindow implements IGui {
         }
         ImGui.end();
 
-        return close;
     }
 
 }

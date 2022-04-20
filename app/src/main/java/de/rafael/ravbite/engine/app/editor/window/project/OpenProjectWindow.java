@@ -46,13 +46,22 @@ import imgui.ImGui;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public record OpenProjectWindow(EditorWindow editorWindow) implements IGui {
+public class OpenProjectWindow implements IGui {
+
+    private final EditorWindow editorWindow;
+    private final CreateProjectWindow createProjectWindow;
+
+    public OpenProjectWindow(EditorWindow editorWindow) {
+        this.editorWindow = editorWindow;
+        createProjectWindow = new CreateProjectWindow(editorWindow);
+    }
 
     @Override
-    public boolean gui() {
+    public void gui() {
         ImGui.begin("Open Project");
 
-        for (EditorProjectDescription project : editorWindow.getProjectManager().getProjects()) {
+        editorWindow.getProjectManager().getProjects().removeIf(project -> {
+            boolean deleteProject = false;
             if (ImGui.collapsingHeader(project.getName())) {
                 ImGui.text("Path: " + project.getPath());
 
@@ -65,19 +74,38 @@ public record OpenProjectWindow(EditorWindow editorWindow) implements IGui {
                 }
                 ImGui.sameLine();
                 if (ImGui.button("Delete")) {
-
+                    ImGui.openPopup("Delete Project");
                 }
             }
-        }
+            if(ImGui.beginPopupModal("Delete Project")) {
+                ImGui.text("Path: " + project.getPath());
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+                ImGui.text("Last used: " + simpleDateFormat.format(new Date(project.getLastUsed())));
+                ImGui.separator();
+                ImGui.text("Do you want to delete this project?");
+                ImGui.spacing();
+                if(ImGui.button("Yes")) {
+                    deleteProject = true;
+                    editorWindow.getProjectManager().deleteProject(project.getName());
+                }
+                ImGui.sameLine();
+                if(ImGui.button("No")) {
+                    ImGui.closeCurrentPopup();
+                }
+                ImGui.endPopup();
+            }
+            return deleteProject;
+        });
 
         ImGui.spacing();
         if (ImGui.button("Create Project")) {
-            editorWindow.openCreateProjectWindow();
+            ImGui.openPopup("Create Project");
         }
+        createProjectWindow.gui();
 
         ImGui.end();
 
-        return false;
     }
 
 }
