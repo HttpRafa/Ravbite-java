@@ -103,14 +103,14 @@ public class MainScene extends Scene {
         material.create();
 
         try {
-            mesh = ModelUtils.rbLoadMeshFromModel(AssetLocation.create("/models/chair.obj", AssetLocation.INTERNAL), getEngineWindow());
-            //mesh.overwriteMaterials(material);
+            mesh = ModelUtils.rbLoadMeshFromModel(AssetLocation.create("/models/Su-27.obj", AssetLocation.INTERNAL), getEngineWindow());
+            mesh.overwriteMaterials(material);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         GameObject testModel = new GameObject(this, "Test Model");
-        testModel.getTransform().move(0, -1, -10);
+        testModel.getTransform().move(0, -4, -45);
         testModel.getTransform().scale(2f);
         testModel.appendComponent(new TestComponent());
         testModel.appendComponent(new MeshComponent(mesh));

@@ -70,7 +70,7 @@ public class OpenProjectWindow implements IGui {
                 ImGui.separator();
 
                 if (ImGui.button("Open")) {
-
+                    
                 }
                 ImGui.sameLine();
                 if (ImGui.button("Delete")) {
