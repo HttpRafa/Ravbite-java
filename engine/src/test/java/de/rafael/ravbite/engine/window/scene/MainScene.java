@@ -110,8 +110,8 @@ public class MainScene extends Scene {
         }
 
         GameObject testModel = new GameObject(this, "Test Model");
-        testModel.getTransform().move(0, -4, -45);
-        testModel.getTransform().scale(2f);
+        testModel.getTransform().move(0, -4, -35);
+        testModel.getTransform().scale(1f);
         testModel.appendComponent(new TestComponent());
         testModel.appendComponent(new MeshComponent(mesh));
         testModel.appendComponent(new MeshRendererComponent());
