@@ -61,7 +61,7 @@ public class DebugWindow {
 
     private final EngineWindow engineWindow;
 
-    private List<GameObjectOptionsWindow> gameObjectOptionsWindowList = new ArrayList<>();
+    private final List<GameObjectOptionsWindow> gameObjectOptionsWindowList = new ArrayList<>();
 
     private final EngineDebugOptionsWindow engineDebugOptionsWindow;
 

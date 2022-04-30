@@ -78,10 +78,10 @@ public class ProjectManager {
 
         if(!projectsFile.exists()) {
             projectsFile.createNewFile();
-            try (FileWriter fileWriter = new FileWriter(projectsFile)) {
-                fileWriter.write("{}");
-                fileWriter.flush();
-            }
+            FileWriter fileWriter = new FileWriter(projectsFile);
+            fileWriter.write("{}");
+            fileWriter.flush();
+            fileWriter.close();
         }
 
         JsonObject jsonObject = new JsonObject();
@@ -93,15 +93,32 @@ public class ProjectManager {
 
         jsonObject.add("projects", projectsArray);
 
-        try(FileWriter fileWriter = new FileWriter(projectsFile)) {
-            fileWriter.write(gson.toJson(jsonObject));
-            fileWriter.flush();
-        }
+        FileWriter fileWriter = new FileWriter(projectsFile);
+        fileWriter.write("{}");
+        fileWriter.flush();
+        fileWriter.close();
 
     }
 
     public boolean createProject(String name, String path, int dimension) {
-        projects.add(new EditorProjectDescription(name, path));
+
+        try {
+            File projectFolder = new File(path, name);
+            if(!projectFolder.exists()) {
+                projectFolder.mkdirs();
+            }
+
+            projects.add(new EditorProjectDescription(name, projectFolder.getAbsolutePath()));
+
+            File projectFile = new File(projectFolder, name + ".json");
+            projectFile.createNewFile();
+            FileWriter fileWriter = new FileWriter(projectsFile);
+            fileWriter.write("{}");
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
 
         return true;
     }
