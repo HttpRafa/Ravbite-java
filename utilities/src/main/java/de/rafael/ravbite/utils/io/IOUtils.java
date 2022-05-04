@@ -47,6 +47,13 @@ import java.nio.channels.FileChannel;
 
 public class IOUtils {
 
+    /**
+     * Reads content of file into a ByteBuffer
+     * @param resource Path to the resource
+     * @param bufferSize Initial bufferSize
+     * @return ByteBuffer
+     * @throws IOException IOException
+     */
     public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
         ByteBuffer buffer;
         URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
@@ -80,6 +87,12 @@ public class IOUtils {
         return buffer;
     }
 
+    /**
+     * Resized a ByteBuffer
+     * @param buffer ByteBuffer
+     * @param newCapacity New buffer capacity
+     * @return ByteBuffer
+     */
     private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
         ByteBuffer newBuffer = BufferUtils.createByteBuffer(newCapacity);
         buffer.flip();
