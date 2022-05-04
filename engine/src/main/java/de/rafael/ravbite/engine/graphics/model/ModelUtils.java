@@ -95,7 +95,7 @@ public class ModelUtils {
             byteBuffer.put((byte) inputStream.read());
         }
         byteBuffer.flip();
-        return Assimp.aiImportFileFromMemory(byteBuffer, Assimp.aiProcess_Triangulate | Assimp.aiProcess_OptimizeMeshes | Assimp.aiProcess_FlipUVs | Assimp.aiProcess_CalcTangentSpace, "");
+        return Assimp.aiImportFileFromMemory(byteBuffer, Assimp.aiProcess_Triangulate | Assimp.aiProcess_GenNormals | Assimp.aiProcess_OptimizeMeshes | Assimp.aiProcess_FlipUVs | Assimp.aiProcess_CalcTangentSpace, "");
     }
 
     /**

@@ -39,7 +39,6 @@ package de.rafael.ravbite.engine.app.editor.window.project;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.EditorWindow;
-import de.rafael.ravbite.engine.app.project.EditorProjectDescription;
 import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
 

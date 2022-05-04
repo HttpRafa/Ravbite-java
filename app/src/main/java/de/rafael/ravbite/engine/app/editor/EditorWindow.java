@@ -41,10 +41,9 @@ package de.rafael.ravbite.engine.app.editor;
 import de.rafael.ravbite.engine.app.editor.window.InspectorWindow;
 import de.rafael.ravbite.engine.app.editor.window.LeaveWindow;
 import de.rafael.ravbite.engine.app.editor.window.MenuBar;
-import de.rafael.ravbite.engine.app.editor.window.project.CreateProjectWindow;
 import de.rafael.ravbite.engine.app.editor.window.project.OpenProjectWindow;
-import de.rafael.ravbite.engine.app.project.EditorProject;
-import de.rafael.ravbite.engine.app.project.ProjectManager;
+import de.rafael.ravbite.engine.app.project.Project;
+import de.rafael.ravbite.engine.app.project.manager.ProjectManager;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
 import imgui.ImGuiIO;
@@ -60,7 +59,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class EditorWindow extends Window {
 
     private final ProjectManager projectManager;
-    private EditorProject project;
+    private Project project;
 
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
