@@ -38,6 +38,8 @@ package de.rafael.ravbite.engine.graphics.object.game.material.standard;
 //
 //------------------------------
 
+import org.joml.Vector4f;
+
 import java.awt.*;
 
 public class DiffuseProperty {
@@ -82,6 +84,13 @@ public class DiffuseProperty {
     }
 
     /**
+     * @return Color as Vector
+     */
+    public Vector4f getColorAsVector() {
+        return new Vector4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
+    }
+
+    /**
      * Sets textureId
      * @param diffuseTextureId New textureId
      */
@@ -95,6 +104,15 @@ public class DiffuseProperty {
      */
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "DiffuseProperty{" +
+                "material=" + material +
+                ", diffuseTextureId=" + diffuseTextureId +
+                ", color=" + color +
+                '}';
     }
 
 }

@@ -9,7 +9,9 @@ in vec3 toCameraVector;
 
 out vec4 out_Color;
 
-uniform sampler2D albedo_texture;
+uniform sampler2D diffuse_texture;
+
+uniform vec4 diffuseColor;
 
 uniform vec3 lightColor;
 uniform float shineDamper;
@@ -34,6 +36,6 @@ void main(void) {
     vec3 finalSpecular = dampedFactor * reflectivity * lightColor;
 
 
-    out_Color = vec4(diffuse, 1.0) * texture(albedo_texture, pass_textureCoords) + vec4(finalSpecular, 1.0);
+    out_Color = (vec4(diffuse, 1.0) * diffuseColor) * texture(diffuse_texture, pass_textureCoords) + vec4(finalSpecular, 1.0);
 
 }

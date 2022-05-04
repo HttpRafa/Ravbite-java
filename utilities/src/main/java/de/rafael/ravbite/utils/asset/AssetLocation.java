@@ -113,8 +113,8 @@ public class AssetLocation {
     /**
      * @return Path to the asset
      */
-    public String getPath() {
-        return path;
+    public String getPath(boolean cutSlash) {
+        return cutSlash ? (path.startsWith("/") ? path.substring(1, path.length()) : path) : path;
     }
 
     /**

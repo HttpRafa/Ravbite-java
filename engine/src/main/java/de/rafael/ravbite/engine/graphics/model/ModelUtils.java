@@ -43,9 +43,11 @@ import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
+import de.rafael.ravbite.utils.io.IOUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
+import org.lwjgl.system.MemoryUtil;
 
 import java.awt.*;
 import java.io.File;
@@ -67,6 +69,7 @@ public class ModelUtils {
      */
     public static Mesh rbLoadMeshFromModel(AssetLocation assetLocation, EngineWindow engineWindow) throws IOException {
         AIScene aiScene = ModelUtils.rbLoadScene(assetLocation);
+
         PointerBuffer pointerBuffer = aiScene.mMeshes();
         Mesh mesh = null;
         for (int i = 0; i < Objects.requireNonNull(pointerBuffer).limit(); i++) {
@@ -89,13 +92,68 @@ public class ModelUtils {
      * @throws IOException ?
      */
     public static AIScene rbLoadScene(AssetLocation assetLocation) throws IOException {
-        InputStream inputStream = assetLocation.asInputStream();
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(inputStream.available());
-        while (inputStream.available() > 0) {
-            byteBuffer.put((byte) inputStream.read());
+        AIScene aiScene = null;
+        int i = Assimp.aiProcess_Triangulate |
+                Assimp.aiProcess_OptimizeMeshes |
+                Assimp.aiProcess_FlipUVs |
+                Assimp.aiProcess_CalcTangentSpace |
+                Assimp.aiProcess_JoinIdenticalVertices |
+                Assimp.aiProcess_ValidateDataStructure |
+                Assimp.aiProcess_ImproveCacheLocality |
+                Assimp.aiProcess_GenUVCoords |
+                Assimp.aiProcess_TransformUVCoords |
+                Assimp.aiProcess_LimitBoneWeights |
+                Assimp.aiProcess_OptimizeMeshes |
+                Assimp.aiProcess_GenSmoothNormals |
+                Assimp.aiProcess_SplitLargeMeshes;
+        if(assetLocation.getLocation() == AssetLocation.INTERNAL) {
+            AIFileIO aiFileIO = rbCreateAIFileIO();
+            aiScene = Assimp.aiImportFileEx(assetLocation.getPath(true), i, aiFileIO);
+            aiFileIO.OpenProc().free();
+            aiFileIO.CloseProc().free();
+        } else if(assetLocation.getLocation() == AssetLocation.EXTERNAL) {
+            aiScene = Assimp.aiImportFile(new File(assetLocation.getPath(false)).getAbsolutePath(), i);
         }
-        byteBuffer.flip();
-        return Assimp.aiImportFileFromMemory(byteBuffer, Assimp.aiProcess_Triangulate | Assimp.aiProcess_GenNormals | Assimp.aiProcess_OptimizeMeshes | Assimp.aiProcess_FlipUVs | Assimp.aiProcess_CalcTangentSpace, "");
+        return aiScene;
+    }
+
+    public static AIFileIO rbCreateAIFileIO() {
+        return AIFileIO.create()
+                .OpenProc((pFileIO, fileName, openMode) -> {
+                    ByteBuffer data;
+                    String fileNameUtf8 = MemoryUtil.memUTF8(fileName);
+                    try {
+                        data = IOUtils.ioResourceToByteBuffer(fileNameUtf8, 8192);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Could not open file: " + fileNameUtf8);
+                    }
+
+                    return AIFile.create()
+                            .ReadProc((pFile, pBuffer, size, count) -> {
+                                long max = Math.min(data.remaining(), size * count);
+                                MemoryUtil.memCopy(MemoryUtil.memAddress(data) + data.position(), pBuffer, max);
+                                return max;
+                            })
+                            .SeekProc((pFile, offset, origin) -> {
+                                if (origin == Assimp.aiOrigin_CUR) {
+                                    data.position(data.position() + (int) offset);
+                                } else if (origin == Assimp.aiOrigin_SET) {
+                                    data.position((int) offset);
+                                } else if (origin == Assimp.aiOrigin_END) {
+                                    data.position(data.limit() + (int) offset);
+                                }
+                                return 0;
+                            })
+                            .FileSizeProc(pFile -> data.limit())
+                            .address();
+                })
+                .CloseProc((pFileIO, pFile) -> {
+                    AIFile aiFile = AIFile.create(pFile);
+
+                    aiFile.ReadProc().free();
+                    aiFile.SeekProc().free();
+                    aiFile.FileSizeProc().free();
+                });
     }
 
     /**
@@ -159,9 +217,11 @@ public class ModelUtils {
 
         AIMaterial aiMaterial = null;
         PointerBuffer materialData = aiScene.mMaterials();
-        for (int i = 0; i < Objects.requireNonNull(materialData).limit(); i++) {
+        for (int i = 0; i < aiScene.mNumMaterials(); i++) {
             if(i == aiMesh.mMaterialIndex()) {
+                assert materialData != null;
                 aiMaterial = AIMaterial.create(materialData.get(i));
+                System.out.println(aiMesh.mName().dataString() + " used material " + aiMesh.mMaterialIndex());
             }
         }
 
@@ -174,31 +234,26 @@ public class ModelUtils {
                 System.out.println("More than one texture per mesh is currently not supported. Mesh[" + aiMesh.mName() + "]");
             }
 
-            System.out.println(textureCount);
+            int textureId = 1;
             if(textureCount > 0) {
                 AIString pathString = AIString.create();
                 Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, pathString, (IntBuffer) null, null, null, null, null, null);
                 String path = pathString.dataString();
 
-                AssetLocation assetLocation = AssetLocation.create(new File(modelLocation.getPath()).getParentFile().getPath() + "/" + path, AssetLocation.INTERNAL);
-                int textureId = engineWindow.getGLUtils().rbLoadTexture(assetLocation);
-
-                AIColor4D color = AIColor4D.create();
-                Color diffuseColor = new Color(0, 0, 0);
-                int result = Assimp.aiGetMaterialColor(aiMaterial, Assimp.AI_MATKEY_COLOR_DIFFUSE, Assimp.aiTextureType_NONE, 0, color);
-                if (result == 0) {
-                    diffuseColor = new Color(color.r(), color.g(), color.b(), color.a());
-                }
-
-                DiffuseProperty diffuseProperty = new DiffuseProperty(material, diffuseColor);
-                diffuseProperty.texture(textureId);
-                material.diffuse(diffuseProperty);
+                AssetLocation assetLocation = AssetLocation.create(new File(modelLocation.getPath(false)).getParentFile().getPath() + "/" + path, AssetLocation.EXTERNAL);
+                textureId = engineWindow.getGLUtils().rbLoadTexture(assetLocation);
             }
 
-            PointerBuffer properties = aiMaterial.mProperties();
-            for (int i = 0; i < properties.limit(); i++) {
-                AIMaterialProperty property = AIMaterialProperty.create(properties.get(i));
+            AIColor4D color = AIColor4D.create();
+            Color diffuseColor = new Color(0, 0, 0);
+            int result = Assimp.aiGetMaterialColor(aiMaterial, Assimp.AI_MATKEY_COLOR_DIFFUSE, Assimp.aiTextureType_NONE, 0, color);
+            if (result == 0) {
+                diffuseColor = new Color(color.r(), color.g(), color.b(), color.a());
             }
+
+            DiffuseProperty diffuseProperty = new DiffuseProperty(material, diffuseColor);
+            if(textureId >= 0) diffuseProperty.texture(textureId);
+            material.diffuse(diffuseProperty);
 
             material.create();
         }

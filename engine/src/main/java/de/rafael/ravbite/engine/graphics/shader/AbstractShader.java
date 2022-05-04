@@ -48,6 +48,7 @@ import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -118,6 +119,15 @@ public abstract class AbstractShader {
      */
     public void load(int location, Vector3f value) {
         GL20.glUniform3f(location, value.x, value.y, value.z);
+    }
+
+    /**
+     * Loads a vector with 4 values onto a uniform variable
+     * @param location Location of the uniform variable
+     * @param value Value to load into the uniform variable
+     */
+    public void load(int location, Vector4f value) {
+        GL20.glUniform4f(location, value.x, value.y, value.z, value.w);
     }
 
     /**

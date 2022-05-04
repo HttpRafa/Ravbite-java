@@ -51,7 +51,9 @@ import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.engine.utils.math.Maths;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class StandardShader extends AbstractShader {
@@ -59,6 +61,8 @@ public class StandardShader extends AbstractShader {
     private int transformationMatrix;
     private int projectionMatrix;
     private int viewMatrix;
+
+    private int diffuseColor;
 
     private int lightPosition;
     private int lightColor;
@@ -86,7 +90,9 @@ public class StandardShader extends AbstractShader {
         loadViewMatrix(Maths.createViewMatrix(cameraTransform));
         loadTransformationMatrix(Maths.createTransformationMatrix(gameObject.getSpecialTransform(Transform.WORLD_SPACE)));
 
-        if(material != null) loadSpecular(material.getShineDamper(), material.getReflectivity());
+        loadDiffuseColor(material.getDiffuse().getColorAsVector());
+
+        loadSpecular(material.getShineDamper(), material.getReflectivity());
 
         LightComponent[] lights = gameObject.getScene().getLights(15, cameraTransform.getPosition());
         if(lights.length > 0) loadLightsComponent(lights);
@@ -110,6 +116,14 @@ public class StandardShader extends AbstractShader {
     private void loadLightsComponent(LightComponent[] lightComponents) {
         super.load(lightPosition, lightComponents[0].getGameObject().getSpecialTransform(Transform.WORLD_SPACE).getPosition());
         super.load(lightColor, lightComponents[0].getColorAsVector());
+    }
+
+    /**
+     * Method to load the diffuseColor into the shader
+     * @param diffuseColor DiffuseColor
+     */
+    private void loadDiffuseColor(Vector4f diffuseColor) {
+        super.load(this.diffuseColor, diffuseColor);
     }
 
     /**
@@ -148,6 +162,8 @@ public class StandardShader extends AbstractShader {
         transformationMatrix = super.getUniformLocation("transformationMatrix");
         projectionMatrix = super.getUniformLocation("projectionMatrix");
         viewMatrix = super.getUniformLocation("viewMatrix");
+
+        diffuseColor = super.getUniformLocation("diffuseColor");
 
         lightPosition = super.getUniformLocation("lightPosition");
         lightColor = super.getUniformLocation("lightColor");

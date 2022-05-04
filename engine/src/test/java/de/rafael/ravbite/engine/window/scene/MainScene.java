@@ -103,8 +103,8 @@ public class MainScene extends Scene {
         material.create();
 
         try {
-            mesh = ModelUtils.rbLoadMeshFromModel(AssetLocation.create("/models/suzanne.obj", AssetLocation.INTERNAL), getEngineWindow());
-            mesh.overwriteMaterials(material);
+            mesh = ModelUtils.rbLoadMeshFromModel(AssetLocation.create("/models/world.obj", AssetLocation.INTERNAL), getEngineWindow());
+//            mesh.overwriteMaterials(material);
         } catch (IOException e) {
             e.printStackTrace();
         }
