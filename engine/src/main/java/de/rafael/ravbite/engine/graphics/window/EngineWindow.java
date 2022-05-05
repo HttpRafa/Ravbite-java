@@ -47,6 +47,9 @@ import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
 import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.input.InputSystem;
+import de.rafael.ravbite.utils.debug.EngineWatcher;
+import de.rafael.ravbite.utils.debug.TasksType;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -66,6 +69,7 @@ public abstract class EngineWindow extends Window {
     private InputSystem inputSystem;
 
     private DebugWindow debugWindow = null;
+    private final EngineWatcher engineWatcher = new EngineWatcher();
     private long startTime = 0;
 
     private long frameTime = 0;
@@ -240,35 +244,42 @@ public abstract class EngineWindow extends Window {
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        long nextDebugUpdate = 0;
+        final long[] nextDebugUpdate = {0};
         while (!glfwWindowShouldClose(getWindow())) {
             long frameStart = System.currentTimeMillis();
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            engineWatcher.update(TasksType.LOOP_CLEAR_BUFFERS, () -> glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)); // clear the framebuffer
 
-            if(inputSystem != null) inputSystem.getMouse().update();
-            render();
+            if(inputSystem != null) {
+                engineWatcher.update(TasksType.LOOP_INPUT_UPDATE, () -> inputSystem.getMouse().update());
+            }
+            engineWatcher.update(TasksType.LOOP_SCENE_RENDER_ALL, this::render);
 
-            glfwSwapBuffers(getWindow()); // swap the color buffers
+            engineWatcher.update(TasksType.LOOP_SWAP_BUFFERS, () -> glfwSwapBuffers(getWindow())); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
-            glfwPollEvents();
+            engineWatcher.update(TasksType.LOOP_POLL_EVENTS, org.lwjgl.glfw.GLFW::glfwPollEvents);
 
             // Execute all tasks stored in the stack
-            threadExecutor.executeAllTasksInStack();
+            engineWatcher.update(TasksType.LOOP_STACK_TASKS, threadExecutor::executeAllTasksInStack);
 
             long frameEnd = System.currentTimeMillis();
             frameTime = frameEnd - frameStart;
             deltaTime = frameTime / 1000f;
 
-            if(debugWindow != null) debugWindow.updateGameObjects();
-            if(nextDebugUpdate < System.currentTimeMillis()) {
-                nextDebugUpdate = System.currentTimeMillis() + 500;
-                if(DEBUG_MODE) {
-                    glfwSetWindowTitle(getWindow(), "Ravbite Engine | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
+            engineWatcher.update(TasksType.LOOP_DEBUG_WINDOWS, () -> {
+                if(debugWindow != null) {
+                    debugWindow.updateGameObjects();
+                    debugWindow.updatePerformanceTable();
                 }
-            }
+                if(nextDebugUpdate[0] < System.currentTimeMillis()) {
+                    nextDebugUpdate[0] = System.currentTimeMillis() + 500;
+                    if(DEBUG_MODE) {
+                        glfwSetWindowTitle(getWindow(), "Ravbite Engine | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
+                    }
+                }
+            });
         }
     }
 
@@ -313,6 +324,13 @@ public abstract class EngineWindow extends Window {
      */
     public DebugWindow getDebugWindow() {
         return debugWindow;
+    }
+
+    /**
+     * @return EngineWatcher that records every task performance
+     */
+    public EngineWatcher getEngineWatcher() {
+        return engineWatcher;
     }
 
     /**

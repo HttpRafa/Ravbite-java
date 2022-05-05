@@ -44,8 +44,10 @@ import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.EngineDebugOptionsWindow;
+import de.rafael.ravbite.engine.utils.debug.windows.EnginePerformanceDebugWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.GameObjectOptionsWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
+import de.rafael.ravbite.utils.debug.ExecutedTask;
 import org.lwjgl.glfw.GLFW;
 
 import javax.imageio.ImageIO;
@@ -54,6 +56,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +67,7 @@ public class DebugWindow {
     private final List<GameObjectOptionsWindow> gameObjectOptionsWindowList = new ArrayList<>();
 
     private final EngineDebugOptionsWindow engineDebugOptionsWindow;
+    private final EnginePerformanceDebugWindow enginePerformanceDebugWindow;
 
     private String imagePath;
 
@@ -76,6 +80,21 @@ public class DebugWindow {
 
         engineDebugOptionsWindow = new EngineDebugOptionsWindow(this);
         engineDebugOptionsWindow.setVisible(true);
+
+        enginePerformanceDebugWindow = new EnginePerformanceDebugWindow(this);
+        enginePerformanceDebugWindow.setVisible(true);
+
+        List<Object[]> data = new ArrayList<>();
+        for (ExecutedTask task : engineWindow.getEngineWatcher().getTasks()) {
+            data.add(new Object[]{task.getTasks().getId(), task.getTasks().name().toLowerCase(), 0, 0});
+        }
+
+        enginePerformanceDebugWindow.dataTable.setModel(new javax.swing.table.DefaultTableModel(
+                data.toArray(new Object[0][]),
+                new String [] {
+                        "id", "name", "currentTime", "maxTime"
+                }
+        ));
     }
 
     /**
@@ -100,6 +119,22 @@ public class DebugWindow {
         updateTransformTable(gameObject.getTransform(), gameObjectOptionsWindow.transformTable);
     }
 
+    /**
+     * Updates the performance table
+     */
+    public void updatePerformanceTable() {
+        for (int i = 0; i < engineWindow.getEngineWatcher().getTasks().size(); i++) {
+            ExecutedTask task = engineWindow.getEngineWatcher().getTasks().get(i);
+            enginePerformanceDebugWindow.dataTable.setValueAt(task.getTimeTook(), i, 2);
+            enginePerformanceDebugWindow.dataTable.setValueAt(task.getMaxTime(), i, 3);
+        }
+    }
+
+    /**
+     * Updates the transform table
+     * @param transform Transform
+     * @param table Table
+     */
     public void updateTransformTable(Transform transform, JTable table) {
         table.getModel().setValueAt(cutNumber(transform.getPosition().x), 0, 1);
         table.getModel().setValueAt(cutNumber(transform.getPosition().y), 0, 2);
