@@ -221,7 +221,6 @@ public class ModelUtils {
             if(i == aiMesh.mMaterialIndex()) {
                 assert materialData != null;
                 aiMaterial = AIMaterial.create(materialData.get(i));
-                System.out.println(aiMesh.mName().dataString() + " used material " + aiMesh.mMaterialIndex());
             }
         }
 
