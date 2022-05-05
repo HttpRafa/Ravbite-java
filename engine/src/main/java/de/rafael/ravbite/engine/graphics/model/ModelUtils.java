@@ -74,7 +74,7 @@ public class ModelUtils {
         Mesh mesh = null;
         for (int i = 0; i < Objects.requireNonNull(pointerBuffer).limit(); i++) {
             AIMesh aiMesh = AIMesh.create(pointerBuffer.get(i));
-            Mesh loadedMesh = ModelUtils.rbProcessMesh(aiScene, aiMesh, assetLocation, engineWindow);
+            Mesh loadedMesh = ModelUtils.rbProcessMesh(aiScene, aiMesh, engineWindow);
             if(mesh == null) {
                 mesh = loadedMesh;
             } else {
@@ -162,7 +162,7 @@ public class ModelUtils {
      * @return OutputMesh
      * @throws IOException ?
      */
-    public static Mesh rbProcessMesh(AIScene aiScene, AIMesh aiMesh, AssetLocation modelLocation, EngineWindow engineWindow) throws IOException {
+    public static Mesh rbProcessMesh(AIScene aiScene, AIMesh aiMesh, EngineWindow engineWindow) throws IOException {
         List<Float> verticesList = new ArrayList<>();
         List<Float> normalsList = new ArrayList<>();
         List<Float> tangentsList = new ArrayList<>();
@@ -233,13 +233,14 @@ public class ModelUtils {
                 System.out.println("More than one texture per mesh is currently not supported. Mesh[" + aiMesh.mName() + "]");
             }
 
-            int textureId = 1;
+            int textureId = -1;
             if(textureCount > 0) {
                 AIString pathString = AIString.create();
                 Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, pathString, (IntBuffer) null, null, null, null, null, null);
                 String path = pathString.dataString();
 
-                AssetLocation assetLocation = AssetLocation.create(new File(modelLocation.getPath(false)).getParentFile().getPath() + "/" + path, AssetLocation.EXTERNAL);
+                System.out.println(path);
+                AssetLocation assetLocation = AssetLocation.create(path, AssetLocation.DETECT);
                 textureId = engineWindow.getGLUtils().rbLoadTexture(assetLocation);
             }
 

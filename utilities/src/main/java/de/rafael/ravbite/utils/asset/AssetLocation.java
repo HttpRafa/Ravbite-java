@@ -44,6 +44,7 @@ import java.io.*;
 
 public class AssetLocation {
 
+    public static final int DETECT = -1;
     public static final int INTERNAL = 0;
     public static final int EXTERNAL = 1;
 
@@ -61,8 +62,23 @@ public class AssetLocation {
     private final int location;
 
     public AssetLocation(String path, int location) {
-        this.path = path;
-        this.location = location;
+        this.path = path.replace('\\', '/');
+
+        if(location == DETECT) {
+            InputStream inputStream = this.getClass().getResourceAsStream(path);
+            if(inputStream != null) {
+                this.location = INTERNAL;
+                try {
+                    inputStream.close();
+                } catch (IOException exception) {
+                    throw new RuntimeException(exception);
+                }
+            } else {
+                this.location = EXTERNAL;
+            }
+        } else {
+            this.location = location;
+        }
     }
 
     /**
@@ -114,7 +130,7 @@ public class AssetLocation {
      * @return Path to the asset
      */
     public String getPath(boolean cutSlash) {
-        return cutSlash ? (path.startsWith("/") ? path.substring(1, path.length()) : path) : path;
+        return cutSlash ? ((path.startsWith("/") || path.startsWith("\\")) ? path.substring(1) : path) : path;
     }
 
     /**
