@@ -93,18 +93,8 @@ public class MainScene extends Scene {
         getEngineWindow().getDebugWindow().addGameObject(light);
 
         Mesh mesh = null;
-        Material material = new Material(this.getEngineWindow());
-        try {
-            int textureId = getGLUtils().rbLoadTexture(AssetLocation.create("/textures/ground.png", AssetLocation.INTERNAL));
-            material.diffuse(new DiffuseProperty(material, new Color(255, 255, 255)).texture(textureId));
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        material.create();
-
         try {
             mesh = ModelUtils.rbLoadMeshFromModel(AssetLocation.create("/models/world.obj", AssetLocation.INTERNAL), getEngineWindow());
-//            mesh.overwriteMaterials(material);
         } catch (IOException e) {
             e.printStackTrace();
         }

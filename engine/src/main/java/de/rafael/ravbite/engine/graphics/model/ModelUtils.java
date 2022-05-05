@@ -239,7 +239,6 @@ public class ModelUtils {
                 Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, pathString, (IntBuffer) null, null, null, null, null, null);
                 String path = pathString.dataString();
 
-                System.out.println(path);
                 AssetLocation assetLocation = AssetLocation.create(path, AssetLocation.DETECT);
                 textureId = engineWindow.getGLUtils().rbLoadTexture(assetLocation);
             }
