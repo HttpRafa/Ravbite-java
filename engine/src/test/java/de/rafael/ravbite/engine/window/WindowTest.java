@@ -49,7 +49,7 @@ public class WindowTest {
         EngineWindow.DEBUG_MODE = true;
 
         Ravbite ravbite = new Ravbite();
-        ravbite.addWindow(new TestWindow());
+        ravbite.addWindow(new GameWindow());
         ravbite.run();
     }
 

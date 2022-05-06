@@ -43,6 +43,8 @@ import de.rafael.ravbite.engine.app.project.Project;
 import de.rafael.ravbite.engine.app.project.SimpleProject;
 import de.rafael.ravbite.engine.app.project.generator.ProjectGenerator;
 import de.rafael.ravbite.engine.app.project.generator.ProjectTemplates;
+import de.rafael.ravbite.engine.app.project.gradle.GradleDslType;
+import de.rafael.ravbite.engine.app.project.gradle.GradleLanguageType;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -102,7 +104,7 @@ public class ProjectManager {
         fileWriter.close();
     }
 
-    public boolean createProject(String name, String path, int dimension) {
+    public boolean createProject(String name, String path, int dimension, String packageName, GradleDslType dslType, GradleLanguageType languageType) {
         File projectFolder = new File(path, name);
 
         Project project = new Project(name, projectFolder.getAbsolutePath());

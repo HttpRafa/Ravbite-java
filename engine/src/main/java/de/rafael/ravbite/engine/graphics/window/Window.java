@@ -58,7 +58,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class Window {
 
-    private final int initialWidth, initialHeight;
+    private int initialWidth, initialHeight;
 
     private long window;
 
@@ -150,10 +150,26 @@ public abstract class Window {
     }
 
     /**
+     * Sets the initialWidth
+     * @param initialWidth initialWidth
+     */
+    public void setInitialWidth(int initialWidth) {
+        this.initialWidth = initialWidth;
+    }
+
+    /**
      * @return The initial width of the window
      */
     public int getInitialWidth() {
         return initialWidth;
+    }
+
+    /**
+     * Sets the initialHeight
+     * @param initialHeight initialHeight
+     */
+    public void setInitialHeight(int initialHeight) {
+        this.initialHeight = initialHeight;
     }
 
     /**

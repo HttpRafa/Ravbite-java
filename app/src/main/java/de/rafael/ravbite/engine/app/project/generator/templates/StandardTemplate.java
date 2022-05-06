@@ -40,7 +40,9 @@ package de.rafael.ravbite.engine.app.project.generator.templates;
 
 import de.rafael.ravbite.engine.app.project.Project;
 import de.rafael.ravbite.engine.app.project.generator.ProjectTemplate;
+import de.rafael.ravbite.engine.app.project.gradle.GradleManager;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
@@ -56,7 +58,7 @@ public class StandardTemplate extends ProjectTemplate {
 
         super.folder(project, "src");
         // Generate Gradle Project
-        download(project, "src/gradle.zip", "https://services.gradle.org/distributions/gradle-7.4.2-bin.zip");
+        GradleManager.setup(new File(project.getPath(), "src/"));
 
         super.folder(project, "assets");
 

@@ -39,6 +39,7 @@ package de.rafael.ravbite.engine.app.editor.window.project;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.EditorWindow;
+import de.rafael.ravbite.engine.app.ui.CheckBoxDecider;
 import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
@@ -59,10 +60,12 @@ public class CreateProjectWindow implements IGui {
     }
 
     private String pathString = new File(".").getAbsolutePath();
-    private ImString nameString = new ImString();
+    private final ImString nameString = new ImString();
+    private final ImString packageString = new ImString();
 
-    private ImBoolean checkbox2D = new ImBoolean();
-    private ImBoolean checkbox3D = new ImBoolean(true);
+    private final CheckBoxDecider dimensionsCheckBoxes = new CheckBoxDecider(true, new String[]{"2D", "3D"}, new boolean[] {false, true});
+    private final CheckBoxDecider dslCheckBoxes = new CheckBoxDecider(true, new String[]{"Groovy DSL", "Kotlin DSL"}, new boolean[] {true, false});
+    private final CheckBoxDecider languageCheckBoxes = new CheckBoxDecider(true, new String[]{"Java", "Kotlin", "Groovy"}, new boolean[] {true, false, false});
 
     private String errorString = null;
 
@@ -71,7 +74,7 @@ public class CreateProjectWindow implements IGui {
     public void gui() {
         if(ImGui.beginPopupModal("Create Project")) {
             if (ImGui.inputText("Name", nameString)) {
-
+                packageString.set("net.ravbite." + nameString.get().toLowerCase().trim().replaceAll("\\.", "").replaceAll(" ", "."));
             }
             ImGui.text(pathString);
             ImGui.sameLine();
@@ -91,38 +94,43 @@ public class CreateProjectWindow implements IGui {
             ImGui.spacing();
             ImGui.text("Engine Settings");
 
-            if(ImGui.checkbox("2D", checkbox2D)) {
-                if(checkbox2D.get() && checkbox3D.get()) {
-                    checkbox3D.set(false);
-                }
-                if(!checkbox2D.get() && !checkbox3D.get()) {
-                    checkbox3D.set(true);
-                }
-            }
-            ImGui.sameLine();
-            if(ImGui.checkbox("3D", checkbox3D)) {
-                if(checkbox2D.get() && checkbox3D.get()) {
-                    checkbox2D.set(false);
-                }
-                if(!checkbox2D.get() && !checkbox3D.get()) {
-                    checkbox2D.set(true);
-                }
-            }
+            dimensionsCheckBoxes.imGui();
 
             ImGui.spacing();
             ImGui.separator();
             ImGui.spacing();
+            ImGui.text("Gradle Settings");
+
+            if (ImGui.inputText("Package", packageString)) {
+
+            }
+            ImGui.spacing();
+            ImGui.text("Gradle DSL");
+            dslCheckBoxes.imGui();
+
+            ImGui.spacing();
+            ImGui.text("Language");
+            languageCheckBoxes.imGui();
+
+            ImGui.spacing();
+            ImGui.separator();
+            ImGui.spacing();
+
             if (ImGui.button("Create")) {
                 String name = nameString.get();
+                String packageName = packageString.get();
 
                 if(name.isBlank() || name.isEmpty()) {
                     errorString = "Name is invalid";
-                } else if(checkbox2D.get()) {
+                } else if(packageName.isBlank() || packageName.isEmpty()) {
+                    errorString = "Package is invalid";
+                } else if(this.dimensionsCheckBoxes.getOptionsValues()[0].get()) {
                     errorString = "2D is not supported yet";
                 } else if(!editorWindow.getProjectManager().isNameFree(name)) {
                     errorString = "Name is already in use";
                 } else {
-                    if(editorWindow.getProjectManager().createProject(name, pathString, checkbox2D.get() ? 2 : 3)) {
+                    // TODO: Add missing options
+                    if(editorWindow.getProjectManager().createProject(name, pathString, this.dimensionsCheckBoxes.getOptionsValues()[0].get() ? 2 : 3, packageName, null, null)) {
                         ImGui.closeCurrentPopup();
                     }
                 }

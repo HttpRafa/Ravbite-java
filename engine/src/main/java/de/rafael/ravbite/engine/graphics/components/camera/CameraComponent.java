@@ -47,7 +47,7 @@ public class CameraComponent extends Component {
 
     private int[] renderLayers;
 
-    private float fieldOfView = 70;
+    private float fieldOfView = 100;
     private float nearPlane = 0.1f;
     private float farPlane = 1000f;
 

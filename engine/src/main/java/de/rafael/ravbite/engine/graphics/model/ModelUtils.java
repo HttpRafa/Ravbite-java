@@ -65,24 +65,28 @@ public class ModelUtils {
      * Loads all available meshes from a modelFile
      * @param assetLocation Path to the modelFile
      * @return MeshArray
-     * @throws IOException ?
      */
-    public static Mesh rbLoadMeshFromModel(AssetLocation assetLocation, EngineWindow engineWindow) throws IOException {
-        AIScene aiScene = ModelUtils.rbLoadScene(assetLocation);
+    public static Mesh rbLoadModel(AssetLocation assetLocation, EngineWindow engineWindow) {
+        try {
+            AIScene aiScene = ModelUtils.rbLoadScene(assetLocation);
 
-        PointerBuffer pointerBuffer = aiScene.mMeshes();
-        Mesh mesh = null;
-        for (int i = 0; i < Objects.requireNonNull(pointerBuffer).limit(); i++) {
-            AIMesh aiMesh = AIMesh.create(pointerBuffer.get(i));
-            Mesh loadedMesh = ModelUtils.rbProcessMesh(aiScene, aiMesh, engineWindow);
-            if(mesh == null) {
-                mesh = loadedMesh;
-            } else {
-                mesh.addSubMesh(loadedMesh);
+            PointerBuffer pointerBuffer = aiScene.mMeshes();
+            Mesh mesh = null;
+            for (int i = 0; i < Objects.requireNonNull(pointerBuffer).limit(); i++) {
+                AIMesh aiMesh = AIMesh.create(pointerBuffer.get(i));
+                Mesh loadedMesh = ModelUtils.rbProcessMesh(aiScene, aiMesh, engineWindow);
+                if(mesh == null) {
+                    mesh = loadedMesh;
+                } else {
+                    mesh.addSubMesh(loadedMesh);
+                }
             }
+            Assimp.aiReleaseImport(aiScene);
+            return mesh;
+        } catch(Exception exception) {
+            exception.printStackTrace();
+            return null;
         }
-        Assimp.aiReleaseImport(aiScene);
-        return mesh;
     }
 
     /**

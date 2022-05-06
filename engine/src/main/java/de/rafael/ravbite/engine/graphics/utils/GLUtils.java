@@ -118,6 +118,7 @@ public class GLUtils {
      * @throws IOException If the file doesn't exist
      */
     public int rbLoadTexture(AssetLocation assetLocation) throws IOException {
+        System.out.println(assetLocation.getPath(false));
         return rbLoadTexture(assetLocation.asInputStream());
     }
 
