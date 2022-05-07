@@ -69,13 +69,14 @@ public class GameScene extends Scene {
         light.appendComponent(new LightComponent(new Color(255, 255, 255)));
         getEngineWindow().getDebugWindow().addGameObject(light);
 
-        GameObject swampBiome = new GameObject(this, "Site");
-        swampBiome.getTransform().move(-1.5f, 0f, -2.5f);
-        swampBiome.appendComponent(new MeshComponent(ModelUtils.rbLoadModel(AssetLocation.create("/models/viking-room.obj", AssetLocation.INTERNAL), getEngineWindow())));
-        swampBiome.appendComponent(new MeshRendererComponent());
+        GameObject testModel = new GameObject(this, "Test Model");
+        testModel.getTransform().move(-1.5f, 0f, -2.5f);
+        testModel.appendComponent(new MeshComponent(ModelUtils.rbLoadModel(AssetLocation.create("/models/viking-room.obj", AssetLocation.INTERNAL), getEngineWindow())));
+        testModel.appendComponent(new MeshRendererComponent());
+        getEngineWindow().getDebugWindow().addGameObject(testModel);
 
         super.storeObject(0, camera);
-        getSceneObject().appendChildren(camera, light, swampBiome);
+        getSceneObject().appendChildren(camera, light, testModel);
     }
 
     int state = 0;

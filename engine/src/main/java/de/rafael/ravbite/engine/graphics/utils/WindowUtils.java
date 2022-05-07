@@ -39,6 +39,7 @@ package de.rafael.ravbite.engine.graphics.utils;
 //------------------------------
 
 import de.matthiasmann.twl.utils.PNGDecoder;
+import de.rafael.ravbite.engine.sound.utils.SoundUtils;
 import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
@@ -47,19 +48,17 @@ import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
-import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public class GLUtils {
+public abstract class WindowUtils {
 
     private final EngineWindow engineWindow;
 
-    public GLUtils(EngineWindow engineWindow) {
+    public WindowUtils(EngineWindow engineWindow) {
         this.engineWindow = engineWindow;
     }
 

@@ -80,7 +80,7 @@ public class Transform extends Component {
     }
 
     public Transform rotation(Vector3f vector) {
-        this.rotation.mul(Maths.eulerToQuaternion(vector.x, vector.y, vector.z));
+        this.rotation.set(Maths.eulerToQuaternion(vector.x, vector.y, vector.z));
         return this;
     }
 
@@ -110,7 +110,7 @@ public class Transform extends Component {
      */
     public void add(Transform transform) {
         this.position.add(transform.getPosition());
-        this.rotation.add(transform.getRotation());
+        this.rotation.mul(transform.getRotation());
     }
 
     /**

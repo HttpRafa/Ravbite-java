@@ -71,6 +71,14 @@ public abstract class Component implements IGui {
     }
 
     /**
+     * Called when the component gets removed from a GameObject
+     */
+    // TODO: If components can be removed
+    public void dispose() {
+
+    }
+
+    /**
      * Called every frame
      */
     public void update() {}

@@ -213,7 +213,7 @@ public abstract class EngineWindow extends Window {
 
         // Cleanup old scene
         scenes[currentScene].dispose();
-        inputSystem.delTempCallbacks();
+        inputSystem.getKeyboard().delTempCallbacks();
         if(dataWatcher != null) dataWatcher.rbCleanUp();
 
         // Prepare new scene

@@ -8,13 +8,14 @@ package de.rafael.ravbite.engine.utils;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.utils.GLUtils;
+import de.rafael.ravbite.engine.graphics.utils.WindowUtils;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.sound.utils.SoundUtils;
 
 /**
  *
  */
-public class RavbiteUtils extends GLUtils {
+public class RavbiteUtils extends SoundUtils {
 
     private static final RavbiteUtils UTILS_INSTANCE = new RavbiteUtils();
 

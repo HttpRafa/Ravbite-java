@@ -61,7 +61,7 @@ public class Mouse {
     public Mouse(InputSystem inputSystem) {
         this.inputSystem = inputSystem;
 
-        this.inputSystem.listenGlobal(new KeyCallback() {
+        this.inputSystem.getKeyboard().listenGlobal(new KeyCallback() {
             @Override
             public void pressed(int key, long window, int scancode, int action, int mods) {
                 if(toggleLockKeys.contains(key)) {
@@ -122,20 +122,20 @@ public class Mouse {
         this.toggleLockKeys.remove(key);
     }
 
-    public double getMouseX() {
-        return mouseX;
+    public float getMouseX() {
+        return (float) mouseX;
     }
 
-    public double getMouseY() {
-        return mouseY;
+    public float getMouseY() {
+        return (float) mouseY;
     }
 
-    public double getDeltaX() {
-        return deltaX;
+    public float getDeltaX() {
+        return (float) deltaX;
     }
 
-    public double getDeltaY() {
-        return deltaY;
+    public float getDeltaY() {
+        return (float) deltaY;
     }
 
     public MouseState getState() {

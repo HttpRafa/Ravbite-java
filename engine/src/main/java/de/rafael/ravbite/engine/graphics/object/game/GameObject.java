@@ -98,6 +98,7 @@ public class GameObject {
      * @return GameObject
      */
     public GameObject appendChild(GameObject child) {
+        child.setParentObject(this);
         childrenObjects.add(child);
         return this;
     }
@@ -108,6 +109,9 @@ public class GameObject {
      * @return GameObject
      */
     public GameObject appendChildren(GameObject... children) {
+        for (GameObject child : children) {
+            child.setParentObject(this);
+        }
         childrenObjects.addAll(List.of(children));
         return this;
     }
@@ -151,8 +155,7 @@ public class GameObject {
      */
     public void render(CameraComponent cameraComponent) {
         for (Component objectComponent : objectComponents) {
-            if(objectComponent instanceof RenderComponent) {
-                RenderComponent renderer = (RenderComponent) objectComponent;
+            if(objectComponent instanceof RenderComponent renderer) {
                 renderer.render(cameraComponent);
             }
         }
@@ -222,6 +225,14 @@ public class GameObject {
      */
     public List<Component> getObjectComponents() {
         return objectComponents;
+    }
+
+    /**
+     * Sets the parentObject
+     * @param parentObject Parent
+     */
+    public void setParentObject(GameObject parentObject) {
+        this.parentObject = parentObject;
     }
 
     /**
