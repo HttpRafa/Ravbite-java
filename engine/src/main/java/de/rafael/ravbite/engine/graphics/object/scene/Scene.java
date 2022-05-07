@@ -43,9 +43,9 @@ import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
-import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.engine.input.InputSystem;
+import de.rafael.ravbite.engine.utils.RavbiteUtils;
 import org.joml.Vector3f;
 
 import java.util.Collection;
@@ -208,9 +208,9 @@ public abstract class Scene {
     }
 
     /**
-     * @return Utils class for openGL
+     * @return Utils instance
      */
-    public GLUtils getGLUtils() {
+    public RavbiteUtils getUtils() {
         return this.engineWindow.getUtils();
     }
 
