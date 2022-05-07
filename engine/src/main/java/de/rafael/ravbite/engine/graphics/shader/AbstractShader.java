@@ -43,7 +43,6 @@ import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
-import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import org.joml.Matrix4f;
@@ -148,7 +147,7 @@ public abstract class AbstractShader {
      * @throws ShaderCompilationException If the shader is not programmed right
      */
     public void fragmentShader(AssetLocation assetLocation) throws IOException, ShaderCompilationException {
-        fragmentShaderId = engineWindow.getGLUtils().rbLoadShader(assetLocation, GL20.GL_FRAGMENT_SHADER);
+        fragmentShaderId = engineWindow.getUtils().rbLoadShader(assetLocation, GL20.GL_FRAGMENT_SHADER);
     }
 
     /**
@@ -158,7 +157,7 @@ public abstract class AbstractShader {
      * @throws ShaderCompilationException If the shader is not programmed right
      */
     public void vertexShader(AssetLocation assetLocation) throws IOException, ShaderCompilationException {
-        vertexShaderId = engineWindow.getGLUtils().rbLoadShader(assetLocation, GL20.GL_VERTEX_SHADER);
+        vertexShaderId = engineWindow.getUtils().rbLoadShader(assetLocation, GL20.GL_VERTEX_SHADER);
     }
 
     /**

@@ -38,17 +38,14 @@ package de.rafael.ravbite.engine.utils.debug;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.Component;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
-import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.EngineDebugOptionsWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.EnginePerformanceDebugWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.GameObjectOptionsWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.debug.ExecutedTask;
-import org.lwjgl.glfw.GLFW;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -56,7 +53,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -162,7 +158,7 @@ public class DebugWindow {
         if(imagePath != null) {
             engineWindow.getThreadExecutor().addTask(() -> {
                 try {
-                    int textureId = engineWindow.getGLUtils().rbLoadTexture(AssetLocation.create(imagePath, AssetLocation.EXTERNAL));
+                    int textureId = engineWindow.getUtils().rbLoadTexture(AssetLocation.create(imagePath, AssetLocation.EXTERNAL));
                     engineDebugOptionsWindow.textureIdLabel.setText(textureId + "");
                 } catch (IOException exception) {
                     exception.printStackTrace();

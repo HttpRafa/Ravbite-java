@@ -87,7 +87,7 @@ public class Mesh {
      * @param engineWindow Window to handle the VAOs and VBOs
      */
     public void store(EngineWindow engineWindow) {
-        storedMesh = engineWindow.getGLUtils().rbLoadToVAO(this);
+        storedMesh = engineWindow.getUtils().rbLoadToVAO(this);
     }
 
     /**

@@ -44,7 +44,6 @@ import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.utils.io.IOUtils;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 import org.lwjgl.system.MemoryUtil;
@@ -52,7 +51,6 @@ import org.lwjgl.system.MemoryUtil;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -244,7 +242,7 @@ public class ModelUtils {
                 String path = pathString.dataString();
 
                 AssetLocation assetLocation = AssetLocation.create(path, AssetLocation.DETECT);
-                textureId = engineWindow.getGLUtils().rbLoadTexture(assetLocation);
+                textureId = engineWindow.getUtils().rbLoadTexture(assetLocation);
             }
 
             AIColor4D color = AIColor4D.create();

@@ -39,17 +39,16 @@ package de.rafael.ravbite.engine.graphics.window;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.window.executor.ThreadExecutor;
+import de.rafael.ravbite.engine.utils.RavbiteUtils;
 import de.rafael.ravbite.engine.utils.debug.DebugWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
-import de.rafael.ravbite.engine.graphics.utils.GLUtils;
 import de.rafael.ravbite.engine.input.InputSystem;
 import de.rafael.ravbite.utils.debug.EngineWatcher;
 import de.rafael.ravbite.utils.debug.TasksType;
-import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -78,7 +77,7 @@ public abstract class EngineWindow extends Window {
     private int defaultTexture = 0;
 
     private DataWatcher dataWatcher;
-    private final GLUtils glUtils;
+    private final RavbiteUtils ravbiteUtils;
     private final ThreadExecutor threadExecutor;
 
     /**
@@ -89,7 +88,7 @@ public abstract class EngineWindow extends Window {
     public EngineWindow(int width, int height) {
         super(width, height);
 
-        glUtils = new GLUtils(this);
+        ravbiteUtils = RavbiteUtils.use(this);
         threadExecutor = new ThreadExecutor();
     }
 
@@ -128,7 +127,7 @@ public abstract class EngineWindow extends Window {
 
         // Load default assets
         try {
-            this.defaultTexture = this.glUtils.rbStaticLoadTexture(AssetLocation.create("/textures/default/standard.png", AssetLocation.INTERNAL));
+            this.defaultTexture = this.ravbiteUtils.rbStaticLoadTexture(AssetLocation.create("/textures/default/standard.png", AssetLocation.INTERNAL));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -373,10 +372,10 @@ public abstract class EngineWindow extends Window {
     }
 
     /**
-     * @return Utils class for openGL
+     * @return Utils instance
      */
-    public GLUtils getGLUtils() {
-        return glUtils;
+    public RavbiteUtils getUtils() {
+        return ravbiteUtils;
     }
 
     /**

@@ -211,7 +211,7 @@ public abstract class Scene {
      * @return Utils class for openGL
      */
     public GLUtils getGLUtils() {
-        return this.engineWindow.getGLUtils();
+        return this.engineWindow.getUtils();
     }
 
 }
