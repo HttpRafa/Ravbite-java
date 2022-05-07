@@ -14,6 +14,10 @@ public class GradleManager {
 
     private static final String GRADLE_DOWNLOAD_URL = "https://services.gradle.org/distributions/gradle-7.4.2-bin.zip";
 
+    /**
+     * Creates a new gradle project
+     * @param folder Folder
+     */
     public static void setup(File folder) {
 
     }

@@ -42,6 +42,11 @@ import de.rafael.ravbite.engine.app.project.Project;
 
 public class ProjectGenerator {
 
+    /**
+     * Generates a project
+     * @param projectTemplate Template
+     * @param project Project instance
+     */
     public static void generate(ProjectTemplates projectTemplate, Project project) {
         projectTemplate.getTemplate().generate(project);
     }

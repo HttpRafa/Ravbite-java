@@ -37,6 +37,9 @@ public class CheckBoxDecider {
         this.onlyOne = onlyOne;
     }
 
+    /**
+     * Called every frame to render the GUI
+     */
     public void imGui() {
         for (int i = 0; i < this.options.length; i++) {
             if(ImGui.checkbox(this.options[i], this.optionsValues[i])) {
@@ -61,10 +64,16 @@ public class CheckBoxDecider {
         }
     }
 
+    /**
+     * @return Array of options
+     */
     public String[] getOptions() {
         return options;
     }
 
+    /**
+     * @return Array of the values of options
+     */
     public ImBoolean[] getOptionsValues() {
         return optionsValues;
     }

@@ -81,6 +81,9 @@ public class Mouse {
         });
     }
 
+    /**
+     * Called every frame
+     */
     public void update() {
         double windowWidth = getInputSystem().getEngineWindow().getWidth();
         double windowHeight = getInputSystem().getEngineWindow().getHeight();
@@ -103,6 +106,10 @@ public class Mouse {
         }
     }
 
+    /**
+     * Changes the mouseState
+     * @param state New MouseState
+     */
     public void changeState(MouseState state) {
         this.mouseState[0] = state;
         if (this.mouseState[0] == MouseState.LOCKED_HIDDEN) {
@@ -114,30 +121,53 @@ public class Mouse {
         }
     }
 
+    /**
+     * Adds a new toggleKey
+     * @param key GLFW.GLFW_KEY_....
+     */
     public void addToggleKey(int key) {
         this.toggleLockKeys.add(key);
     }
 
+    /**
+     * Removes a toggleKey
+     * @param key GLFW.GLFW_KEY_....
+     */
     public void removeToggleKey(int key) {
         this.toggleLockKeys.remove(key);
     }
 
+    /**
+     * @return X Position of the mouse on screen
+     */
     public float getMouseX() {
         return (float) mouseX;
     }
 
+    /**
+     * @return Y Position of the mouse on screen
+     */
     public float getMouseY() {
         return (float) mouseY;
     }
 
+    /**
+     * @return X Delta of the mouse
+     */
     public float getDeltaX() {
         return (float) deltaX;
     }
 
+    /**
+     * @return Y Delta of the mouse
+     */
     public float getDeltaY() {
         return (float) deltaY;
     }
 
+    /**
+     * @return Current mouseState
+     */
     public MouseState getState() {
         return mouseState[0];
     }

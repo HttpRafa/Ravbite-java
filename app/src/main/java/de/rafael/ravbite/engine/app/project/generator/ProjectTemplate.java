@@ -60,6 +60,12 @@ public abstract class ProjectTemplate {
 
     public abstract void generate(Project project);
 
+    /**
+     * Downloads a file and stores it
+     * @param simpleProject Project
+     * @param path Path to the file inside the project structure
+     * @param url Url
+     */
     public void download(SimpleProject simpleProject, String path, String url) {
         File file = new File(simpleProject.getPath(), path);
         try {
@@ -70,8 +76,14 @@ public abstract class ProjectTemplate {
         }
     }
 
-    public void projectFile(SimpleProject projectDescription, String path, ProjectStorage projectStorage) {
-        File file = new File(projectDescription.getPath(), path);
+    /**
+     * Creates a projectFile
+     * @param simpleProject Project
+     * @param path Path to the file inside the project structure
+     * @param projectStorage Instance to save
+     */
+    public void projectFile(SimpleProject simpleProject, String path, ProjectStorage projectStorage) {
+        File file = new File(simpleProject.getPath(), path);
         try {
             FileUtils.writeByteArrayToFile(file, SerializationUtils.serialize(projectStorage));
         } catch (IOException exception) {
@@ -79,16 +91,27 @@ public abstract class ProjectTemplate {
         }
     }
 
-    public void folder(SimpleProject projectDescription, String path) {
-        File folder = new File(projectDescription.getPath(), path);
+    /**
+     * Creates a folder
+     * @param simpleProject Project
+     * @param path Path to the folder inside the project structure
+     */
+    public void folder(SimpleProject simpleProject, String path) {
+        File folder = new File(simpleProject.getPath(), path);
         if(!folder.exists()) folder.mkdirs();
     }
 
-    public void jsonFile(SimpleProject projectDescription, String path, JsonElement jsonElement) {
+    /**
+     * Creates a jsonFile
+     * @param simpleProject Project
+     * @param path Path to the file inside the project structure
+     * @param jsonElement JsonElement
+     */
+    public void jsonFile(SimpleProject simpleProject, String path, JsonElement jsonElement) {
         Gson gson = new GsonBuilder().disableHtmlEscaping().serializeNulls().setPrettyPrinting().create();
 
         try {
-            File file = new File(projectDescription.getPath(), path);
+            File file = new File(simpleProject.getPath(), path);
             if (!file.exists()) {
                 file.createNewFile();
             }

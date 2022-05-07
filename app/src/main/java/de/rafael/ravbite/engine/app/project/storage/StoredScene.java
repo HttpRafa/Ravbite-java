@@ -50,10 +50,17 @@ public class StoredScene implements Serializable {
         this.name = name;
     }
 
+    /**
+     * @return Name of the scene
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of scene
+     * @param name New name
+     */
     public void setName(String name) {
         this.name = name;
     }

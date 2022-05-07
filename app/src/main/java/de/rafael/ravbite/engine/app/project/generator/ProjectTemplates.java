@@ -50,6 +50,9 @@ public enum ProjectTemplates {
         this.template = template;
     }
 
+    /**
+     * @return Template as instance
+     */
     public ProjectTemplate getTemplate() {
         return template;
     }

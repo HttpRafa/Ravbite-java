@@ -54,18 +54,32 @@ public class ProjectStorage implements Serializable {
         this.scenes = new String[0];
     }
 
+    /**
+     * @return Name of the project
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the project
+     * @param name New name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return Array of scenes inside this project
+     */
     public String[] getScenes() {
         return scenes;
     }
 
+    /**
+     * Overrides the array of scenes
+     * @param scenes New Array
+     */
     public void setScenes(String[] scenes) {
         this.scenes = scenes;
     }

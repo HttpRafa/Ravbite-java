@@ -56,6 +56,10 @@ public class ProjectManager {
 
     private final List<SimpleProject> projects = new ArrayList<>();
 
+    /**
+     * Loads a projects
+     * @throws IOException ?
+     */
     public void loadProjects() throws IOException {
         Gson gson = new GsonBuilder().disableHtmlEscaping().serializeNulls().setPrettyPrinting().create();
 
@@ -78,6 +82,10 @@ public class ProjectManager {
         }
     }
 
+    /**
+     * Stores all projects
+     * @throws IOException ?
+     */
     public void storeProjects() throws IOException {
         Gson gson = new GsonBuilder().disableHtmlEscaping().serializeNulls().setPrettyPrinting().create();
 
@@ -104,6 +112,16 @@ public class ProjectManager {
         fileWriter.close();
     }
 
+    /**
+     * Creates a project
+     * @param name Name of the project
+     * @param path Path to the project
+     * @param dimension Dimension
+     * @param packageName Package Name
+     * @param dslType Gradle DSL Type
+     * @param languageType Gradle Language Type
+     * @return If it was successful
+     */
     public boolean createProject(String name, String path, int dimension, String packageName, GradleDslType dslType, GradleLanguageType languageType) {
         File projectFolder = new File(path, name);
 
@@ -115,14 +133,25 @@ public class ProjectManager {
         return true;
     }
 
+    /**
+     * Deletes a project
+     * @param name Name of the project
+     */
     public void deleteProject(String name) {
 
     }
 
+    /**
+     * @param name Name
+     * @return If the name is free
+     */
     public boolean isNameFree(String name) {
         return projects.stream().noneMatch(item -> item.getName().equalsIgnoreCase(name));
     }
 
+    /**
+     * @return All projects as simple version
+     */
     public List<SimpleProject> getProjects() {
         return projects;
     }
