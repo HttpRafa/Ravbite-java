@@ -39,6 +39,7 @@ package de.rafael.ravbite.engine.graphics.window;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.window.executor.ThreadExecutor;
+import de.rafael.ravbite.engine.sound.SoundSystem;
 import de.rafael.ravbite.engine.utils.RavbiteUtils;
 import de.rafael.ravbite.engine.utils.debug.DebugWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
@@ -65,6 +66,7 @@ public abstract class EngineWindow extends Window {
 
     private AbstractShader[] abstractShaders = new AbstractShader[0];
 
+    private SoundSystem soundSystem;
     private InputSystem inputSystem;
 
     private DebugWindow debugWindow = null;
@@ -111,6 +113,7 @@ public abstract class EngineWindow extends Window {
             abstractShader.dispose();
         }
 
+        soundSystem.destroy();
         destroy();
     }
 
@@ -121,6 +124,10 @@ public abstract class EngineWindow extends Window {
         }
 
         super.initialize();
+
+        // Setup soundEngine
+        soundSystem = new SoundSystem(this);
+        soundSystem.initialize();
 
         // Setup inputSystem
         inputSystem = new InputSystem(this);
@@ -313,6 +320,13 @@ public abstract class EngineWindow extends Window {
      */
     public Scene[] getScenes() {
         return scenes;
+    }
+
+    /**
+     * @return SoundSystem for this window
+     */
+    public SoundSystem getSoundSystem() {
+        return soundSystem;
     }
 
     /**

@@ -57,7 +57,7 @@ public class ImageUtils {
      * @throws IOException If the file doesn't exist or an error occurred while reading the data
      */
     public static BufferedImage loadImage(AssetLocation assetLocation) throws IOException {
-        return ImageIO.read(assetLocation.asInputStream());
+        return ImageIO.read(assetLocation.inputStream());
     }
 
     /**

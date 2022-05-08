@@ -46,7 +46,10 @@ import de.rafael.ravbite.engine.graphics.model.ModelUtils;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
-import de.rafael.ravbite.engine.input.mouse.state.MouseState;
+import de.rafael.ravbite.engine.input.callbacks.KeyCallback;
+import de.rafael.ravbite.engine.sound.components.AudioListener;
+import de.rafael.ravbite.engine.sound.components.AudioSource;
+import de.rafael.ravbite.engine.sound.utils.Sound;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.lwjgl.glfw.GLFW;
 
@@ -60,8 +63,17 @@ public class GameScene extends Scene {
 
     @Override
     public void prepare() {
+        Sound music = getEngineWindow().getUtils().alLoadSound(AssetLocation.create("/sounds/music.ogg", AssetLocation.INTERNAL));
+        AudioSource musicBox = new AudioSource().use(music).playOnInitialization();
+
+        Sound sound = getEngineWindow().getUtils().alLoadSound(AssetLocation.create("/sounds/bounce.ogg", AssetLocation.INTERNAL));
+        AudioSource audioSource = new AudioSource().use(sound);
+
         GameObject camera = new GameObject(this, "Camera 1");
         camera.appendComponent(new CameraComponent());
+        camera.appendComponent(new AudioListener());
+        camera.appendComponent(musicBox);
+        camera.appendComponent(audioSource);
         getEngineWindow().getDebugWindow().addGameObject(camera);
 
         GameObject light = new GameObject(this, "Light");
@@ -75,6 +87,20 @@ public class GameScene extends Scene {
         testModel.appendComponent(new MeshRendererComponent());
         getEngineWindow().getDebugWindow().addGameObject(testModel);
 
+        getInputSystem().getKeyboard().listen(new KeyCallback() {
+            @Override
+            public void pressed(int key, long window, int scancode, int action, int mods) {
+                if(key == GLFW.GLFW_KEY_P) {
+                    audioSource.play(1f, 1f);
+                }
+            }
+
+            @Override
+            public void released(int key, long window, int scancode, int action, int mods) {
+
+            }
+        });
+
         super.storeObject(0, camera);
         getSceneObject().appendChildren(camera, light, testModel);
     }
@@ -84,9 +110,9 @@ public class GameScene extends Scene {
     public void update() {
         GameObject camera = (GameObject) super.getStoredObject(0);
 
-        if(camera.getTransform().getRotation().y < -0.65) {
+        if(camera.getTransform().rotation.y < -0.65) {
             state = 1;
-        } else if(camera.getTransform().getRotation().y > 0.15) {
+        } else if(camera.getTransform().rotation.y > 0.15) {
             state = 0;
         }
 

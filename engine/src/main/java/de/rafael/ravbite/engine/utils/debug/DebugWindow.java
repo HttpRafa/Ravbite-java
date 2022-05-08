@@ -132,17 +132,17 @@ public class DebugWindow {
      * @param table Table
      */
     public void updateTransformTable(Transform transform, JTable table) {
-        table.getModel().setValueAt(cutNumber(transform.getPosition().x), 0, 1);
-        table.getModel().setValueAt(cutNumber(transform.getPosition().y), 0, 2);
-        table.getModel().setValueAt(cutNumber(transform.getPosition().z), 0, 3);
+        table.getModel().setValueAt(cutNumber(transform.position.x), 0, 1);
+        table.getModel().setValueAt(cutNumber(transform.position.y), 0, 2);
+        table.getModel().setValueAt(cutNumber(transform.position.z), 0, 3);
 
-        table.getModel().setValueAt(cutNumber(transform.getRotation().x), 1, 1);
-        table.getModel().setValueAt(cutNumber(transform.getRotation().y), 1, 2);
-        table.getModel().setValueAt(cutNumber(transform.getRotation().z), 1, 3);
+        table.getModel().setValueAt(cutNumber(transform.rotation.x), 1, 1);
+        table.getModel().setValueAt(cutNumber(transform.rotation.y), 1, 2);
+        table.getModel().setValueAt(cutNumber(transform.rotation.z), 1, 3);
 
-        table.getModel().setValueAt(cutNumber(transform.getScale().x), 2, 1);
-        table.getModel().setValueAt(cutNumber(transform.getScale().y), 2, 2);
-        table.getModel().setValueAt(cutNumber(transform.getScale().z), 2, 3);
+        table.getModel().setValueAt(cutNumber(transform.scale.x), 2, 1);
+        table.getModel().setValueAt(cutNumber(transform.scale.y), 2, 2);
+        table.getModel().setValueAt(cutNumber(transform.scale.z), 2, 3);
     }
 
     /**

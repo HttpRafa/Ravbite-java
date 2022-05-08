@@ -94,7 +94,7 @@ public class StandardShader extends AbstractShader {
 
         loadSpecular(material.getShineDamper(), material.getReflectivity());
 
-        LightComponent[] lights = gameObject.getScene().getLights(15, cameraTransform.getPosition());
+        LightComponent[] lights = gameObject.getScene().getLights(15, cameraTransform.position);
         if(lights.length > 0) loadLightsComponent(lights);
     }
 
@@ -114,7 +114,7 @@ public class StandardShader extends AbstractShader {
      */
     // TODO: Support multiple lights
     private void loadLightsComponent(LightComponent[] lightComponents) {
-        super.load(lightPosition, lightComponents[0].getGameObject().getSpecialTransform(Transform.WORLD_SPACE).getPosition());
+        super.load(lightPosition, lightComponents[0].getGameObject().getSpecialTransform(Transform.WORLD_SPACE).position);
         super.load(lightColor, lightComponents[0].getColorAsVector());
     }
 

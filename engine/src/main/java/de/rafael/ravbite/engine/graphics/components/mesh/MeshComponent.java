@@ -44,7 +44,7 @@ import de.rafael.ravbite.engine.graphics.object.game.mesh.StoredMesh;
 
 public class MeshComponent extends Component {
 
-    private Mesh mesh;
+    public Mesh mesh;
 
     public MeshComponent(Mesh mesh) {
         this.mesh = mesh;
@@ -53,6 +53,11 @@ public class MeshComponent extends Component {
     @Override
     public void initialize() {
         this.mesh.storeMeshes(getGameObject().getScene().getEngineWindow());
+    }
+
+    @Override
+    public void valueUpdate(String fieldName) {
+        setMesh(mesh);
     }
 
     /**

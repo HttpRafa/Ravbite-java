@@ -38,6 +38,7 @@ package de.rafael.ravbite.engine.graphics.utils;
 //
 //------------------------------
 
+import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
@@ -50,6 +51,8 @@ public class DataWatcher {
     private final List<Integer> vaoList = new ArrayList<>();
     private final List<Integer> vboList = new ArrayList<>();
     private final List<Integer> textureList = new ArrayList<>();
+    
+    private final List<Integer> soundBuffersList = new ArrayList<>();
 
     /**
      * Delete all VAOs and VBOs stored in this dataWatcher
@@ -63,6 +66,9 @@ public class DataWatcher {
         }
         for (Integer texture : textureList) {
             GL11.glDeleteTextures(texture);
+        }
+        for (Integer buffer : soundBuffersList) {
+            AL10.alDeleteBuffers(buffer);
         }
     }
 

@@ -79,6 +79,11 @@ public abstract class Component implements IGui {
     }
 
     /**
+     * Called everytime a value is changed in the editor
+     */
+    public void valueUpdate(String fieldName) {}
+
+    /**
      * Called every frame
      */
     public void update() {}

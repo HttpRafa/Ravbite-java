@@ -75,6 +75,7 @@ public abstract class WindowUtils {
         ByteBuffer buffer = ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
         decoder.decode(buffer, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
         buffer.flip();
+        inputStream.close();
 
         int textureId = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
@@ -95,7 +96,7 @@ public abstract class WindowUtils {
      * @throws IOException If the file doesn't exist
      */
     public int rbStaticLoadTexture(AssetLocation assetLocation) throws IOException {
-        return rbStaticLoadTexture(assetLocation.asInputStream());
+        return rbStaticLoadTexture(assetLocation.inputStream());
     }
 
     /**
@@ -117,8 +118,7 @@ public abstract class WindowUtils {
      * @throws IOException If the file doesn't exist
      */
     public int rbLoadTexture(AssetLocation assetLocation) throws IOException {
-        System.out.println(assetLocation.getPath(false));
-        return rbLoadTexture(assetLocation.asInputStream());
+        return rbLoadTexture(assetLocation.inputStream());
     }
 
     /**

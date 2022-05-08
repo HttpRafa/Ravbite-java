@@ -119,6 +119,10 @@ public class ModelUtils {
         return aiScene;
     }
 
+    /**
+     * Create virtual filesystem for assimp
+     * @return Filesystem
+     */
     public static AIFileIO rbCreateAIFileIO() {
         return AIFileIO.create()
                 .OpenProc((pFileIO, fileName, openMode) -> {

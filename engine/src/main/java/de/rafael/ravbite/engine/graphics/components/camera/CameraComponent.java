@@ -45,11 +45,11 @@ import org.joml.Matrix4f;
 
 public class CameraComponent extends Component {
 
-    private int[] renderLayers;
+    public int[] renderLayers;
 
-    private float fieldOfView = 100;
-    private float nearPlane = 0.1f;
-    private float farPlane = 1000f;
+    public float fieldOfView = 100;
+    public float nearPlane = 0.1f;
+    public float farPlane = 1000f;
 
     private Matrix4f projectionMatrix;
 
@@ -85,6 +85,11 @@ public class CameraComponent extends Component {
 
     @Override
     public void initialize() {
+        updateProjectionMatrix();
+    }
+
+    @Override
+    public void valueUpdate(String fieldName) {
         updateProjectionMatrix();
     }
 
@@ -139,25 +144,11 @@ public class CameraComponent extends Component {
     }
 
     /**
-     * @return Layers that the camera renders
-     */
-    public int[] getRenderLayers() {
-        return renderLayers;
-    }
-
-    /**
      * Sets the renderLayers
      * @param renderLayers New renderLayers
      */
     public void setRenderLayers(int[] renderLayers) {
         this.renderLayers = renderLayers;
-    }
-
-    /**
-     * @return FieldOfView of the camera
-     */
-    public float getFieldOfView() {
-        return fieldOfView;
     }
 
     /**
@@ -170,26 +161,12 @@ public class CameraComponent extends Component {
     }
 
     /**
-     * @return NearPlane of the camera
-     */
-    public float getNearPlane() {
-        return nearPlane;
-    }
-
-    /**
      * Sets the NearPlane of the camera
      * @param nearPlane NearPlane
      */
     public void setNearPlane(float nearPlane) {
         this.nearPlane = nearPlane;
         updateProjectionMatrix();
-    }
-
-    /**
-     * @return FarPlane of the camera
-     */
-    public float getFarPlane() {
-        return farPlane;
     }
 
     /**

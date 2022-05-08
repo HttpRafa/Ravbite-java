@@ -41,6 +41,7 @@ package de.rafael.ravbite.utils.asset;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.ByteBuffer;
 
 public class AssetLocation {
 
@@ -87,7 +88,7 @@ public class AssetLocation {
      * @throws IOException If the file doesn't exist or the bufferReader fails
      */
     public String loadString() throws IOException {
-        InputStream inputStream = asInputStream();
+        InputStream inputStream = inputStream();
         assert inputStream != null;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -97,6 +98,7 @@ public class AssetLocation {
             stringBuilder.append(line).append(System.lineSeparator());
         }
         bufferedReader.close();
+        inputStream.close();
         return stringBuilder.toString();
     }
 
@@ -104,7 +106,7 @@ public class AssetLocation {
      * @return Creates a inputSteam from the given file location
      * @throws FileNotFoundException If the file doesn't exist
      */
-    public InputStream asInputStream() throws FileNotFoundException {
+    public InputStream inputStream() throws FileNotFoundException {
         InputStream inputStream;
         if(location == INTERNAL) {
             inputStream = this.getClass().getResourceAsStream(path);
@@ -115,11 +117,28 @@ public class AssetLocation {
     }
 
     /**
+     * @return Creates a byteBuffer from the given file location
+     * @throws IOException If the file doesn't exist
+     */
+    public ByteBuffer byteBuffer() throws IOException {
+        InputStream inputStream = inputStream();
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(inputStream.available());
+        int b;
+        while ((b=inputStream.read())!=-1) {
+            byteBuffer.put((byte)b);
+        }
+        inputStream.close();
+
+        return byteBuffer;
+    }
+
+    /**
      * @return Trys to load the image from the assetLocation
      */
     public BufferedImage loadImage() {
         try {
-            return ImageIO.read(asInputStream());
+            return ImageIO.read(inputStream());
         } catch (IOException exception) {
             exception.printStackTrace();
         }

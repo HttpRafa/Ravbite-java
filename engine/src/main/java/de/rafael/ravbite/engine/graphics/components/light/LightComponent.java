@@ -45,7 +45,7 @@ import java.awt.*;
 
 public class LightComponent extends Component {
 
-    private Color color;
+    public Color color;
 
     public LightComponent(Color color) {
         this.color = color;
@@ -57,13 +57,6 @@ public class LightComponent extends Component {
      */
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    /**
-     * @return Color of the light
-     */
-    public Color getColor() {
-        return color;
     }
 
     /**

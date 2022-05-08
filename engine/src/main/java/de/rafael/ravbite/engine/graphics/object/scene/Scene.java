@@ -160,8 +160,8 @@ public abstract class Scene {
         Collection<GameObject> gameObjects = getGameObjects();
         Collection<GameObject> lights = gameObjects.stream().filter(item -> item.hasComponent(LightComponent.class).isPresent()).collect(Collectors.toList());
         List<GameObject> sortedLights = lights.stream().sorted((o1, o2) -> {
-            float o1Distance = centerPosition.distance(o1.getSpecialTransform(Transform.WORLD_SPACE).getPosition());
-            float o2Distance = centerPosition.distance(o2.getSpecialTransform(Transform.WORLD_SPACE).getPosition());
+            float o1Distance = centerPosition.distance(o1.getSpecialTransform(Transform.WORLD_SPACE).position);
+            float o2Distance = centerPosition.distance(o2.getSpecialTransform(Transform.WORLD_SPACE).position);
 
             if (o2Distance > o1Distance) { //  || !light1.hasAttenuation()
                 return -1;

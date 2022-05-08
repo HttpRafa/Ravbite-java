@@ -38,13 +38,10 @@ package de.rafael.ravbite.engine;
 //
 //------------------------------
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.IntelliJTheme;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.utils.swing.SwingUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 

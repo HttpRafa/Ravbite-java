@@ -61,7 +61,7 @@ public class Mesh {
     private float[] textureCoords;
     private int[] indices;
 
-    private Mesh[] subMeshes = new Mesh[] {};
+    private Mesh[] subMeshes = new Mesh[0];
 
     public Mesh(IMaterial material, float[] vertices, float[] normals, float[] tangents, float[] textureCoords, int[] indices) {
         this.material = material;

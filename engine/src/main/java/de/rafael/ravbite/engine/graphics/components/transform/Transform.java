@@ -48,18 +48,22 @@ public class Transform extends Component {
     public static final int WORLD_SPACE = 0;
     public static final int OBJECT_SPACE = 1;
 
-    private final Vector3f position;
-    private final Vector3f scale;
-    private final Quaternionf rotation;
+    public final Vector3f position;
+    public final Vector3f velocity;
+
+    public final Vector3f scale;
+    public final Quaternionf rotation;
 
     public Transform() {
         this.position = new Vector3f(0f, 0f, 0f);
+        this.velocity = new Vector3f(0f, 0f, 0f);
         this.scale = new Vector3f(1f, 1f, 1f);
         this.rotation = new Quaternionf();
     }
 
-    public Transform(Vector3f position, Vector3f scale, Quaternionf rotation) {
+    public Transform(Vector3f position, Vector3f initializeVelocity, Vector3f scale, Quaternionf rotation) {
         this.position = position;
+        this.velocity = initializeVelocity;
         this.scale = scale;
         this.rotation = rotation;
     }
@@ -71,6 +75,16 @@ public class Transform extends Component {
 
     public Transform position(Vector3f vector) {
         this.position.set(vector);
+        return this;
+    }
+
+    public Transform velocity(float x, float y, float z) {
+        this.velocity.set(x, y, z);
+        return this;
+    }
+
+    public Transform velocity(Vector3f vector) {
+        this.velocity.set(vector);
         return this;
     }
 
@@ -109,8 +123,8 @@ public class Transform extends Component {
      * @param transform Transform to add
      */
     public void add(Transform transform) {
-        this.position.add(transform.getPosition());
-        this.rotation.mul(transform.getRotation());
+        this.position.add(transform.position);
+        this.rotation.mul(transform.rotation);
     }
 
     /**
@@ -149,30 +163,9 @@ public class Transform extends Component {
         this.rotation.mul(rotation);
     }
 
-    /**
-     * @return Position of the GameObject
-     */
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    /**
-     * @return Scale of the GameObject
-     */
-    public Vector3f getScale() {
-        return scale;
-    }
-
-    /**
-     * @return Rotation of the GameObject
-     */
-    public Quaternionf getRotation() {
-        return rotation;
-    }
-
     @Override
     public Transform clone() {
-        return new Transform(new Vector3f(this.position), new Vector3f(this.scale), new Quaternionf(this.rotation));
+        return new Transform(new Vector3f(this.position), new Vector3f(this.velocity), new Vector3f(this.scale), new Quaternionf(this.rotation));
     }
 
     @Override
