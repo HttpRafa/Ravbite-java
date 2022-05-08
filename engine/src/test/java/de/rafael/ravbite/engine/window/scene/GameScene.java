@@ -51,6 +51,7 @@ import de.rafael.ravbite.engine.sound.components.AudioListener;
 import de.rafael.ravbite.engine.sound.components.AudioSource;
 import de.rafael.ravbite.engine.sound.utils.Sound;
 import de.rafael.ravbite.utils.asset.AssetLocation;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -64,7 +65,8 @@ public class GameScene extends Scene {
     @Override
     public void prepare() {
         Sound music = getEngineWindow().getUtils().alLoadSound(AssetLocation.create("/sounds/music.ogg", AssetLocation.INTERNAL));
-        AudioSource musicBox = new AudioSource().use(music).playOnInitialization();
+        AudioSource musicBoxSource = new AudioSource().use(music).playOnInitialization();
+        musicBoxSource.setPitch(1.2f);
 
         Sound sound = getEngineWindow().getUtils().alLoadSound(AssetLocation.create("/sounds/bounce.ogg", AssetLocation.INTERNAL));
         AudioSource audioSource = new AudioSource().use(sound);
@@ -72,9 +74,13 @@ public class GameScene extends Scene {
         GameObject camera = new GameObject(this, "Camera 1");
         camera.appendComponent(new CameraComponent());
         camera.appendComponent(new AudioListener());
-        camera.appendComponent(musicBox);
         camera.appendComponent(audioSource);
         getEngineWindow().getDebugWindow().addGameObject(camera);
+
+        GameObject musicBox = new GameObject(this, "Music Box");
+        musicBox.getTransform().position(0, 0, 2f);
+        musicBox.appendComponent(musicBoxSource);
+        getEngineWindow().getDebugWindow().addGameObject(musicBox);
 
         GameObject light = new GameObject(this, "Light");
         light.getTransform().move(0, 15, 0);
@@ -91,7 +97,7 @@ public class GameScene extends Scene {
             @Override
             public void pressed(int key, long window, int scancode, int action, int mods) {
                 if(key == GLFW.GLFW_KEY_P) {
-                    audioSource.play(1f, 1f);
+                    audioSource.play(1f, 2f);
                 }
             }
 
@@ -102,13 +108,16 @@ public class GameScene extends Scene {
         });
 
         super.storeObject(0, camera);
-        getSceneObject().appendChildren(camera, light, testModel);
+        super.storeObject(1, musicBox);
+        getSceneObject().appendChildren(camera, musicBox, light, testModel);
     }
 
     int state = 0;
+    int musicState = 0;
     @Override
     public void update() {
         GameObject camera = (GameObject) super.getStoredObject(0);
+        GameObject musicBox = (GameObject) super.getStoredObject(1);
 
         if(camera.getTransform().rotation.y < -0.65) {
             state = 1;
@@ -120,6 +129,18 @@ public class GameScene extends Scene {
             camera.getTransform().rotate(0f, 0.025f, 0f); //  * Time.deltaTime
         } else {
             camera.getTransform().rotate(0f, -0.025f, 0f); //  * Time.deltaTime
+        }
+
+        if(musicBox.getTransform().position.x > 15f) {
+            musicState = 0;
+        } else if(musicBox.getTransform().position.x < -15f){
+            musicState = 1;
+        }
+
+        if(musicState == 1) {
+            musicBox.getTransform().move(new Vector3f(2f, 0, 0).mul(getEngineWindow().getDeltaTime()));
+        } else {
+            musicBox.getTransform().move(new Vector3f(-2f, 0, 0).mul(getEngineWindow().getDeltaTime()));
         }
 
         super.update();

@@ -38,16 +38,16 @@ package de.rafael.ravbite.engine.graphics.window;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.executor.ThreadExecutor;
-import de.rafael.ravbite.engine.sound.SoundSystem;
-import de.rafael.ravbite.engine.utils.RavbiteUtils;
-import de.rafael.ravbite.engine.utils.debug.DebugWindow;
-import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
+import de.rafael.ravbite.engine.graphics.window.executor.ThreadExecutor;
 import de.rafael.ravbite.engine.input.InputSystem;
+import de.rafael.ravbite.engine.sound.SoundSystem;
+import de.rafael.ravbite.engine.utils.RavbiteUtils;
+import de.rafael.ravbite.engine.utils.debug.DebugWindow;
+import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.debug.EngineWatcher;
 import de.rafael.ravbite.utils.debug.TasksType;
 
@@ -126,8 +126,7 @@ public abstract class EngineWindow extends Window {
         super.initialize();
 
         // Setup soundEngine
-        soundSystem = new SoundSystem(this);
-        soundSystem.initialize();
+        soundSystem = new SoundSystem(this).initialize();
 
         // Setup inputSystem
         inputSystem = new InputSystem(this);

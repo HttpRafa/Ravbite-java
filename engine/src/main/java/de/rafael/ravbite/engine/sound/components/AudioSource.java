@@ -19,8 +19,9 @@ public class AudioSource extends Component {
     private int sourceId;
 
     public Sound sound;
-    public boolean playOnInitialization = false;
 
+    public boolean playOnInitialization = false;
+    public boolean looping = false;
     public float gain = 1f;
     public float pitch = 1f;
 
@@ -38,6 +39,7 @@ public class AudioSource extends Component {
 
     @Override
     public void dispose() {
+        stop();
         AL10.alDeleteSources(sourceId);
     }
 
@@ -66,6 +68,15 @@ public class AudioSource extends Component {
     }
 
     /**
+     * Sets if the sound should loop
+     * @return AudioSource
+     */
+    public AudioSource loop() {
+        this.looping = true;
+        return this;
+    }
+
+    /**
      * Plays the stored sound
      * @param gain Gain
      * @param pitch Pitch
@@ -88,10 +99,11 @@ public class AudioSource extends Component {
      * @param pitch Pitch
      */
     public void play(Sound sound, float gain, float pitch) {
-        updateSourceProperty(gain, pitch);
+        stop();
+        AL10.alSourcef(sourceId, AL10.AL_GAIN, gain);
+        AL10.alSourcef(sourceId, AL10.AL_PITCH, pitch);
         AL10.alSourcei(sourceId, AL10.AL_BUFFER, sound.soundId());
-        AL10.alSourcePlay(sourceId);
-        updateSourceProperty();
+        resume();
     }
 
     /**
@@ -99,8 +111,10 @@ public class AudioSource extends Component {
      * @param sound Sound to play
      */
     public void play(Sound sound) {
+        stop();
+        updateSourceProperty();
         AL10.alSourcei(sourceId, AL10.AL_BUFFER, sound.soundId());
-        AL10.alSourcePlay(sourceId);
+        resume();
     }
 
     /**
@@ -115,18 +129,49 @@ public class AudioSource extends Component {
         AL10.alSource3f(sourceId, AL10.AL_VELOCITY, velocity.x, velocity.y, velocity.z);
     }
 
+    /**
+     * Updates the sourceProperty
+     */
     private void updateSourceProperty() {
-        updateSourceProperty(gain, pitch);
+        AL10.alSourcef(sourceId, AL10.AL_GAIN, gain);
+        AL10.alSourcef(sourceId, AL10.AL_PITCH, pitch);
+        AL10.alSourcei(sourceId, AL10.AL_LOOPING, looping ? AL10.AL_TRUE : AL10.AL_FALSE);
     }
 
     /**
-     * Updates source property's
-     * @param gain Gain
-     * @param pitch Pitch
+     * Pauses the soundPlayer
      */
-    private void updateSourceProperty(float gain, float pitch) {
-        AL10.alSourcef(sourceId, AL10.AL_GAIN, gain);
-        AL10.alSourcef(sourceId, AL10.AL_PITCH, pitch);
+    public void pause() {
+        AL10.alSourcePause(sourceId);
+    }
+
+    /**
+     * Resumes the soundPlayer
+     */
+    public void resume() {
+        AL10.alSourcePlay(sourceId);
+    }
+
+    /**
+     * Stops the currently playing sound
+     */
+    public void stop() {
+        AL10.alSourceStop(sourceId);
+    }
+
+    /**
+     * @return If true source is playing something
+     */
+    public boolean isPlaying() {
+        return AL10.alGetSourcei(sourceId, AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING;
+    }
+
+    /**
+     * Sets and updates if the sound should loop
+     * @param looping Boolean value
+     */
+    public void setLooping(boolean looping) {
+        this.looping = looping;
     }
 
     /**

@@ -9,6 +9,7 @@ package de.rafael.ravbite.engine.sound;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import org.lwjgl.openal.AL10;
 
 public class SoundSystem {
 
@@ -21,14 +22,21 @@ public class SoundSystem {
         this.engineWindow = engineWindow;
     }
 
+    public SoundSystem distanceModel(int model) {
+        AL10.alDistanceModel(model);
+        return this;
+    }
+
     /**
      * Initializes the soundEngine
+     * @return SoundSystem
      */
-    public void initialize() {
+    public SoundSystem initialize() {
         String defaultDevice = engineWindow.getUtils().alGetDefaultAudioDevice();
         device = engineWindow.getUtils().alOpenDevice(defaultDevice);
 
         context = engineWindow.getUtils().alInit(device);
+        return this;
     }
 
     /**
