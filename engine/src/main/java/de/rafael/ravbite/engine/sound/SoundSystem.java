@@ -21,6 +21,9 @@ public class SoundSystem {
         this.engineWindow = engineWindow;
     }
 
+    /**
+     * Initializes the soundEngine
+     */
     public void initialize() {
         String defaultDevice = engineWindow.getUtils().alGetDefaultAudioDevice();
         device = engineWindow.getUtils().alOpenDevice(defaultDevice);
@@ -28,18 +31,30 @@ public class SoundSystem {
         context = engineWindow.getUtils().alInit(device);
     }
 
+    /**
+     * Destroys the soundEngine
+     */
     public void destroy() {
         engineWindow.getUtils().alDestroy(context, device);
     }
 
+    /**
+     * @return Device as OpenAL ID
+     */
     public long getDevice() {
         return device;
     }
 
+    /**
+     * @return OpenAL context
+     */
     public long getContext() {
         return context;
     }
 
+    /**
+     * @return EngineWindow
+     */
     public EngineWindow getEngineWindow() {
         return engineWindow;
     }

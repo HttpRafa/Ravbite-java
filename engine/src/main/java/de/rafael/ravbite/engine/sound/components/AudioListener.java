@@ -30,6 +30,9 @@ public class AudioListener extends Component {
         updateListener();
     }
 
+    /**
+     * Updates the position and velocity of the listener
+     */
     private void updateListener() {
         Transform transform = getGameObject().getTransform();
         Vector3f position = transform.position;
