@@ -48,8 +48,8 @@ import de.rafael.ravbite.engine.sound.SoundSystem;
 import de.rafael.ravbite.engine.utils.RavbiteUtils;
 import de.rafael.ravbite.engine.utils.debug.DebugWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
-import de.rafael.ravbite.utils.debug.EngineWatcher;
-import de.rafael.ravbite.utils.debug.TasksType;
+import de.rafael.ravbite.utils.performance.EngineWatcher;
+import de.rafael.ravbite.utils.performance.TasksType;
 
 import java.io.IOException;
 import java.util.Arrays;

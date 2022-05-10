@@ -95,7 +95,7 @@ public class PNGDecoder {
                     readPLTE();
                     break;
                 case tRNS:
-                    readtRNS();
+                    readRNS();
                     break;
             }
             closeChunk();
@@ -257,7 +257,7 @@ public class PNGDecoder {
         try {
             for (int y = 0; y < height; y++) {
                 readChunkUnzip(inflater, curLine, 0, curLine.length);
-                unfilter(curLine, prevLine);
+                unfiltered(curLine, prevLine);
 
                 buffer.position(offset + y * stride);
 
@@ -476,7 +476,7 @@ public class PNGDecoder {
         if (paletteA != null) {
             for (int i = 1, n = curLine.length; i < n; i += 1) {
                 int idx = curLine[i] & 255;
-                byte r = palette[idx * 3 + 0];
+                byte r = palette[idx * 3];
                 byte g = palette[idx * 3 + 1];
                 byte b = palette[idx * 3 + 2];
                 byte a = paletteA[idx];
@@ -485,7 +485,7 @@ public class PNGDecoder {
         } else {
             for (int i = 1, n = curLine.length; i < n; i += 1) {
                 int idx = curLine[i] & 255;
-                byte r = palette[idx * 3 + 0];
+                byte r = palette[idx * 3];
                 byte g = palette[idx * 3 + 1];
                 byte b = palette[idx * 3 + 2];
                 byte a = (byte) 0xFF;
@@ -498,7 +498,7 @@ public class PNGDecoder {
         if (paletteA != null) {
             for (int i = 1, n = curLine.length; i < n; i += 1) {
                 int idx = curLine[i] & 255;
-                byte r = palette[idx * 3 + 0];
+                byte r = palette[idx * 3];
                 byte g = palette[idx * 3 + 1];
                 byte b = palette[idx * 3 + 2];
                 byte a = paletteA[idx];
@@ -507,7 +507,7 @@ public class PNGDecoder {
         } else {
             for (int i = 1, n = curLine.length; i < n; i += 1) {
                 int idx = curLine[i] & 255;
-                byte r = palette[idx * 3 + 0];
+                byte r = palette[idx * 3];
                 byte g = palette[idx * 3 + 1];
                 byte b = palette[idx * 3 + 2];
                 byte a = (byte) 0xFF;
@@ -520,7 +520,7 @@ public class PNGDecoder {
         if (paletteA != null) {
             for (int i = 1, n = curLine.length; i < n; i += 1) {
                 int idx = curLine[i] & 255;
-                byte r = palette[idx * 3 + 0];
+                byte r = palette[idx * 3];
                 byte g = palette[idx * 3 + 1];
                 byte b = palette[idx * 3 + 2];
                 byte a = paletteA[idx];
@@ -529,7 +529,7 @@ public class PNGDecoder {
         } else {
             for (int i = 1, n = curLine.length; i < n; i += 1) {
                 int idx = curLine[i] & 255;
-                byte r = palette[idx * 3 + 0];
+                byte r = palette[idx * 3];
                 byte g = palette[idx * 3 + 1];
                 byte b = palette[idx * 3 + 2];
                 byte a = (byte) 0xFF;
@@ -590,42 +590,42 @@ public class PNGDecoder {
         }
     }
 
-    private void unfilter(byte[] curLine, byte[] prevLine) throws IOException {
+    private void unfiltered(byte[] curLine, byte[] prevLine) throws IOException {
         switch (curLine[0]) {
             case 0: // none
                 break;
             case 1:
-                unfilterSub(curLine);
+                unfilteredSub(curLine);
                 break;
             case 2:
-                unfilterUp(curLine, prevLine);
+                unfilteredUp(curLine, prevLine);
                 break;
             case 3:
-                unfilterAverage(curLine, prevLine);
+                unfilteredAverage(curLine, prevLine);
                 break;
             case 4:
-                unfilterPaeth(curLine, prevLine);
+                unfilteredPath(curLine, prevLine);
                 break;
             default:
                 throw new IOException("invalide filter type in scanline: " + curLine[0]);
         }
     }
 
-    private void unfilterSub(byte[] curLine) {
+    private void unfilteredSub(byte[] curLine) {
         final int bpp = this.bytesPerPixel;
         for (int i = bpp + 1, n = curLine.length; i < n; ++i) {
             curLine[i] += curLine[i - bpp];
         }
     }
 
-    private void unfilterUp(byte[] curLine, byte[] prevLine) {
+    private void unfilteredUp(byte[] curLine, byte[] prevLine) {
         final int bpp = this.bytesPerPixel;
         for (int i = 1, n = curLine.length; i < n; ++i) {
             curLine[i] += prevLine[i];
         }
     }
 
-    private void unfilterAverage(byte[] curLine, byte[] prevLine) {
+    private void unfilteredAverage(byte[] curLine, byte[] prevLine) {
         final int bpp = this.bytesPerPixel;
 
         int i;
@@ -637,7 +637,7 @@ public class PNGDecoder {
         }
     }
 
-    private void unfilterPaeth(byte[] curLine, byte[] prevLine) {
+    private void unfilteredPath(byte[] curLine, byte[] prevLine) {
         final int bpp = this.bytesPerPixel;
 
         int i;
@@ -698,14 +698,8 @@ public class PNGDecoder {
                 break;
             case COLOR_INDEXED:
                 switch (bitdepth) {
-                    case 8:
-                    case 4:
-                    case 2:
-                    case 1:
-                        bytesPerPixel = 1;
-                        break;
-                    default:
-                        throw new IOException("Unsupported bit depth: " + bitdepth);
+                    case 8, 4, 2, 1 -> bytesPerPixel = 1;
+                    default -> throw new IOException("Unsupported bit depth: " + bitdepth);
                 }
                 break;
             default:
@@ -732,28 +726,29 @@ public class PNGDecoder {
         readChunk(palette, 0, palette.length);
     }
 
-    private void readtRNS() throws IOException {
+    private void readRNS() throws IOException {
         switch (colorType) {
-            case COLOR_GREYSCALE:
+            case COLOR_GREYSCALE -> {
                 checkChunkLength(2);
                 transPixel = new byte[2];
                 readChunk(transPixel, 0, 2);
-                break;
-            case COLOR_TRUECOLOR:
+            }
+            case COLOR_TRUECOLOR -> {
                 checkChunkLength(6);
                 transPixel = new byte[6];
                 readChunk(transPixel, 0, 6);
-                break;
-            case COLOR_INDEXED:
+            }
+            case COLOR_INDEXED -> {
                 if (palette == null) {
                     throw new IOException("tRNS chunk without PLTE chunk");
                 }
                 paletteA = new byte[palette.length / 3];
                 Arrays.fill(paletteA, (byte) 0xFF);
                 readChunk(paletteA, 0, paletteA.length);
-                break;
-            default:
-                // just ignore it
+            }
+            default -> {
+            }
+            // just ignore it
         }
     }
 

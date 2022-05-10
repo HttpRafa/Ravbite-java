@@ -9,4 +9,5 @@
 
 rootProject.name = 'Ravbite'
 
-include('utilities', 'engine', 'app')
+include('utilities', 'engine', 'app', 'examples')
+

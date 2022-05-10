@@ -136,6 +136,8 @@ public class AudioSource extends Component {
         AL10.alSourcef(sourceId, AL10.AL_GAIN, gain);
         AL10.alSourcef(sourceId, AL10.AL_PITCH, pitch);
         AL10.alSourcei(sourceId, AL10.AL_LOOPING, looping ? AL10.AL_TRUE : AL10.AL_FALSE);
+
+        // TODO: Add distance attenuation property's
     }
 
     /**

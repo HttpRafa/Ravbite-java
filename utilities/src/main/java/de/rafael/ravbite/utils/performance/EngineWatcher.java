@@ -1,4 +1,4 @@
-package de.rafael.ravbite.utils.debug;
+package de.rafael.ravbite.utils.performance;
 
 //------------------------------
 //
@@ -21,6 +21,12 @@ public class EngineWatcher {
         }
     }
 
+    /**
+     * Logs how long a task takes
+     * @param type Type of the task
+     * @param runnable Task
+     */
+    // TODO: Optimize
     public void update(TasksType type, Runnable runnable) {
         long start = System.nanoTime();
         runnable.run();
@@ -33,12 +39,18 @@ public class EngineWatcher {
         }
     }
 
+    /**
+     * Clears the max value
+     */
     public void clearMax() {
         for (ExecutedTask task : tasks) {
             task.setMaxTime(0);
         }
     }
 
+    /**
+     * @return All tasks
+     */
     public List<ExecutedTask> getTasks() {
         return tasks;
     }

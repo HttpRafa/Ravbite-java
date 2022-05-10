@@ -1,4 +1,4 @@
-package de.rafael.ravbite.utils.debug;
+package de.rafael.ravbite.utils.performance;
 
 //------------------------------
 //
@@ -18,10 +18,17 @@ public class ExecutedTask {
         this.tasks = tasks;
     }
 
+    /**
+     * @return Type of the task
+     */
     public TasksType getTasks() {
         return tasks;
     }
 
+    /**
+     * Sets how long the task took
+     * @param timeTook New time
+     */
     public void setTimeTook(double timeTook) {
         this.timeTook = timeTook;
         if(this.timeTook > this.maxTime) {
@@ -29,14 +36,24 @@ public class ExecutedTask {
         }
     }
 
+    /**
+     * @return How long a task takes
+     */
     public double getTimeTook() {
         return timeTook;
     }
 
+    /**
+     * Sets the maxTime
+     * @param maxTime New time
+     */
     public void setMaxTime(double maxTime) {
         this.maxTime = maxTime;
     }
 
+    /**
+     * @return Time the task took max
+     */
     public double getMaxTime() {
         return maxTime;
     }

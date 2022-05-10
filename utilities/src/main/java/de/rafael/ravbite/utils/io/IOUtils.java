@@ -55,19 +55,19 @@ public class IOUtils {
      * @throws IOException IOException
      */
     public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
-        ByteBuffer buffer;
+        ByteBuffer byteBuffer;
         URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
         if (url == null)
             throw new IOException("Classpath resource not found: " + resource);
         File file = new File(url.getFile());
         if (file.isFile()) {
-            FileInputStream fis = new FileInputStream(file);
-            FileChannel fc = fis.getChannel();
-            buffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-            fc.close();
-            fis.close();
+            FileInputStream fileInputStream = new FileInputStream(file);
+            FileChannel fileChannel = fileInputStream.getChannel();
+            byteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
+            fileChannel.close();
+            fileInputStream.close();
         } else {
-            buffer = BufferUtils.createByteBuffer(bufferSize);
+            byteBuffer = BufferUtils.createByteBuffer(bufferSize);
             InputStream source = url.openStream();
             try (source) {
                 if (source == null)
@@ -77,14 +77,14 @@ public class IOUtils {
                     int bytes = source.read(buf, 0, buf.length);
                     if (bytes == -1)
                         break;
-                    if (buffer.remaining() < bytes)
-                        buffer = resizeBuffer(buffer, Math.max(buffer.capacity() * 2, buffer.capacity() - buffer.remaining() + bytes));
-                    buffer.put(buf, 0, bytes);
+                    if (byteBuffer.remaining() < bytes)
+                        byteBuffer = resizeBuffer(byteBuffer, Math.max(byteBuffer.capacity() * 2, byteBuffer.capacity() - byteBuffer.remaining() + bytes));
+                    byteBuffer.put(buf, 0, bytes);
                 }
-                buffer.flip();
+                byteBuffer.flip();
             }
         }
-        return buffer;
+        return byteBuffer;
     }
 
     /**

@@ -45,7 +45,7 @@ import de.rafael.ravbite.engine.utils.debug.windows.EngineDebugOptionsWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.EnginePerformanceDebugWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.GameObjectOptionsWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
-import de.rafael.ravbite.utils.debug.ExecutedTask;
+import de.rafael.ravbite.utils.performance.ExecutedTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

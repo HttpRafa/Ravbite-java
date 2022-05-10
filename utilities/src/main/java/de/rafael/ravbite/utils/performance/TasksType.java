@@ -1,4 +1,4 @@
-package de.rafael.ravbite.utils.debug;
+package de.rafael.ravbite.utils.performance;
 
 //------------------------------
 //
@@ -24,6 +24,9 @@ public enum TasksType {
         this.id = id;
     }
 
+    /**
+     * @return ID of the task
+     */
     public int getId() {
         return id;
     }
