@@ -282,7 +282,7 @@ public abstract class EngineWindow extends Window {
                     nextDebugUpdate[0] = System.currentTimeMillis() + 500;
                     if(DEBUG_MODE) {
                         try {
-                            glfwSetWindowTitle(getWindow(), "Ravbite Engine | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
+                            glfwSetWindowTitle(getWindow(), "Ravbite Engine[" + this.getInitialWidth() + "x" +  this.getInitialHeight() + "] | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
                         } catch (ArithmeticException ignored) {
 
                         }
