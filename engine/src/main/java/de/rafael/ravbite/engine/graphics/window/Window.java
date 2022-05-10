@@ -73,12 +73,20 @@ public abstract class Window extends EngineWindow {
         this.initialHeight = initialHeight;
     }
 
+    /**
+     * Changes the scene
+     * @param index Index of the new scene
+     * @return Index of the old scene
+     */
     @Override
     public int changeScene(int index) {
         this.inputSystem.getKeyboard().delTempCallbacks();
         return super.changeScene(index);
     }
 
+    /**
+     * Initializes the window
+     */
     @Override
     public void initialize() {
         // Create the window
@@ -144,6 +152,9 @@ public abstract class Window extends EngineWindow {
         glClearColor(220f/255f,220f/255f,220f/255f, 0.0f);
     }
 
+    /**
+     * Destroys the engine and the window
+     */
     @Override
     public void destroy() {
         super.destroy();
@@ -156,17 +167,26 @@ public abstract class Window extends EngineWindow {
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
+    /**
+     * Runs the window in a new thread
+     */
     public void runThreaded() {
         Thread renderThread = new Thread(this::run);
         renderThread.start();
     }
 
+    /**
+     * Runs the window in the same thread
+     */
     public void run() {
         this.initialize();
         this.loop();
         this.destroy();
     }
 
+    /**
+     * Starts the gameLoop
+     */
     public void loop() {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

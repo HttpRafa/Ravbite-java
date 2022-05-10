@@ -96,11 +96,17 @@ public abstract class EngineWindow {
         this.threadExecutor = new ThreadExecutor();
     }
 
-    public EngineWindow inputSystem(InputSystem inputSystem) {
+    /**
+     * Sets the inputSystem
+     * @param inputSystem InputSystem
+     */
+    public void inputSystem(InputSystem inputSystem) {
         this.inputSystem = inputSystem;
-        return this;
     }
 
+    /**
+     * Initializes the engine
+     */
     public void initialize() {
         if(DEBUG_MODE) this.debugWindow = new DebugWindow(this);
 
@@ -124,12 +130,19 @@ public abstract class EngineWindow {
     }
 
     private long frameStart;
+
+    /**
+     * Starts the frameRender process
+     */
     public void startFrame() {
         frameStart = System.currentTimeMillis();
 
         // Start render to frameBuffer
     }
 
+    /**
+     * Renders the frame
+     */
     public void renderFrame() {
         engineWatcher.update(TasksType.LOOP_SCENE_RENDER_ALL, this::render);
 
@@ -138,6 +151,9 @@ public abstract class EngineWindow {
         // Postprocessing
     }
 
+    /**
+     * End of the frameRender process
+     */
     public void endFrame() {
         // Execute all tasks stored in the stack
         engineWatcher.update(TasksType.LOOP_STACK_TASKS, threadExecutor::executeAllTasksInStack);
@@ -147,6 +163,9 @@ public abstract class EngineWindow {
         deltaTime = frameTime / 1000f;
     }
 
+    /**
+     * Destroys the engine
+     */
     public void destroy() {
         dataWatcher.rbCleanUp();
         for (AbstractShader abstractShader : abstractShaders) {

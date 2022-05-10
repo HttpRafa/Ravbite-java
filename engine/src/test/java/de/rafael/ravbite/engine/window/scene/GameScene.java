@@ -84,7 +84,7 @@ public class GameScene extends Scene {
         getEngineWindow().getDebugWindow().addGameObject(musicBox);
 
         GameObject light = new GameObject(this, "Light");
-        light.getTransform().move(0, 15, 0);
+        light.getTransform().move(0, 2, 0);
         light.appendComponent(new LightComponent(new Color(255, 255, 255)));
         getEngineWindow().getDebugWindow().addGameObject(light);
 
