@@ -37,6 +37,7 @@ package de.rafael.ravbite.engine.app.editor;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.editor.scene.EditorScene;
 import de.rafael.ravbite.engine.app.editor.window.InspectorWindow;
 import de.rafael.ravbite.engine.app.editor.window.LeaveWindow;
 import de.rafael.ravbite.engine.app.editor.window.MenuBar;
@@ -91,7 +92,7 @@ public class EditorWindow extends Window {
 
     @Override
     public void prepare() {
-
+        addScene(new EditorScene(this));
     }
 
     @Override
