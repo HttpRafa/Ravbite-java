@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.graphics.components.light;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.components.classes.Component;
 import org.joml.Vector3f;
 
 import java.awt.*;

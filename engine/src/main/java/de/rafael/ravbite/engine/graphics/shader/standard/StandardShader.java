@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.graphics.shader.standard;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.RenderComponent;
+import de.rafael.ravbite.engine.graphics.components.classes.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;

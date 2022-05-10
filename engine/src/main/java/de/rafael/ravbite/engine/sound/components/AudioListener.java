@@ -8,7 +8,7 @@ package de.rafael.ravbite.engine.sound.components;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.components.classes.Component;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

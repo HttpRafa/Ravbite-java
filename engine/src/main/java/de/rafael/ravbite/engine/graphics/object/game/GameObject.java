@@ -38,8 +38,9 @@ package de.rafael.ravbite.engine.graphics.object.game;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.Component;
-import de.rafael.ravbite.engine.graphics.components.RenderComponent;
+import de.rafael.ravbite.engine.graphics.components.classes.Component;
+import de.rafael.ravbite.engine.graphics.components.classes.ISizeDependent;
+import de.rafael.ravbite.engine.graphics.components.classes.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
@@ -49,7 +50,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class GameObject {
+public class GameObject implements ISizeDependent {
 
     private final Scene scene;
     private final String name;
@@ -90,6 +91,18 @@ public class GameObject {
         this.parentObject = parentObject;
         this.transform = new Transform();
         this.objectComponents.add(this.transform);
+    }
+
+    @Override
+    public void sizeChanged() {
+        for (Component objectComponent : this.objectComponents) {
+            if(objectComponent instanceof ISizeDependent sizeDependent) {
+                sizeDependent.sizeChanged();
+            }
+        }
+        for (GameObject childrenObject : this.childrenObjects) {
+            childrenObject.sizeChanged();
+        }
     }
 
     /**

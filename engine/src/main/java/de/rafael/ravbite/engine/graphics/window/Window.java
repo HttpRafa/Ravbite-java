@@ -44,6 +44,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
 import java.awt.image.BufferedImage;
@@ -59,6 +60,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public abstract class Window {
 
     private int initialWidth, initialHeight;
+    private WindowSizeChangeCallback windowSizeChangeCallback = null;
 
     private long window;
 
@@ -91,6 +93,11 @@ public abstract class Window {
             assert videoMode != null;
             glfwSetWindowPos(window, (videoMode.width() - pWidth.get(0)) / 2, (videoMode.height() - pHeight.get(0)) / 2);
         } // the stack frame is popped automatically
+
+        glfwSetWindowSizeCallback(window, (windowId, width, height) -> {
+            if(windowSizeChangeCallback != null) windowSizeChangeCallback.change(width, height);
+            GL11.glViewport(0, 0, width, height);
+        });
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
@@ -180,6 +187,14 @@ public abstract class Window {
     }
 
     /**
+     * Sets the sizeChangeCallback
+     * @param windowSizeChangeCallback Callback
+     */
+    public void windowSizeChangeCallback(WindowSizeChangeCallback windowSizeChangeCallback) {
+        this.windowSizeChangeCallback = windowSizeChangeCallback;
+    }
+
+    /**
      * @return Size of the window in IntBuffers
      */
     public IntBuffer[] getWindowSize() {
@@ -192,22 +207,22 @@ public abstract class Window {
     /**
      * @return Width of the window
      */
-    public int getWidth() {
+    public int getWindowWidth() {
         return getWindowSize()[0].get();
     }
 
     /**
      * @return Height of the window
      */
-    public int getHeight() {
+    public int getWindowHeight() {
         return getWindowSize()[1].get();
     }
 
     /**
      * @return AspectRatio of the window
      */
-    public float getAspectRatio() {
-        return ((float) getWidth()) / ((float) getHeight());
+    public float getWindowAspectRatio() {
+        return ((float) getWindowWidth()) / ((float) getWindowHeight());
     }
 
     /**

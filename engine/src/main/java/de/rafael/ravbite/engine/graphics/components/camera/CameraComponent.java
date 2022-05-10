@@ -38,12 +38,13 @@ package de.rafael.ravbite.engine.graphics.components.camera;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.components.classes.Component;
+import de.rafael.ravbite.engine.graphics.components.classes.ISizeDependent;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.joml.Matrix4f;
 
-public class CameraComponent extends Component {
+public class CameraComponent extends Component implements ISizeDependent {
 
     public int[] renderLayers;
 
@@ -90,6 +91,11 @@ public class CameraComponent extends Component {
 
     @Override
     public void valueUpdate(String fieldName) {
+        updateProjectionMatrix();
+    }
+
+    @Override
+    public void sizeChanged() {
         updateProjectionMatrix();
     }
 

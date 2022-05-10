@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.graphics.components.transform;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.components.classes.Component;
 import de.rafael.ravbite.engine.utils.math.Maths;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;

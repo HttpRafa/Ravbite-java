@@ -38,8 +38,8 @@ package de.rafael.ravbite.engine.graphics.components.rendering.mesh;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.Component;
-import de.rafael.ravbite.engine.graphics.components.RenderComponent;
+import de.rafael.ravbite.engine.graphics.components.classes.Component;
+import de.rafael.ravbite.engine.graphics.components.classes.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.mesh.MeshComponent;
 import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;

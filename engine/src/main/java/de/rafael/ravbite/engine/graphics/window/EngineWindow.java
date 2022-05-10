@@ -61,6 +61,9 @@ public abstract class EngineWindow extends Window {
 
     public static boolean DEBUG_MODE = false;
 
+    private int width;
+    private int height;
+
     private int currentScene = 0;
     private Scene[] scenes = new Scene[0];
 
@@ -89,6 +92,10 @@ public abstract class EngineWindow extends Window {
      */
     public EngineWindow(int width, int height) {
         super(width, height);
+        this.width = width;
+        this.height = height;
+
+        super.windowSizeChangeCallback(this::changeViewPortSize);
 
         ravbiteUtils = RavbiteUtils.use(this);
         threadExecutor = new ThreadExecutor();
@@ -230,6 +237,19 @@ public abstract class EngineWindow extends Window {
     }
 
     /**
+     * Called to change the viewPortSize
+     * @param width New width
+     * @param height New height
+     */
+    public void changeViewPortSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+
+        // TODO: Resize frameBuffer
+        scenes[currentScene].sizeChanged();
+    }
+
+    /**
      * Starts the render loop
      */
     @Override
@@ -282,7 +302,7 @@ public abstract class EngineWindow extends Window {
                     nextDebugUpdate[0] = System.currentTimeMillis() + 500;
                     if(DEBUG_MODE) {
                         try {
-                            glfwSetWindowTitle(getWindow(), "Ravbite Engine[" + this.getInitialWidth() + "x" +  this.getInitialHeight() + "] | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
+                            glfwSetWindowTitle(getWindow(), "Ravbite Engine[" + width + "x" + height + "] | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
                         } catch (ArithmeticException ignored) {
 
                         }
@@ -312,6 +332,27 @@ public abstract class EngineWindow extends Window {
      */
     public void fixedUpdate() {
         // TODO: Implement
+    }
+
+    /**
+     * @return Width of the viewPort
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * @return Height of the viewPort
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * @return AspectRatio of the viewPort
+     */
+    public float getAspectRatio() {
+        return ((float) width) / ((float) height);
     }
 
     /**
@@ -397,4 +438,5 @@ public abstract class EngineWindow extends Window {
     public ThreadExecutor getThreadExecutor() {
         return threadExecutor;
     }
+
 }

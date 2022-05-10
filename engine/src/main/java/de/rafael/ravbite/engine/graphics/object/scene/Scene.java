@@ -38,8 +38,9 @@ package de.rafael.ravbite.engine.graphics.object.scene;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.Component;
+import de.rafael.ravbite.engine.graphics.components.classes.Component;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
+import de.rafael.ravbite.engine.graphics.components.classes.ISizeDependent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
@@ -54,7 +55,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class Scene {
+public abstract class Scene implements ISizeDependent {
 
     private final EngineWindow engineWindow;
     private final String name;
@@ -140,6 +141,11 @@ public abstract class Scene {
      */
     public void fixedUpdate() {
 
+    }
+
+    @Override
+    public void sizeChanged() {
+        this.sceneObject.sizeChanged();
     }
 
     /**
