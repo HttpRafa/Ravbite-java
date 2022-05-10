@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,12 +37,12 @@ package de.rafael.ravbite.engine.window;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.Window;
 import de.rafael.ravbite.engine.window.scene.GameScene;
 
 import java.awt.*;
 
-public class GameWindow extends EngineWindow {
+public class GameWindow extends Window {
 
     public GameWindow() {
         super(1920/2, 1080/2);

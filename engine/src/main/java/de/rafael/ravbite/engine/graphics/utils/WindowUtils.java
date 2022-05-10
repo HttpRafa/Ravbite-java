@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,12 +38,11 @@ package de.rafael.ravbite.engine.graphics.utils;
 //------------------------------
 
 import de.matthiasmann.twl.utils.PNGDecoder;
-import de.rafael.ravbite.engine.sound.utils.SoundUtils;
-import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
-import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.StoredMesh;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
+import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 

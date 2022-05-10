@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,7 +43,6 @@ import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
 import imgui.extension.imguifiledialog.flag.ImGuiFileDialogFlags;
-import imgui.type.ImBoolean;
 import imgui.type.ImString;
 
 import java.io.File;

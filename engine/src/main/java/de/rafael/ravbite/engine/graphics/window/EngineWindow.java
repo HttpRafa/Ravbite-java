@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,12 +27,13 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package de.rafael.ravbite.engine.graphics.window;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/23/2022 at 5:55 PM
+// On 05/10/2022 at 8:27 PM
 // In the project Ravbite
 //
 //------------------------------
@@ -54,10 +54,7 @@ import de.rafael.ravbite.utils.performance.TasksType;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-
-public abstract class EngineWindow extends Window {
+public abstract class EngineWindow {
 
     public static boolean DEBUG_MODE = false;
 
@@ -72,8 +69,7 @@ public abstract class EngineWindow extends Window {
     private SoundSystem soundSystem;
     private InputSystem inputSystem;
 
-    private DebugWindow debugWindow = null;
-    private final EngineWatcher engineWatcher = new EngineWatcher();
+    private DebugWindow debugWindow;
     private long startTime = 0;
 
     private long frameTime = 0;
@@ -82,6 +78,8 @@ public abstract class EngineWindow extends Window {
     private int defaultTexture = 0;
 
     private DataWatcher dataWatcher;
+
+    private final EngineWatcher engineWatcher = new EngineWatcher();
     private final RavbiteUtils ravbiteUtils;
     private final ThreadExecutor threadExecutor;
 
@@ -91,52 +89,23 @@ public abstract class EngineWindow extends Window {
      * @param height Height of the window
      */
     public EngineWindow(int width, int height) {
-        super(width, height);
         this.width = width;
         this.height = height;
 
-        super.windowSizeChangeCallback(this::changeViewPortSize);
-
-        ravbiteUtils = RavbiteUtils.use(this);
-        threadExecutor = new ThreadExecutor();
+        this.ravbiteUtils = RavbiteUtils.use(this);
+        this.threadExecutor = new ThreadExecutor();
     }
 
-    public void runThreaded() {
-        Thread renderThread = new Thread(this::run);
-        renderThread.start();
-    }
-
-    /**
-     * Opens the window and starts the render loop
-     */
-    public void run() {
-        initialize();
-        prepareShaders();
-        prepare();
-        loop();
-
-        dataWatcher.rbCleanUp();
-        for (AbstractShader abstractShader : abstractShaders) {
-            abstractShader.dispose();
-        }
-
-        soundSystem.destroy();
-        destroy();
+    public EngineWindow inputSystem(InputSystem inputSystem) {
+        this.inputSystem = inputSystem;
+        return this;
     }
 
     public void initialize() {
-        // Initialize debug
-        if(DEBUG_MODE) {
-            debugWindow = new DebugWindow(this);
-        }
-
-        super.initialize();
+        if(DEBUG_MODE) this.debugWindow = new DebugWindow(this);
 
         // Setup soundEngine
-        soundSystem = new SoundSystem(this).initialize();
-
-        // Setup inputSystem
-        inputSystem = new InputSystem(this);
+        this.soundSystem = new SoundSystem(this).initialize();
 
         // Load default assets
         try {
@@ -145,6 +114,46 @@ public abstract class EngineWindow extends Window {
             exception.printStackTrace();
         }
 
+        prepareShaders();
+        prepare();
+
+        startTime = System.currentTimeMillis();
+
+        // Trigger prepare method in scene
+        changeScene(0);
+    }
+
+    private long frameStart;
+    public void startFrame() {
+        frameStart = System.currentTimeMillis();
+
+        // Start render to frameBuffer
+    }
+
+    public void renderFrame() {
+        engineWatcher.update(TasksType.LOOP_SCENE_RENDER_ALL, this::render);
+
+        // Stop render to frameBuffer
+
+        // Postprocessing
+    }
+
+    public void endFrame() {
+        // Execute all tasks stored in the stack
+        engineWatcher.update(TasksType.LOOP_STACK_TASKS, threadExecutor::executeAllTasksInStack);
+
+        long frameEnd = System.currentTimeMillis();
+        frameTime = frameEnd - frameStart;
+        deltaTime = frameTime / 1000f;
+    }
+
+    public void destroy() {
+        dataWatcher.rbCleanUp();
+        for (AbstractShader abstractShader : abstractShaders) {
+            abstractShader.dispose();
+        }
+
+        this.soundSystem.destroy();
     }
 
     /**
@@ -157,6 +166,28 @@ public abstract class EngineWindow extends Window {
      */
     public void prepareShaders() {
         addShader(new StandardShader(this));
+    }
+
+    /**
+     * Called to render the frame
+     */
+    public void render() {
+        scenes[currentScene].render();
+        update();
+    }
+
+    /**
+     * Called every frame
+     */
+    public void update() {
+        scenes[currentScene].update();
+    }
+
+    /**
+     * Called every fixed update(Physics)
+     */
+    public void fixedUpdate() {
+        // TODO: Implement
     }
 
     /**
@@ -226,7 +257,6 @@ public abstract class EngineWindow extends Window {
 
         // Cleanup old scene
         scenes[currentScene].dispose();
-        inputSystem.getKeyboard().delTempCallbacks();
         if(dataWatcher != null) dataWatcher.rbCleanUp();
 
         // Prepare new scene
@@ -247,91 +277,6 @@ public abstract class EngineWindow extends Window {
 
         // TODO: Resize frameBuffer
         scenes[currentScene].sizeChanged();
-    }
-
-    /**
-     * Starts the render loop
-     */
-    @Override
-    public void loop() {
-        startTime = System.currentTimeMillis();
-
-        // Trigger prepare method in scene
-        changeScene(0);
-
-        // Enable OpenGL Features
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-
-        // Set the clear color
-        glClearColor(220f/255f,220f/255f,220f/255f, 0.0f);
-
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
-        final long[] nextDebugUpdate = {0};
-        while (!glfwWindowShouldClose(getWindow())) {
-            long frameStart = System.currentTimeMillis();
-
-            engineWatcher.update(TasksType.LOOP_CLEAR_BUFFERS, () -> glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)); // clear the framebuffer
-
-            if(inputSystem != null) {
-                engineWatcher.update(TasksType.LOOP_INPUT_UPDATE, () -> inputSystem.getMouse().update());
-            }
-            engineWatcher.update(TasksType.LOOP_SCENE_RENDER_ALL, this::render);
-
-            engineWatcher.update(TasksType.LOOP_SWAP_BUFFERS, () -> glfwSwapBuffers(getWindow())); // swap the color buffers
-
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            engineWatcher.update(TasksType.LOOP_POLL_EVENTS, org.lwjgl.glfw.GLFW::glfwPollEvents);
-
-            // Execute all tasks stored in the stack
-            engineWatcher.update(TasksType.LOOP_STACK_TASKS, threadExecutor::executeAllTasksInStack);
-
-            long frameEnd = System.currentTimeMillis();
-            frameTime = frameEnd - frameStart;
-            deltaTime = frameTime / 1000f;
-
-            engineWatcher.update(TasksType.LOOP_DEBUG_WINDOWS, () -> {
-                if(debugWindow != null) {
-                    debugWindow.updateGameObjects();
-                    debugWindow.updatePerformanceTable();
-                }
-                if(nextDebugUpdate[0] < System.currentTimeMillis()) {
-                    nextDebugUpdate[0] = System.currentTimeMillis() + 500;
-                    if(DEBUG_MODE) {
-                        try {
-                            glfwSetWindowTitle(getWindow(), "Ravbite Engine[" + width + "x" + height + "] | " + (int) (1000 / frameTime) + " fps / " + frameTime + " ms / delta: " + deltaTime + " sec / running: " + (System.currentTimeMillis() - startTime) + " ms");
-                        } catch (ArithmeticException ignored) {
-
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    /**
-     * Called to render the frame
-     */
-    public void render() {
-        scenes[currentScene].render();
-        update();
-    }
-
-    /**
-     * Called every frame
-     */
-    public void update() {
-        scenes[currentScene].update();
-    }
-
-    /**
-     * Called every fixed update(Physics)
-     */
-    public void fixedUpdate() {
-        // TODO: Implement
     }
 
     /**
@@ -370,7 +315,7 @@ public abstract class EngineWindow extends Window {
     }
 
     /**
-     * @return InputSystem for this window
+     * @return InputSystem if you use standard Window.clas
      */
     public InputSystem getInputSystem() {
         return inputSystem;

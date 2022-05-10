@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,24 +37,20 @@ package de.rafael.ravbite.engine.input;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
-import de.rafael.ravbite.engine.input.callbacks.KeyCallback;
+import de.rafael.ravbite.engine.graphics.window.Window;
 import de.rafael.ravbite.engine.input.keyboard.Keyboard;
 import de.rafael.ravbite.engine.input.mouse.Mouse;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class InputSystem {
 
-    private final EngineWindow engineWindow;
+    private final Window window;
 
     private final Mouse mouse;
     private final Keyboard keyboard;
 
-    public InputSystem(EngineWindow engineWindow) {
-        this.engineWindow = engineWindow;
+    public InputSystem(Window window) {
+        this.window = window;
 
         keyboard = new Keyboard(this);
 
@@ -78,10 +73,10 @@ public class InputSystem {
     }
 
     /**
-     * @return EngineWindow
+     * @return Window
      */
-    public EngineWindow getEngineWindow() {
-        return engineWindow;
+    public Window getWindow() {
+        return window;
     }
 
 }

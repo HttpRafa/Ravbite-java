@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -78,8 +77,10 @@ public class GameScene extends Scene {
         getEngineWindow().getDebugWindow().addGameObject(camera);
 
         GameObject musicBox = new GameObject(this, "Music Box");
-        musicBox.getTransform().position(0, 0, 2f);
+        musicBox.getTransform().position(0, 0, -2f);
         musicBox.appendComponent(musicBoxSource);
+        musicBox.appendComponent(new MeshComponent(ModelUtils.rbLoadModel(AssetLocation.create("/models/cube.obj", AssetLocation.INTERNAL), getEngineWindow())));
+        musicBox.appendComponent(new MeshRendererComponent());
         getEngineWindow().getDebugWindow().addGameObject(musicBox);
 
         GameObject light = new GameObject(this, "Light");

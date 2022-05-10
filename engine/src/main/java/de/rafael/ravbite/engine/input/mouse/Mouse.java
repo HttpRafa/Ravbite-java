@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -85,13 +84,13 @@ public class Mouse {
      * Called every frame
      */
     public void update() {
-        double windowWidth = getInputSystem().getEngineWindow().getWidth();
-        double windowHeight = getInputSystem().getEngineWindow().getHeight();
+        double windowWidth = getInputSystem().getWindow().getWindowWidth();
+        double windowHeight = getInputSystem().getWindow().getWindowHeight();
 
         DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
         DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
 
-        GLFW.glfwGetCursorPos(this.inputSystem.getEngineWindow().getWindow(), x, y);
+        GLFW.glfwGetCursorPos(this.inputSystem.getWindow().getWindow(), x, y);
         x.rewind();
         y.rewind();
 
@@ -102,7 +101,7 @@ public class Mouse {
             // Calculate delta
             this.deltaX = this.mouseX - (windowWidth / 2);
             this.deltaY = this.mouseY - (windowHeight / 2);
-            GLFW.glfwSetCursorPos(this.inputSystem.getEngineWindow().getWindow(), windowWidth / 2, windowHeight / 2);
+            GLFW.glfwSetCursorPos(this.inputSystem.getWindow().getWindow(), windowWidth / 2, windowHeight / 2);
         }
     }
 
@@ -114,10 +113,10 @@ public class Mouse {
         this.mouseState[0] = state;
         if (this.mouseState[0] == MouseState.LOCKED_HIDDEN) {
             // Hide Cursor
-            GLFW.glfwSetInputMode(this.inputSystem.getEngineWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+            GLFW.glfwSetInputMode(this.inputSystem.getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
         } else {
             // Show Cursor
-            GLFW.glfwSetInputMode(this.inputSystem.getEngineWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+            GLFW.glfwSetInputMode(this.inputSystem.getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
         }
     }
 

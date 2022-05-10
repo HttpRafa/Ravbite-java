@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,9 +39,9 @@ package de.rafael.ravbite.engine.graphics.model;
 
 import de.rafael.ravbite.engine.graphics.object.game.material.standard.DiffuseProperty;
 import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
+import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
-import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.utils.io.IOUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;

@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,9 +42,6 @@ import de.rafael.ravbite.engine.app.project.generator.ProjectTemplate;
 import de.rafael.ravbite.engine.app.project.gradle.GradleManager;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
 
 public class StandardTemplate extends ProjectTemplate {
 

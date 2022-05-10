@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,23 +27,25 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package de.rafael.ravbite.engine.graphics.window;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/15/2022 at 1:18 PM
+// On 05/10/2022 at 8:29 PM
 // In the project Ravbite
 //
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
+import de.rafael.ravbite.engine.input.InputSystem;
 import de.rafael.ravbite.utils.asset.AssetLocation;
+import de.rafael.ravbite.utils.performance.TasksType;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
 import java.awt.image.BufferedImage;
@@ -54,24 +55,31 @@ import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public abstract class Window {
+public abstract class Window extends EngineWindow {
 
     private int initialWidth, initialHeight;
-    private WindowSizeChangeCallback windowSizeChangeCallback = null;
 
     private long window;
 
+    private InputSystem inputSystem;
+
     public Window(int initialWidth, int initialHeight) {
+        super(initialWidth, initialHeight);
         this.initialWidth = initialWidth;
         this.initialHeight = initialHeight;
     }
 
-    /**
-     * Initializes the GLFW window and shows it
-     */
+    @Override
+    public int changeScene(int index) {
+        this.inputSystem.getKeyboard().delTempCallbacks();
+        return super.changeScene(index);
+    }
+
+    @Override
     public void initialize() {
         // Create the window
         window = glfwCreateWindow(initialWidth, initialHeight, "Ravbite Engine", NULL, NULL);
@@ -95,8 +103,8 @@ public abstract class Window {
         } // the stack frame is popped automatically
 
         glfwSetWindowSizeCallback(window, (windowId, width, height) -> {
-            if(windowSizeChangeCallback != null) windowSizeChangeCallback.change(width, height);
-            GL11.glViewport(0, 0, width, height);
+            glViewport(0, 0, width, height);
+            super.changeViewPortSize(width, height);
         });
 
         // Make the OpenGL context current
@@ -121,17 +129,81 @@ public abstract class Window {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        this.inputSystem = new InputSystem(this);
+        super.inputSystem(this.inputSystem);
+
+        super.initialize();
+
+        // Enable OpenGL Features
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+
+        // Set the clear color
+        glClearColor(220f/255f,220f/255f,220f/255f, 0.0f);
     }
 
-    public abstract void loop();
-
+    @Override
     public void destroy() {
+        super.destroy();
+
         glfwFreeCallbacks(getWindow());
         glfwDestroyWindow(getWindow());
 
         // Terminate GLFW and free the error callback
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    }
+
+    public void runThreaded() {
+        Thread renderThread = new Thread(this::run);
+        renderThread.start();
+    }
+
+    public void run() {
+        this.initialize();
+        this.loop();
+        this.destroy();
+    }
+
+    public void loop() {
+        // Run the rendering loop until the user has attempted to close
+        // the window or has pressed the ESCAPE key.
+        final long[] nextDebugUpdate = {0};
+        while(!glfwWindowShouldClose(getWindow())) {
+            super.startFrame();
+
+            super.getEngineWatcher().update(TasksType.LOOP_CLEAR_BUFFERS, () -> glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)); // clear the framebuffer
+            if(inputSystem != null) super.getEngineWatcher().update(TasksType.LOOP_INPUT_UPDATE, () -> inputSystem.getMouse().update());
+
+            super.renderFrame();
+
+            super.getEngineWatcher().update(TasksType.LOOP_SWAP_BUFFERS, () -> glfwSwapBuffers(getWindow())); // swap the color buffers
+
+            // Poll for window events. The key callback above will only be
+            // invoked during this call.
+            super.getEngineWatcher().update(TasksType.LOOP_POLL_EVENTS, org.lwjgl.glfw.GLFW::glfwPollEvents);
+
+            super.endFrame();
+
+            super.getEngineWatcher().update(TasksType.LOOP_DEBUG_WINDOWS, () -> {
+                if(super.getDebugWindow() != null) {
+                    super.getDebugWindow().updateGameObjects();
+                    super.getDebugWindow().updatePerformanceTable();
+                }
+                if(nextDebugUpdate[0] < System.currentTimeMillis()) {
+                    nextDebugUpdate[0] = System.currentTimeMillis() + 500;
+                    if(DEBUG_MODE) {
+                        try {
+                            glfwSetWindowTitle(getWindow(), "Ravbite Engine[" + super.getWidth() + "x" + super.getHeight() + "] | " + (int) (1000 / super.getFrameTime()) + " fps / " + super.getFrameTime() + " ms / delta: " + super.getDeltaTime() + " sec / running: " + (System.currentTimeMillis() - super.getStartTime()) + " ms");
+                        } catch (ArithmeticException ignored) {
+
+                        }
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -187,14 +259,6 @@ public abstract class Window {
     }
 
     /**
-     * Sets the sizeChangeCallback
-     * @param windowSizeChangeCallback Callback
-     */
-    public void windowSizeChangeCallback(WindowSizeChangeCallback windowSizeChangeCallback) {
-        this.windowSizeChangeCallback = windowSizeChangeCallback;
-    }
-
-    /**
      * @return Size of the window in IntBuffers
      */
     public IntBuffer[] getWindowSize() {
@@ -230,6 +294,13 @@ public abstract class Window {
      */
     public long getWindow() {
         return window;
+    }
+
+    /**
+     * @return InputSystem for this window
+     */
+    public InputSystem getInputSystem() {
+        return inputSystem;
     }
 
 }

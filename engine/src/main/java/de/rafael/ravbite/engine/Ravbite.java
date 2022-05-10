@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022.
- * All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,7 +37,7 @@ package de.rafael.ravbite.engine;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.Window;
 import de.rafael.ravbite.utils.swing.SwingUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
@@ -46,11 +45,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 
 public class Ravbite {
 
-    private final List<EngineWindow> windows = new ArrayList<>();
+    private final List<Window> windows = new ArrayList<>();
 
     /**
      * Initializes GLFW
@@ -92,7 +90,7 @@ public class Ravbite {
      * Adds a window to the engine manager
      * @param window Window to add
      */
-    public void addWindow(EngineWindow window) {
+    public void addWindow(Window window) {
         windows.add(window);
     }
 
@@ -100,7 +98,7 @@ public class Ravbite {
      *
      * @return All registered windows
      */
-    public List<EngineWindow> getWindows() {
+    public List<Window> getWindows() {
         return windows;
     }
 
