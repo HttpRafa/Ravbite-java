@@ -61,14 +61,14 @@ public class Maths {
 
     /**
      * Creates viewMatrix
-     * @param cameraTransform Transform of the camera
+     * @param transform Transform
      * @return ViewMatrix
      */
-    public static Matrix4f createViewMatrix(Transform cameraTransform) {
+    public static Matrix4f createViewMatrix(Transform transform) {
         Matrix4f viewMatrix = new Matrix4f();
         viewMatrix.identity();
-        viewMatrix.rotate(cameraTransform.rotation);
-        Vector3f position = cameraTransform.position;
+        viewMatrix.rotate(transform.rotation);
+        Vector3f position = transform.position;
         viewMatrix.translate(new Vector3f(-position.x, -position.y, -position.z));
         return viewMatrix;
     }

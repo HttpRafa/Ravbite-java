@@ -40,6 +40,7 @@ package de.rafael.ravbite.engine.graphics.components.transform;
 
 import de.rafael.ravbite.engine.graphics.components.Component;
 import de.rafael.ravbite.engine.utils.math.Maths;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -161,6 +162,14 @@ public class Transform extends Component {
      */
     public void rotate(Quaternionf rotation) {
         this.rotation.mul(rotation);
+    }
+
+    /**
+     * Converts the transform into a viewMatrix
+     * @return The viewMatrix
+     */
+    public Matrix4f viewMatrix() {
+        return Maths.createViewMatrix(this);
     }
 
     @Override

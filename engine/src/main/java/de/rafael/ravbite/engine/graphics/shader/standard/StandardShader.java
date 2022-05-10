@@ -38,22 +38,21 @@ package de.rafael.ravbite.engine.graphics.shader.standard;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
-import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
-import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.engine.graphics.components.RenderComponent;
 import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
-import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
+import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.engine.utils.math.Maths;
+import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-import java.awt.*;
 import java.io.IOException;
 
 public class StandardShader extends AbstractShader {
@@ -87,7 +86,7 @@ public class StandardShader extends AbstractShader {
         Transform cameraTransform = cameraComponent.getGameObject().getSpecialTransform(Transform.WORLD_SPACE);
 
         loadProjectionMatrix(cameraComponent.getProjectionMatrix());
-        loadViewMatrix(Maths.createViewMatrix(cameraTransform));
+        loadViewMatrix(cameraTransform.viewMatrix());
         loadTransformationMatrix(Maths.createTransformationMatrix(gameObject.getSpecialTransform(Transform.WORLD_SPACE)));
 
         loadDiffuseColor(material.getDiffuse().getColorAsVector());

@@ -3,8 +3,8 @@ package de.rafael.ravbite.engine.examples.main;
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On ${MONTH}/${DAY}/${YEAR} at ${TIME}
-// In the project ${PROJECT_NAME}
+// On 3/22/2022 at 5:12 PM
+// In the project Ravbite
 //
 //------------------------------
 
