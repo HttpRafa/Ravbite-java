@@ -45,7 +45,7 @@ import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
 import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.engine.utils.math.Maths;
 import de.rafael.ravbite.utils.asset.AssetLocation;
@@ -67,8 +67,8 @@ public class StandardShader extends AbstractShader {
     private int shineDamper;
     private int reflectivity;
 
-    public StandardShader(EngineWindow engineWindow) {
-        super(engineWindow);
+    public StandardShader(EngineView engineView) {
+        super(engineView);
         try {
             super.vertexShader(AssetLocation.create("/shaders/standard/vertexShader.glsl", AssetLocation.INTERNAL));
             super.fragmentShader(AssetLocation.create("/shaders/standard/fragmentShader.glsl", AssetLocation.INTERNAL));

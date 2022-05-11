@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.utils;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.engine.sound.utils.SoundUtils;
 
 /**
@@ -52,15 +52,15 @@ public class RavbiteUtils extends SoundUtils {
         super(null);
     }
 
-    public RavbiteUtils(EngineWindow engineWindow) {
-        super(engineWindow);
+    public RavbiteUtils(EngineView engineView) {
+        super(engineView);
     }
 
     // Utils Methods
 
 
     /**
-     * Returns an utils instance without a engineWindow !!No GLUtils usable!!
+     * Returns an utils instance without a engineView !!No GLUtils usable!!
      * @return Utils instance
      */
     public static RavbiteUtils use() {
@@ -68,12 +68,12 @@ public class RavbiteUtils extends SoundUtils {
     }
 
     /**
-     * Returns an utils instance with a engineWindow !!GLUtils usable!!
-     * @param engineWindow EngineWindow to use
+     * Returns an utils instance with a engineView !!GLUtils usable!!
+     * @param engineView EngineView to use
      * @return Utils instance
      */
-    public static RavbiteUtils use(EngineWindow engineWindow) {
-        return new RavbiteUtils(engineWindow);
+    public static RavbiteUtils use(EngineView engineView) {
+        return new RavbiteUtils(engineView);
     }
 
 }

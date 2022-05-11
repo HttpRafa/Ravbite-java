@@ -40,7 +40,7 @@ package de.rafael.ravbite.engine.graphics.utils;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.StoredMesh;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.lwjgl.BufferUtils;
@@ -54,10 +54,10 @@ import java.nio.IntBuffer;
 
 public abstract class WindowUtils {
 
-    private final EngineWindow engineWindow;
+    private final EngineView engineView;
 
-    public WindowUtils(EngineWindow engineWindow) {
-        this.engineWindow = engineWindow;
+    public WindowUtils(EngineView engineView) {
+        this.engineView = engineView;
     }
 
     // Ravbite
@@ -105,7 +105,7 @@ public abstract class WindowUtils {
      */
     public int rbLoadTexture(InputStream inputStream) throws IOException {
         int textureId = rbStaticLoadTexture(inputStream);
-        engineWindow.getDataWatcher().glTexture(textureId);
+        engineView.getDataWatcher().glTexture(textureId);
         return textureId;
     }
 
@@ -163,7 +163,7 @@ public abstract class WindowUtils {
      */
     public void rbStoreDataInAttributeList(int number, int size, float[] data) {
         int vbo = GL15.glGenBuffers();
-        engineWindow.getDataWatcher().glVbo(vbo);
+        engineView.getDataWatcher().glVbo(vbo);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
         FloatBuffer floatBuffer = rbStoreDataInBuffer(data);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatBuffer, GL15.GL_STATIC_DRAW);
@@ -178,7 +178,7 @@ public abstract class WindowUtils {
      */
     public void rbBindIndicesBuffer(int[] indices) {
         int vbo = GL15.glGenBuffers();
-        engineWindow.getDataWatcher().glVbo(vbo);
+        engineView.getDataWatcher().glVbo(vbo);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vbo);
         IntBuffer intBuffer = rbStoreDataInBuffer(indices);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, intBuffer, GL15.GL_STATIC_DRAW);
@@ -219,7 +219,7 @@ public abstract class WindowUtils {
      */
     public int glCreateVAO() {
         int vao = GL30.glGenVertexArrays();
-        engineWindow.getDataWatcher().glVao(vao);
+        engineView.getDataWatcher().glVao(vao);
         GL30.glBindVertexArray(vao);
         return vao;
     }

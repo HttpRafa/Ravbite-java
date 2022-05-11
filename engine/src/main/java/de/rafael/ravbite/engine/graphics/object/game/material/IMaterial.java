@@ -37,11 +37,11 @@ package de.rafael.ravbite.engine.graphics.object.game.material;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 
 public interface IMaterial {
 
-    EngineWindow getEngineWindow();
+    EngineView getEngineView();
 
     int getShaderId();
 

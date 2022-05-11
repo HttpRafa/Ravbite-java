@@ -38,14 +38,14 @@ package de.rafael.ravbite.engine.window;
 //------------------------------
 
 import de.rafael.ravbite.engine.Ravbite;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import org.junit.jupiter.api.Test;
 
 public class WindowTest {
 
     @Test
     public void windowTest() {
-        EngineWindow.DEBUG_MODE = true;
+        EngineView.DEBUG_MODE = true;
 
         Ravbite ravbite = new Ravbite();
         ravbite.addWindow(new GameWindow());

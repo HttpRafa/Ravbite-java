@@ -43,7 +43,7 @@ import de.rafael.ravbite.engine.graphics.components.classes.ISizeDependent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.engine.input.InputSystem;
 import de.rafael.ravbite.engine.utils.RavbiteUtils;
 import org.joml.Vector3f;
@@ -56,15 +56,15 @@ import java.util.stream.Collectors;
 
 public abstract class Scene implements ISizeDependent {
 
-    private final EngineWindow engineWindow;
+    private final EngineView engineView;
     private final String name;
 
     private final GameObject sceneObject;
 
     private final HashMap<Integer, Object> storedObjects = new HashMap<>();
 
-    public Scene(EngineWindow engineWindow, String name) {
-        this.engineWindow = engineWindow;
+    public Scene(EngineView engineView, String name) {
+        this.engineView = engineView;
         this.name = name;
 
         this.sceneObject = new GameObject(this, "Scene");
@@ -187,15 +187,15 @@ public abstract class Scene implements ISizeDependent {
     /**
      * @return Window were the scene is rendered
      */
-    public EngineWindow getEngineWindow() {
-        return engineWindow;
+    public EngineView getEngineView() {
+        return engineView;
     }
 
     /**
      * @return InputSystem for this scene
      */
     public InputSystem getInputSystem() {
-        return engineWindow.getInputSystem();
+        return engineView.getInputSystem();
     }
 
     /**
@@ -216,7 +216,7 @@ public abstract class Scene implements ISizeDependent {
      * @return Utils instance
      */
     public RavbiteUtils getUtils() {
-        return this.engineWindow.getUtils();
+        return this.engineView.getUtils();
     }
 
 }

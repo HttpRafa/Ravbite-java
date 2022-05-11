@@ -54,7 +54,7 @@ public class Terrain {
         this.material = material;
         this.x = gridX * terrainComponent.getTerrainSize();
         this.z = gridZ * terrainComponent.getTerrainSize();
-        this.mesh = MeshGenerator.generateSimpleTerrainMesh(terrainComponent.getVertexCount(), terrainComponent.getTerrainSize(), terrainComponent.getGameObject().getScene().getEngineWindow());
+        this.mesh = MeshGenerator.generateSimpleTerrainMesh(terrainComponent.getVertexCount(), terrainComponent.getTerrainSize(), terrainComponent.getGameObject().getScene().getEngineView());
     }
 
     /**

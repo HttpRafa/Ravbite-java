@@ -44,7 +44,7 @@ import de.rafael.ravbite.engine.graphics.components.rendering.mesh.MeshRendererC
 import de.rafael.ravbite.engine.graphics.model.ModelUtils;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.engine.input.callbacks.KeyCallback;
 import de.rafael.ravbite.engine.sound.components.AudioListener;
 import de.rafael.ravbite.engine.sound.components.AudioSource;
@@ -57,42 +57,42 @@ import java.awt.*;
 
 public class GameScene extends Scene {
 
-    public GameScene(EngineWindow engineWindow) {
-        super(engineWindow, "Scene 1");
+    public GameScene(EngineView engineView) {
+        super(engineView, "Scene 1");
     }
 
     @Override
     public void prepare() {
-        Sound music = getEngineWindow().getUtils().alLoadSound(AssetLocation.create("/sounds/music.ogg", AssetLocation.INTERNAL));
+        Sound music = getEngineView().getUtils().alLoadSound(AssetLocation.create("/sounds/music.ogg", AssetLocation.INTERNAL));
         AudioSource musicBoxSource = new AudioSource().use(music).playOnInitialization();
         musicBoxSource.setPitch(1.2f);
 
-        Sound sound = getEngineWindow().getUtils().alLoadSound(AssetLocation.create("/sounds/bounce.ogg", AssetLocation.INTERNAL));
+        Sound sound = getEngineView().getUtils().alLoadSound(AssetLocation.create("/sounds/bounce.ogg", AssetLocation.INTERNAL));
         AudioSource audioSource = new AudioSource().use(sound);
 
         GameObject camera = new GameObject(this, "Camera 1");
         camera.appendComponent(new CameraComponent());
         camera.appendComponent(new AudioListener());
         camera.appendComponent(audioSource);
-        getEngineWindow().getDebugWindow().addGameObject(camera);
+        getEngineView().getDebugWindow().addGameObject(camera);
 
         GameObject musicBox = new GameObject(this, "Music Box");
         musicBox.getTransform().position(0, 0, -2f);
         musicBox.appendComponent(musicBoxSource);
-        musicBox.appendComponent(new MeshComponent(ModelUtils.rbLoadModel(AssetLocation.create("/models/cube.obj", AssetLocation.INTERNAL), getEngineWindow())));
+        musicBox.appendComponent(new MeshComponent(ModelUtils.rbLoadModel(AssetLocation.create("/models/cube.obj", AssetLocation.INTERNAL), getEngineView())));
         musicBox.appendComponent(new MeshRendererComponent());
-        getEngineWindow().getDebugWindow().addGameObject(musicBox);
+        getEngineView().getDebugWindow().addGameObject(musicBox);
 
         GameObject light = new GameObject(this, "Light");
         light.getTransform().move(0, 2, 0);
         light.appendComponent(new LightComponent(new Color(255, 255, 255)));
-        getEngineWindow().getDebugWindow().addGameObject(light);
+        getEngineView().getDebugWindow().addGameObject(light);
 
         GameObject testModel = new GameObject(this, "Test Model");
         testModel.getTransform().move(-1.5f, 0f, -2.5f);
-        testModel.appendComponent(new MeshComponent(ModelUtils.rbLoadModel(AssetLocation.create("/models/viking-room.obj", AssetLocation.INTERNAL), getEngineWindow())));
+        testModel.appendComponent(new MeshComponent(ModelUtils.rbLoadModel(AssetLocation.create("/models/viking-room.obj", AssetLocation.INTERNAL), getEngineView())));
         testModel.appendComponent(new MeshRendererComponent());
-        getEngineWindow().getDebugWindow().addGameObject(testModel);
+        getEngineView().getDebugWindow().addGameObject(testModel);
 
         getInputSystem().getKeyboard().listen(new KeyCallback() {
             @Override
@@ -139,9 +139,9 @@ public class GameScene extends Scene {
         }
 
         if(musicState == 1) {
-            musicBox.getTransform().move(new Vector3f(2f, 0, 0).mul(getEngineWindow().getDeltaTime()));
+            musicBox.getTransform().move(new Vector3f(2f, 0, 0).mul(getEngineView().getDeltaTime()));
         } else {
-            musicBox.getTransform().move(new Vector3f(-2f, 0, 0).mul(getEngineWindow().getDeltaTime()));
+            musicBox.getTransform().move(new Vector3f(-2f, 0, 0).mul(getEngineView().getDeltaTime()));
         }
 
         super.update();

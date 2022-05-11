@@ -70,7 +70,7 @@ public class DiffuseProperty {
      */
     public Integer getDiffuseTextureId() {
         if(diffuseTextureId == null) {
-            return material.getEngineWindow().getDefaultTexture();
+            return material.getEngineView().getDefaultTexture();
         }
         return diffuseTextureId;
     }

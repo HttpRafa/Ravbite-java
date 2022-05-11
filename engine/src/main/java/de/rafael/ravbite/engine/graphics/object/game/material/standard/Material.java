@@ -39,21 +39,21 @@ package de.rafael.ravbite.engine.graphics.object.game.material.standard;
 
 import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 
 import java.awt.*;
 
 public class Material implements IMaterial {
 
-    private final EngineWindow engineWindow;
+    private final EngineView engineView;
 
     private Integer shaderId;
     private DiffuseProperty diffuse;
     private float shineDamper = 10f; // TODO: Change to texture based
     private float reflectivity = 0f; // TODO: Change to texture based
 
-    public Material(EngineWindow engineWindow) {
-        this.engineWindow = engineWindow;
+    public Material(EngineView engineView) {
+        this.engineView = engineView;
     }
 
     public Material shader(int id) {
@@ -74,7 +74,7 @@ public class Material implements IMaterial {
 
     public Material create() {
         if(this.shaderId == null) {
-            this.shaderId = engineWindow.getIdOfShader(StandardShader.class);
+            this.shaderId = engineView.getIdOfShader(StandardShader.class);
         }
         if(this.diffuse == null) {
             this.diffuse = new DiffuseProperty(this, new Color(0, 0, 0));
@@ -83,11 +83,11 @@ public class Material implements IMaterial {
     }
 
     /**
-     * @return EngineWindow
+     * @return EngineView
      */
     @Override
-    public EngineWindow getEngineWindow() {
-        return engineWindow;
+    public EngineView getEngineView() {
+        return engineView;
     }
 
     /**

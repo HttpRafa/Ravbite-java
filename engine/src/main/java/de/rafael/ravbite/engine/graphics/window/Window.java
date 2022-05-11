@@ -59,7 +59,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public abstract class Window extends EngineWindow {
+public abstract class Window extends EngineView {
 
     private int initialWidth, initialHeight;
 

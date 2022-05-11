@@ -50,7 +50,7 @@ public class MeshComponent extends Component {
 
     @Override
     public void initialize() {
-        this.mesh.storeMeshes(getGameObject().getScene().getEngineWindow());
+        this.mesh.storeMeshes(getGameObject().getScene().getEngineView());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MeshComponent extends Component {
     public void setMesh(Mesh mesh) {
         // TODO: Dispose/Delete old mesh from OpenGL
         this.mesh = mesh;
-        mesh.storeMeshes(getGameObject().getScene().getEngineWindow());
+        mesh.storeMeshes(getGameObject().getScene().getEngineView());
     }
 
 }

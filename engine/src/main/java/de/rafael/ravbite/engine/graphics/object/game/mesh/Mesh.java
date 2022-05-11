@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.graphics.object.game.mesh;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,20 +83,20 @@ public class Mesh {
 
     /**
      * Store the meshData into openGL VAOs and VBOs
-     * @param engineWindow Window to handle the VAOs and VBOs
+     * @param engineView Window to handle the VAOs and VBOs
      */
-    public void store(EngineWindow engineWindow) {
-        storedMesh = engineWindow.getUtils().rbLoadToVAO(this);
+    public void store(EngineView engineView) {
+        storedMesh = engineView.getUtils().rbLoadToVAO(this);
     }
 
     /**
      * Stores all meshes in OpenGL
-     * @param engineWindow Window to handle the VAOs and VBOs
+     * @param engineView Window to handle the VAOs and VBOs
      */
-    public void storeMeshes(EngineWindow engineWindow) {
-        store(engineWindow);
+    public void storeMeshes(EngineView engineView) {
+        store(engineView);
         for (Mesh subMesh : subMeshes) {
-            subMesh.storeMeshes(engineWindow);
+            subMesh.storeMeshes(engineView);
         }
     }
 

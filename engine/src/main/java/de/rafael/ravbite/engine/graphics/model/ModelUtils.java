@@ -40,7 +40,7 @@ package de.rafael.ravbite.engine.graphics.model;
 import de.rafael.ravbite.engine.graphics.object.game.material.standard.DiffuseProperty;
 import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.io.IOUtils;
 import org.lwjgl.PointerBuffer;
@@ -63,7 +63,7 @@ public class ModelUtils {
      * @param assetLocation Path to the modelFile
      * @return MeshArray
      */
-    public static Mesh rbLoadModel(AssetLocation assetLocation, EngineWindow engineWindow) {
+    public static Mesh rbLoadModel(AssetLocation assetLocation, EngineView engineView) {
         try {
             AIScene aiScene = ModelUtils.rbLoadScene(assetLocation);
 
@@ -71,7 +71,7 @@ public class ModelUtils {
             Mesh mesh = null;
             for (int i = 0; i < Objects.requireNonNull(pointerBuffer).limit(); i++) {
                 AIMesh aiMesh = AIMesh.create(pointerBuffer.get(i));
-                Mesh loadedMesh = ModelUtils.rbProcessMesh(aiScene, aiMesh, engineWindow);
+                Mesh loadedMesh = ModelUtils.rbProcessMesh(aiScene, aiMesh, engineView);
                 if(mesh == null) {
                     mesh = loadedMesh;
                 } else {
@@ -167,7 +167,7 @@ public class ModelUtils {
      * @return OutputMesh
      * @throws IOException ?
      */
-    public static Mesh rbProcessMesh(AIScene aiScene, AIMesh aiMesh, EngineWindow engineWindow) throws IOException {
+    public static Mesh rbProcessMesh(AIScene aiScene, AIMesh aiMesh, EngineView engineView) throws IOException {
         List<Float> verticesList = new ArrayList<>();
         List<Float> normalsList = new ArrayList<>();
         List<Float> tangentsList = new ArrayList<>();
@@ -229,9 +229,9 @@ public class ModelUtils {
             }
         }
 
-        Material material = new Material(engineWindow).create();
+        Material material = new Material(engineView).create();
         if(aiMaterial != null) {
-            material = new Material(engineWindow);
+            material = new Material(engineView);
 
             int textureCount = Assimp.aiGetMaterialTextureCount(aiMaterial, Assimp.aiTextureType_DIFFUSE);
             if(textureCount > 1) {
@@ -245,7 +245,7 @@ public class ModelUtils {
                 String path = pathString.dataString();
 
                 AssetLocation assetLocation = AssetLocation.create(path, AssetLocation.DETECT);
-                textureId = engineWindow.getUtils().rbLoadTexture(assetLocation);
+                textureId = engineView.getUtils().rbLoadTexture(assetLocation);
             }
 
             AIColor4D color = AIColor4D.create();

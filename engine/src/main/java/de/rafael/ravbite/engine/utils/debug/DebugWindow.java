@@ -39,7 +39,7 @@ package de.rafael.ravbite.engine.utils.debug;
 
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.engine.utils.debug.windows.EngineDebugOptionsWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.EnginePerformanceDebugWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.GameObjectOptionsWindow;
@@ -57,7 +57,7 @@ import java.util.List;
 
 public class DebugWindow {
 
-    private final EngineWindow engineWindow;
+    private final EngineView engineView;
 
     private final List<GameObjectOptionsWindow> gameObjectOptionsWindowList = new ArrayList<>();
 
@@ -68,10 +68,10 @@ public class DebugWindow {
 
     /**
      * Used to test the engine
-     * @param engineWindow EngineWindow
+     * @param engineView EngineView
      */
-    public DebugWindow(EngineWindow engineWindow) {
-        this.engineWindow = engineWindow;
+    public DebugWindow(EngineView engineView) {
+        this.engineView = engineView;
 
         engineDebugOptionsWindow = new EngineDebugOptionsWindow(this);
         engineDebugOptionsWindow.setVisible(true);
@@ -80,7 +80,7 @@ public class DebugWindow {
         enginePerformanceDebugWindow.setVisible(true);
 
         List<Object[]> data = new ArrayList<>();
-        for (ExecutedTask task : engineWindow.getEngineWatcher().getTasks()) {
+        for (ExecutedTask task : engineView.getEngineWatcher().getTasks()) {
             data.add(new Object[]{task.getTasks().getId(), task.getTasks().name().toLowerCase(), 0, 0});
         }
 
@@ -118,8 +118,8 @@ public class DebugWindow {
      * Updates the performance table
      */
     public void updatePerformanceTable() {
-        for (int i = 0; i < engineWindow.getEngineWatcher().getTasks().size(); i++) {
-            ExecutedTask task = engineWindow.getEngineWatcher().getTasks().get(i);
+        for (int i = 0; i < engineView.getEngineWatcher().getTasks().size(); i++) {
+            ExecutedTask task = engineView.getEngineWatcher().getTasks().get(i);
             enginePerformanceDebugWindow.dataTable.setValueAt(task.getTimeTook(), i, 2);
             enginePerformanceDebugWindow.dataTable.setValueAt(task.getMaxTime(), i, 3);
         }
@@ -155,9 +155,9 @@ public class DebugWindow {
 
     public void loadIntoOpenGL() {
         if(imagePath != null) {
-            engineWindow.getThreadExecutor().addTask(() -> {
+            engineView.getThreadExecutor().addTask(() -> {
                 try {
-                    int textureId = engineWindow.getUtils().rbLoadTexture(AssetLocation.create(imagePath, AssetLocation.EXTERNAL));
+                    int textureId = engineView.getUtils().rbLoadTexture(AssetLocation.create(imagePath, AssetLocation.EXTERNAL));
                     engineDebugOptionsWindow.textureIdLabel.setText(textureId + "");
                 } catch (IOException exception) {
                     exception.printStackTrace();
@@ -197,10 +197,10 @@ public class DebugWindow {
     }
 
     /**
-     * @return EngineWindow
+     * @return EngineView
      */
-    public EngineWindow getEngineWindow() {
-        return engineWindow;
+    public EngineView getEngineView() {
+        return engineView;
     }
 
 }

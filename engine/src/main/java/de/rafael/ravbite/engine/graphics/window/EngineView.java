@@ -54,7 +54,7 @@ import de.rafael.ravbite.utils.performance.TasksType;
 import java.io.IOException;
 import java.util.Arrays;
 
-public abstract class EngineWindow {
+public abstract class EngineView {
 
     public static boolean DEBUG_MODE = false;
 
@@ -88,7 +88,7 @@ public abstract class EngineWindow {
      * @param width Width of the window
      * @param height Height of the window
      */
-    public EngineWindow(int width, int height) {
+    public EngineView(int width, int height) {
         this.width = width;
         this.height = height;
 
@@ -334,7 +334,7 @@ public abstract class EngineWindow {
     }
 
     /**
-     * @return InputSystem if you use standard Window.clas
+     * @return InputSystem if you use standard Window.java
      */
     public InputSystem getInputSystem() {
         return inputSystem;

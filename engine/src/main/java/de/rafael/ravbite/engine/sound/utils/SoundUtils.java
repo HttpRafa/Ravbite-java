@@ -39,7 +39,7 @@ package de.rafael.ravbite.engine.sound.utils;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.utils.WindowUtils;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.io.IOUtils;
 import org.lwjgl.openal.*;
@@ -56,8 +56,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class SoundUtils extends WindowUtils {
 
-    public SoundUtils(EngineWindow engineWindow) {
-        super(engineWindow);
+    public SoundUtils(EngineView engineView) {
+        super(engineView);
     }
 
     /**

@@ -39,12 +39,12 @@ package de.rafael.ravbite.engine.app.editor.scene;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 
 public class EditorScene extends Scene {
 
-    public EditorScene(EngineWindow engineWindow) {
-        super(engineWindow, "EditorScene");
+    public EditorScene(EngineView engineView) {
+        super(engineView, "EditorScene");
     }
 
     @Override

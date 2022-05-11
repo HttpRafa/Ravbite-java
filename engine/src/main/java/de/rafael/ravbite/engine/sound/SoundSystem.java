@@ -38,18 +38,18 @@ package de.rafael.ravbite.engine.sound;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import org.lwjgl.openal.AL10;
 
 public class SoundSystem {
 
-    private final EngineWindow engineWindow;
+    private final EngineView engineView;
 
     private long device;
     private long context;
 
-    public SoundSystem(EngineWindow engineWindow) {
-        this.engineWindow = engineWindow;
+    public SoundSystem(EngineView engineView) {
+        this.engineView = engineView;
     }
 
     public SoundSystem distanceModel(int model) {
@@ -62,10 +62,10 @@ public class SoundSystem {
      * @return SoundSystem
      */
     public SoundSystem initialize() {
-        String defaultDevice = engineWindow.getUtils().alGetDefaultAudioDevice();
-        device = engineWindow.getUtils().alOpenDevice(defaultDevice);
+        String defaultDevice = engineView.getUtils().alGetDefaultAudioDevice();
+        device = engineView.getUtils().alOpenDevice(defaultDevice);
 
-        context = engineWindow.getUtils().alInit(device);
+        context = engineView.getUtils().alInit(device);
         return this;
     }
 
@@ -73,7 +73,7 @@ public class SoundSystem {
      * Destroys the soundEngine
      */
     public void destroy() {
-        engineWindow.getUtils().alDestroy(context, device);
+        engineView.getUtils().alDestroy(context, device);
     }
 
     /**
@@ -91,10 +91,10 @@ public class SoundSystem {
     }
 
     /**
-     * @return EngineWindow
+     * @return EngineView
      */
-    public EngineWindow getEngineWindow() {
-        return engineWindow;
+    public EngineView getEngineView() {
+        return engineView;
     }
 
 }

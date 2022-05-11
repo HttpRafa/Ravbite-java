@@ -102,7 +102,7 @@ public class CameraComponent extends Component implements ISizeDependent {
      * Updates the projectionMatrix
      */
     public void updateProjectionMatrix() {
-        float aspectRatio = this.getGameObject().getScene().getEngineWindow().getAspectRatio();
+        float aspectRatio = this.getGameObject().getScene().getEngineView().getAspectRatio();
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(fieldOfView / 2f))) * aspectRatio);
         float x_scale = y_scale / aspectRatio;
         float frustum_length = farPlane - nearPlane;

@@ -41,7 +41,7 @@ import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.classes.RenderComponent;
 import de.rafael.ravbite.engine.graphics.object.game.GameObject;
 import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
-import de.rafael.ravbite.engine.graphics.window.EngineWindow;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.joml.Matrix4f;
@@ -55,7 +55,7 @@ import java.nio.FloatBuffer;
 
 public abstract class AbstractShader {
 
-    private final EngineWindow engineWindow;
+    private final EngineView engineView;
 
     private Integer shaderId;
 
@@ -64,10 +64,10 @@ public abstract class AbstractShader {
     private Integer fragmentShaderId;
 
     /**
-     * @param engineWindow EngineWindow
+     * @param engineView EngineView
      */
-    public AbstractShader(EngineWindow engineWindow) {
-        this.engineWindow = engineWindow;
+    public AbstractShader(EngineView engineView) {
+        this.engineView = engineView;
     }
 
     public abstract void prepareObject(GameObject gameObject, IMaterial material, CameraComponent cameraComponent, RenderComponent renderer);
@@ -146,7 +146,7 @@ public abstract class AbstractShader {
      * @throws ShaderCompilationException If the shader is not programmed right
      */
     public void fragmentShader(AssetLocation assetLocation) throws IOException, ShaderCompilationException {
-        fragmentShaderId = engineWindow.getUtils().rbLoadShader(assetLocation, GL20.GL_FRAGMENT_SHADER);
+        fragmentShaderId = engineView.getUtils().rbLoadShader(assetLocation, GL20.GL_FRAGMENT_SHADER);
     }
 
     /**
@@ -156,7 +156,7 @@ public abstract class AbstractShader {
      * @throws ShaderCompilationException If the shader is not programmed right
      */
     public void vertexShader(AssetLocation assetLocation) throws IOException, ShaderCompilationException {
-        vertexShaderId = engineWindow.getUtils().rbLoadShader(assetLocation, GL20.GL_VERTEX_SHADER);
+        vertexShaderId = engineView.getUtils().rbLoadShader(assetLocation, GL20.GL_VERTEX_SHADER);
     }
 
     /**
@@ -199,10 +199,10 @@ public abstract class AbstractShader {
     }
 
     /**
-     * @return Window handling this shader
+     * @return View handling this shader
      */
-    public EngineWindow getEngineWindow() {
-        return engineWindow;
+    public EngineView getEngineView() {
+        return engineView;
     }
 
     /**
