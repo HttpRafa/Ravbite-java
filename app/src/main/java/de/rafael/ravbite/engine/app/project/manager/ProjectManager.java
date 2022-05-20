@@ -44,40 +44,29 @@ import de.rafael.ravbite.engine.app.project.generator.ProjectGenerator;
 import de.rafael.ravbite.engine.app.project.generator.ProjectTemplates;
 import de.rafael.ravbite.engine.app.project.gradle.GradleDslType;
 import de.rafael.ravbite.engine.app.project.gradle.GradleLanguageType;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProjectManager {
 
-    public static final File projectsFile = new File("projects.json");
+    public static final File projectsFile = new File("projects.ravbite");
 
-    private final List<SimpleProject> projects = new ArrayList<>();
+    private SimpleProject[] projects = new SimpleProject[0];
 
     /**
      * Loads a projects
      * @throws IOException ?
      */
     public void loadProjects() throws IOException {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().serializeNulls().setPrettyPrinting().create();
-
-        if(!projectsFile.exists()) {
-            projectsFile.createNewFile();
-            try(FileWriter fileWriter = new FileWriter(projectsFile)) {
-                fileWriter.write("{}");
-                fileWriter.flush();
-            }
-        }
-
-        projects.clear();
-        JsonObject jsonObject = new JsonParser().parse(new InputStreamReader(new FileInputStream(projectsFile))).getAsJsonObject();
-        if(jsonObject.has("projects")) {
-            JsonArray projectsArray = jsonObject.get("projects").getAsJsonArray();
-            for (JsonElement jsonElement : projectsArray) {
-                SimpleProject editorDescription = gson.fromJson(jsonElement, SimpleProject.class);
-                projects.add(editorDescription);
-            }
+        if(projectsFile.exists()) {
+            byte[] data = FileUtils.readFileToByteArray(projectsFile);
+            projects = SerializationUtils.deserialize(data);
         }
     }
 
@@ -86,29 +75,8 @@ public class ProjectManager {
      * @throws IOException ?
      */
     public void storeProjects() throws IOException {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().serializeNulls().setPrettyPrinting().create();
-
-        if(!projectsFile.exists()) {
-            projectsFile.createNewFile();
-            FileWriter fileWriter = new FileWriter(projectsFile);
-            fileWriter.write("{}");
-            fileWriter.flush();
-            fileWriter.close();
-        }
-
-        JsonObject jsonObject = new JsonObject();
-        JsonArray projectsArray = new JsonArray();
-
-        for (SimpleProject project : projects) {
-            projectsArray.add(new JsonParser().parse(gson.toJson(project)));
-        }
-
-        jsonObject.add("projects", projectsArray);
-
-        FileWriter fileWriter = new FileWriter(projectsFile);
-        fileWriter.write(gson.toJson(jsonObject));
-        fileWriter.flush();
-        fileWriter.close();
+        byte[] data = SerializationUtils.serialize(projects);
+        FileUtils.writeByteArrayToFile(projectsFile, data);
     }
 
     /**
@@ -127,7 +95,7 @@ public class ProjectManager {
         Project project = new Project(name, projectFolder.getAbsolutePath());
         ProjectGenerator.generate(ProjectTemplates.STANDARD, project);
 
-        projects.add(project);
+        projects = ArrayUtils.add(projects, project.asSimple());
 
         return true;
     }
@@ -137,7 +105,20 @@ public class ProjectManager {
      * @param name Name of the project
      */
     public void deleteProject(String name) {
+        for (int i = 0; i < projects.length; i++) {
+            if(name.equalsIgnoreCase(projects[i].getName())) {
+                deleteProject(i);
+            }
+        }
+    }
 
+    /**
+     * Deletes a project
+     * @param index Index of the project in the projects array
+     */
+    public void deleteProject(int index) {
+        SimpleProject project = projects[index];
+        projects = ArrayUtils.remove(projects, index);
     }
 
     /**
@@ -145,13 +126,13 @@ public class ProjectManager {
      * @return If the name is free
      */
     public boolean isNameFree(String name) {
-        return projects.stream().noneMatch(item -> item.getName().equalsIgnoreCase(name));
+        return Arrays.stream(projects).noneMatch(item -> item.getName().equalsIgnoreCase(name));
     }
 
     /**
      * @return All projects as simple version
      */
-    public List<SimpleProject> getProjects() {
+    public SimpleProject[] getProjects() {
         return projects;
     }
 

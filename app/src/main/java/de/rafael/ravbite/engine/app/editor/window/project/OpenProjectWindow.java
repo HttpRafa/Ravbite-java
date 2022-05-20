@@ -38,8 +38,10 @@ package de.rafael.ravbite.engine.app.editor.window.project;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.EditorWindow;
+import de.rafael.ravbite.engine.app.project.SimpleProject;
 import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -58,7 +60,8 @@ public class OpenProjectWindow implements IGui {
     public void gui() {
         ImGui.begin("Open Project");
 
-        editorWindow.getProjectManager().getProjects().removeIf(project -> {
+        for (int i = 0; i < editorWindow.getProjectManager().getProjects().length; i++) {
+            SimpleProject project = editorWindow.getProjectManager().getProjects()[i];
             boolean deleteProject = false;
             if (ImGui.collapsingHeader(project.getName())) {
                 ImGui.text("Path: " + project.getPath());
@@ -68,7 +71,7 @@ public class OpenProjectWindow implements IGui {
                 ImGui.separator();
 
                 if (ImGui.button("Open")) {
-                    
+
                 }
                 ImGui.sameLine();
                 if (ImGui.button("Delete")) {
@@ -85,7 +88,6 @@ public class OpenProjectWindow implements IGui {
                 ImGui.spacing();
                 if(ImGui.button("Yes")) {
                     deleteProject = true;
-                    editorWindow.getProjectManager().deleteProject(project.getName());
                 }
                 ImGui.sameLine();
                 if(ImGui.button("No")) {
@@ -93,8 +95,8 @@ public class OpenProjectWindow implements IGui {
                 }
                 ImGui.endPopup();
             }
-            return deleteProject;
-        });
+            if(deleteProject) editorWindow.getProjectManager().deleteProject(project.getName());
+        }
 
         ImGui.spacing();
         if (ImGui.button("Create Project")) {

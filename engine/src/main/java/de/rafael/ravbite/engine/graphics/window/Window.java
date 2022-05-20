@@ -65,8 +65,6 @@ public abstract class Window extends EngineView {
 
     private long window;
 
-    private InputSystem inputSystem;
-
     public Window(int initialWidth, int initialHeight) {
         super(initialWidth, initialHeight);
         this.initialWidth = initialWidth;
@@ -80,7 +78,7 @@ public abstract class Window extends EngineView {
      */
     @Override
     public int changeScene(int index) {
-        this.inputSystem.getKeyboard().delTempCallbacks();
+        super.getInputSystem().getKeyboard().delTempCallbacks();
         return super.changeScene(index);
     }
 
@@ -138,8 +136,7 @@ public abstract class Window extends EngineView {
         // bindings available for use.
         GL.createCapabilities();
 
-        this.inputSystem = new InputSystem(this);
-        super.inputSystem(this.inputSystem);
+        super.inputSystem(new InputSystem(this));
 
         super.initialize();
 
@@ -195,7 +192,7 @@ public abstract class Window extends EngineView {
             super.startFrame();
 
             super.getEngineWatcher().update(TasksType.LOOP_CLEAR_BUFFERS, () -> glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)); // clear the framebuffer
-            if(inputSystem != null) super.getEngineWatcher().update(TasksType.LOOP_INPUT_UPDATE, () -> inputSystem.getMouse().update());
+            if(super.getInputSystem() != null) super.getEngineWatcher().update(TasksType.LOOP_INPUT_UPDATE, () -> super.getInputSystem().getMouse().update());
 
             super.renderFrame();
 
@@ -320,7 +317,7 @@ public abstract class Window extends EngineView {
      * @return InputSystem for this window
      */
     public InputSystem getInputSystem() {
-        return inputSystem;
+        return super.getInputSystem();
     }
 
 }

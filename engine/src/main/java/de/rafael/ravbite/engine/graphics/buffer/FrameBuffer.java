@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022. All rights reserved.
+ * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,55 +27,19 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.project;
+
+package de.rafael.ravbite.engine.graphics.buffer;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/16/2022 at 7:37 PM
+// On 5/20/2022 at 2:36 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import java.io.Serializable;
+public class FrameBuffer {
 
-public class SimpleProject implements Serializable {
 
-    static final long serialVersionUID = 55L;
-
-    private String name;
-    private String path;
-    private long lastUsed;
-
-    public SimpleProject(String name, String path) {
-        this.name = name;
-        this.path = path;
-
-        this.lastUsed = System.currentTimeMillis();
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public void setLastUsed(long lastUsed) {
-        this.lastUsed = lastUsed;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public long getLastUsed() {
-        return lastUsed;
-    }
 
 }

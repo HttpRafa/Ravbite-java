@@ -57,6 +57,10 @@ public class Project extends SimpleProject {
 
     }
 
+    public SimpleProject asSimple() {
+        return new SimpleProject(getName(), getPath());
+    }
+
     public ProjectStorage getProjectStorage() {
         return projectStorage;
     }
