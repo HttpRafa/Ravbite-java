@@ -77,12 +77,11 @@ public abstract class ProjectTemplate {
 
     /**
      * Creates a projectFile
-     * @param simpleProject Project
      * @param path Path to the file inside the project structure
      * @param projectStorage Instance to save
      */
-    public void projectFile(SimpleProject simpleProject, String path, ProjectStorage projectStorage) {
-        File file = new File(simpleProject.getPath(), path);
+    public void projectFile(String path, ProjectStorage projectStorage) {
+        File file = new File(path);
         try {
             FileUtils.writeByteArrayToFile(file, SerializationUtils.serialize(projectStorage));
         } catch (IOException exception) {

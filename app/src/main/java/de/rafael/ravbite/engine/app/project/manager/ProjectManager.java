@@ -37,7 +37,6 @@ package de.rafael.ravbite.engine.app.project.manager;
 //
 //------------------------------
 
-import com.google.gson.*;
 import de.rafael.ravbite.engine.app.project.Project;
 import de.rafael.ravbite.engine.app.project.SimpleProject;
 import de.rafael.ravbite.engine.app.project.generator.ProjectGenerator;
@@ -48,10 +47,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 public class ProjectManager {
 
@@ -98,6 +96,27 @@ public class ProjectManager {
         projects = ArrayUtils.add(projects, project.asSimple());
 
         return true;
+    }
+
+    /**
+     * Opens the specified project
+     * @param simpleProject Simple version of the project
+     */
+    public Project openProject(SimpleProject simpleProject) {
+        Project project = new Project(simpleProject.getName(), simpleProject.getPath());
+        project.load();
+        return project;
+    }
+
+    /**
+     * Saves the project
+     */
+    public void saveProject(Project project) {
+        try {
+            project.save();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     /**

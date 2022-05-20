@@ -37,6 +37,8 @@ package de.rafael.ravbite.engine.app.project.storage;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.object.scene.Scene;
+
 import java.io.Serializable;
 
 public class StoredScene implements Serializable {
@@ -62,6 +64,15 @@ public class StoredScene implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Creates a stored version from the real version
+     * @param scene Scene to use
+     * @return Stored version
+     */
+    public static StoredScene fromScene(Scene scene) {
+        return new StoredScene(scene.getName());
     }
 
 }

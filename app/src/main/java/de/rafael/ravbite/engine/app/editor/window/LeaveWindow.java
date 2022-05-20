@@ -37,30 +37,30 @@ package de.rafael.ravbite.engine.app.editor.window;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.editor.EditorWindow;
 import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
 
 public class LeaveWindow implements IGui {
 
+    private final EditorWindow editorWindow;
+
+    public LeaveWindow(EditorWindow editorWindow) {
+        this.editorWindow = editorWindow;
+    }
+
     @Override
     public void gui() {
-        boolean close = false;
-
         ImGui.begin("Leave");
-        ImGui.text("Do you want to save your changes?");
+        ImGui.text("Do you want to leave?");
         if(ImGui.button("Yes")) {
             System.exit(0);
         }
         ImGui.sameLine();
         if(ImGui.button("No")) {
-            System.exit(0);
-        }
-        ImGui.sameLine();
-        if(ImGui.button("Cancel")) {
-            close = true;
+            editorWindow.setLeaveWindow(null);
         }
         ImGui.end();
-
     }
 
 }

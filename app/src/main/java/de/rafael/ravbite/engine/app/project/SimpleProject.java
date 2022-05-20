@@ -45,35 +45,73 @@ public class SimpleProject implements Serializable {
 
     private String name;
     private String path;
+    private String projectFilePath;
     private long lastUsed;
 
     public SimpleProject(String name, String path) {
         this.name = name;
         this.path = path;
+        this.projectFilePath = path + "/" + name + ".ravbite";
 
         this.lastUsed = System.currentTimeMillis();
     }
 
+    /**
+     * Sets the name of the project
+     * @param name Name of the project
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Sets the path of the project
+     * @param path Path of the project
+     */
     public void setPath(String path) {
         this.path = path;
     }
 
+    /**
+     * Sets the project file path
+     * @param projectFilePath Path of the project file
+     */
+    public void setProjectFilePath(String projectFilePath) {
+        this.projectFilePath = projectFilePath;
+    }
+
+    /**
+     * Sets the last used
+     * @param lastUsed LastUsed
+     */
     public void setLastUsed(long lastUsed) {
         this.lastUsed = lastUsed;
     }
 
+    /**
+     * @return Name of the project
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return Path to the project folder
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * @return Path to the project file
+     */
+    public String getProjectFilePath() {
+        return projectFilePath;
+    }
+
+    /**
+     * @return Last used time
+     */
     public long getLastUsed() {
         return lastUsed;
     }

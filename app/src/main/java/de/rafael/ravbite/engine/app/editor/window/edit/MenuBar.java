@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.editor.window;
+package de.rafael.ravbite.engine.app.editor.window.edit;
 
 //------------------------------
 //
@@ -37,10 +37,17 @@ package de.rafael.ravbite.engine.app.editor.window;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.editor.EditorWindow;
 import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
 
 public class MenuBar implements IGui {
+
+    private final EditorWindow editorWindow;
+
+    public MenuBar(EditorWindow editorWindow) {
+        this.editorWindow = editorWindow;
+    }
 
     @Override
     public void gui() {
@@ -61,11 +68,8 @@ public class MenuBar implements IGui {
 
             }
             ImGui.separator();
-            if(ImGui.menuItem("New Project")) {
-
-            }
-            if(ImGui.menuItem("Open Project")) {
-
+            if(ImGui.menuItem("Close Project")) {
+                editorWindow.closeProject();
             }
             ImGui.endMenu();
         }

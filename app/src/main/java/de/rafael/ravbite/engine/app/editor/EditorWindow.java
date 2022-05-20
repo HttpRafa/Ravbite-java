@@ -37,12 +37,15 @@ package de.rafael.ravbite.engine.app.editor;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.Ravbite;
 import de.rafael.ravbite.engine.app.editor.scene.EditorScene;
-import de.rafael.ravbite.engine.app.editor.window.InspectorWindow;
 import de.rafael.ravbite.engine.app.editor.window.LeaveWindow;
-import de.rafael.ravbite.engine.app.editor.window.MenuBar;
+import de.rafael.ravbite.engine.app.editor.window.edit.EngineView;
+import de.rafael.ravbite.engine.app.editor.window.edit.InspectorWindow;
+import de.rafael.ravbite.engine.app.editor.window.edit.MenuBar;
 import de.rafael.ravbite.engine.app.editor.window.project.OpenProjectWindow;
 import de.rafael.ravbite.engine.app.project.Project;
+import de.rafael.ravbite.engine.app.project.SimpleProject;
 import de.rafael.ravbite.engine.app.project.manager.ProjectManager;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
@@ -101,6 +104,7 @@ public class EditorWindow extends Window {
 
         super.initialize();
         glfwMaximizeWindow(getWindow());
+        super.setTitle("Ravbite Editor");
 
         ImGui.createContext();
         ImGuiIO io = ImGui.getIO();
@@ -112,16 +116,16 @@ public class EditorWindow extends Window {
 
     @Override
     public void loop() {
-
-        MenuBar menuBar = new MenuBar();
+        MenuBar menuBar = new MenuBar(this);
         InspectorWindow inspector = new InspectorWindow();
+        EngineView engineView = new EngineView(this);
         OpenProjectWindow openProjectWindow = new OpenProjectWindow(this);
 
         while (true) {
             if(glfwWindowShouldClose(getWindow())) {
                 if(project == null) break;
                 glfwSetWindowShouldClose(getWindow(), false);
-                leaveWindow = new LeaveWindow();
+                leaveWindow = new LeaveWindow(this);
             }
 
             glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
@@ -133,9 +137,11 @@ public class EditorWindow extends Window {
             if(project != null) {
                 menuBar.gui();
                 inspector.gui();
-                leaveWindow.gui();
+                engineView.gui();
+                if(leaveWindow != null) leaveWindow.gui();
+            } else {
+                openProjectWindow.gui();
             }
-            openProjectWindow.gui();
 
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());
@@ -152,8 +158,44 @@ public class EditorWindow extends Window {
         }
     }
 
+    /**
+     * Opens the project
+     * @param project Project to open
+     */
+    public void open(SimpleProject project) {
+        this.project = projectManager.openProject(project);
+        super.setTitle("Ravbite Editor / " + project.getName() + " # using Ravbite Engine v" + Ravbite.VERSION);
+    }
+
+    /**
+     * Closes the project
+     */
+    public void closeProject() {
+        projectManager.saveProject(project);
+        project = null;
+        super.setTitle("Ravbite Editor");
+    }
+
+    /**
+     * @return ProjectManager for the editorInstance
+     */
     public ProjectManager getProjectManager() {
         return projectManager;
+    }
+
+    /**
+     * @return Currently opened window
+     */
+    public Project getProject() {
+        return project;
+    }
+
+    /**
+     * Sets the leaveWindow | null = closed
+     * @param leaveWindow LeaveWindow
+     */
+    public void setLeaveWindow(LeaveWindow leaveWindow) {
+        this.leaveWindow = leaveWindow;
     }
 
 }

@@ -246,6 +246,14 @@ public abstract class Window extends EngineView {
     }
 
     /**
+     * Sets the windowTitle
+     * @param title Title for the window
+     */
+    public void setTitle(String title) {
+        glfwSetWindowTitle(window, title);
+    }
+
+    /**
      * Sets the initialWidth
      * @param initialWidth initialWidth
      */

@@ -38,7 +38,13 @@ package de.rafael.ravbite.engine.app.project;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.project.storage.ProjectStorage;
+import de.rafael.ravbite.engine.app.project.storage.StoredScene;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.SerializationUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Project extends SimpleProject {
 
@@ -53,20 +59,60 @@ public class Project extends SimpleProject {
         this.scenes = new Scene[] {};
     }
 
+    /**
+     * Creates a new scene inside the project
+     * @param name Name of the scene
+     */
     public void createScene(String name) {
 
     }
 
+    /**
+     * Loads the project from the disc
+     */
+    public void load() {
+
+    }
+
+    /**
+     * Saves the project
+     * @throws IOException ?
+     */
+    public void save() throws IOException {
+        FileUtils.writeByteArrayToFile(new File(getProjectFilePath()), SerializationUtils.serialize(projectStorage));
+        for (Scene scene : scenes) {
+            StoredScene storedScene = StoredScene.fromScene(scene);
+            FileUtils.writeByteArrayToFile(new File(getPath(), "scenes/" + storedScene.getName() + ".ravbite"), SerializationUtils.serialize(storedScene));
+        }
+    }
+
+    /**
+     * @return Project in simple version
+     */
     public SimpleProject asSimple() {
         return new SimpleProject(getName(), getPath());
     }
 
+    /**
+     * @return ProjectStorage
+     */
     public ProjectStorage getProjectStorage() {
         return projectStorage;
     }
 
+    /**
+     * Sets the project storage
+     * @param projectStorage New project storage
+     */
     public void setProjectStorage(ProjectStorage projectStorage) {
         this.projectStorage = projectStorage;
+    }
+
+    /**
+     * @return Array of all loaded scenes
+     */
+    public Scene[] getScenes() {
+        return scenes;
     }
 
 }

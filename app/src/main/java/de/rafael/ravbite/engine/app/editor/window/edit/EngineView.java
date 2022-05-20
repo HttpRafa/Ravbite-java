@@ -27,38 +27,33 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.project.generator.templates;
+
+package de.rafael.ravbite.engine.app.editor.window.edit;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/04/2022 at 1:51 PM
+// On 05/20/2022 at 6:52 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.project.Project;
-import de.rafael.ravbite.engine.app.project.generator.ProjectTemplate;
-import de.rafael.ravbite.engine.app.project.gradle.GradleManager;
+import de.rafael.ravbite.engine.app.editor.EditorWindow;
+import de.rafael.ravbite.utils.gui.IGui;
+import imgui.ImGui;
 
-import java.io.File;
+public class EngineView implements IGui {
 
-public class StandardTemplate extends ProjectTemplate {
+    private final EditorWindow editorWindow;
+
+    public EngineView(EditorWindow editorWindow) {
+        this.editorWindow = editorWindow;
+    }
 
     @Override
-    public void generate(Project project) {
-        super.folder(project, ".");
-        super.folder(project, "scenes");
-        // Default Scene
-        project.createScene("Scene 1");
-
-        super.folder(project, "src");
-        // Generate Gradle Project
-        GradleManager.setup(new File(project.getPath(), "src/"));
-
-        super.folder(project, "assets");
-
-        super.projectFile(project.getProjectFilePath(), project.getProjectStorage());
+    public void gui() {
+        ImGui.begin("View");
+        ImGui.end();
     }
 
 }

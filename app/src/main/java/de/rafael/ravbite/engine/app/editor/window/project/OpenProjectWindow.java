@@ -41,7 +41,6 @@ import de.rafael.ravbite.engine.app.editor.EditorWindow;
 import de.rafael.ravbite.engine.app.project.SimpleProject;
 import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,15 +69,15 @@ public class OpenProjectWindow implements IGui {
                 ImGui.text("Last used: " + simpleDateFormat.format(new Date(project.getLastUsed())));
                 ImGui.separator();
 
-                if (ImGui.button("Open")) {
-
+                if (ImGui.button("Open" + "\n".repeat(i))) {
+                    editorWindow.open(project);
                 }
                 ImGui.sameLine();
-                if (ImGui.button("Delete")) {
-                    ImGui.openPopup("Delete Project");
+                if (ImGui.button("Delete" + "\n".repeat(i))) {
+                    ImGui.openPopup("Delete Project" + "\n".repeat(i));
                 }
             }
-            if(ImGui.beginPopupModal("Delete Project")) {
+            if(ImGui.beginPopupModal("Delete Project" + "\n".repeat(i))) {
                 ImGui.text("Path: " + project.getPath());
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
