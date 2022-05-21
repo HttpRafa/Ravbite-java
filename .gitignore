@@ -3,5 +3,6 @@
 /utilities/build/
 /engine/build/
 /app/build/
+/app/projects.ravbite
 /buildSrc/build/
 /buildSrc/.gradle/
