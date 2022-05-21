@@ -37,6 +37,8 @@ package de.rafael.ravbite.engine.app.project.storage;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.project.gradle.GradleProject;
+
 import java.io.Serializable;
 
 public class ProjectStorage implements Serializable {
@@ -46,6 +48,8 @@ public class ProjectStorage implements Serializable {
     private String name;
 
     private String[] scenes;
+
+    private GradleProject gradleProject;
 
     public ProjectStorage(String name) {
         this.name = name;
@@ -81,6 +85,21 @@ public class ProjectStorage implements Serializable {
      */
     public void setScenes(String[] scenes) {
         this.scenes = scenes;
+    }
+
+    /**
+     * @return GradleProject
+     */
+    public GradleProject getGradleProject() {
+        return gradleProject;
+    }
+
+    /**
+     * Sets the gradleProject
+     * @param gradleProject GradleProject
+     */
+    public void setGradleProject(GradleProject gradleProject) {
+        this.gradleProject = gradleProject;
     }
 
 }

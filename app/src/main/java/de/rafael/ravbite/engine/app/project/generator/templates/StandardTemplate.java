@@ -53,8 +53,6 @@ public class StandardTemplate extends ProjectTemplate {
         project.createScene("Scene 1");
 
         super.folder(project, "src");
-        // Generate Gradle Project
-        GradleManager.setup(new File(project.getPath(), "src/"));
 
         super.folder(project, "assets");
 

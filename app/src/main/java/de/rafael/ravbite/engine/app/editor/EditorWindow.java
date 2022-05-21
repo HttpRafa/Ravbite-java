@@ -55,6 +55,8 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -72,7 +74,7 @@ public class EditorWindow extends Window {
     public EditorWindow() throws IOException {
         super(1900, 1000);
 
-        this.projectManager = new ProjectManager();
+        this.projectManager = new ProjectManager(this);
         this.projectManager.loadProjects();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -80,6 +82,13 @@ public class EditorWindow extends Window {
                 projectManager.storeProjects();
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
+            }
+            if(project != null) {
+                try {
+                    project.save();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
             }
         }));
 
@@ -162,7 +171,7 @@ public class EditorWindow extends Window {
      * Opens the project
      * @param project Project to open
      */
-    public void open(SimpleProject project) {
+    public void open(SimpleProject project) throws IOException {
         this.project = projectManager.openProject(project);
         super.setTitle("Ravbite Editor / " + project.getName() + " # using Ravbite Engine v" + Ravbite.VERSION);
     }

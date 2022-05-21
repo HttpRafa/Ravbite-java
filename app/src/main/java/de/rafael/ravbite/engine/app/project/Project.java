@@ -37,25 +37,32 @@ package de.rafael.ravbite.engine.app.project;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.editor.EditorWindow;
+import de.rafael.ravbite.engine.app.editor.scene.EditorScene;
+import de.rafael.ravbite.engine.app.project.gradle.GradleManager;
 import de.rafael.ravbite.engine.app.project.storage.ProjectStorage;
 import de.rafael.ravbite.engine.app.project.storage.StoredScene;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Project extends SimpleProject {
+
+    private final EditorWindow editorWindow;
 
     private ProjectStorage projectStorage;
     private Scene[] scenes;
 
-    public Project(String name, String path) {
+    public Project(EditorWindow editorWindow, String name, String path) {
         super(name, path);
 
+        this.editorWindow = editorWindow;
         this.projectStorage = new ProjectStorage(name);
-
         this.scenes = new Scene[] {};
     }
 
@@ -64,14 +71,28 @@ public class Project extends SimpleProject {
      * @param name Name of the scene
      */
     public void createScene(String name) {
-
+        StoredScene storedScene = new StoredScene(name);
+        scenes = ArrayUtils.add(scenes, EditorScene.fromStoredScene(editorWindow, storedScene));
     }
 
     /**
      * Loads the project from the disc
      */
-    public void load() {
+    public void load() throws IOException {
+        byte[] projectStorageData = FileUtils.readFileToByteArray(new File(getProjectFilePath()));
+        projectStorage = SerializationUtils.deserialize(projectStorageData);
+        File scenesFolder = new File(getPath(), "scenes/");
+        if(scenesFolder.exists()) {
+            for (File file : Objects.requireNonNull(scenesFolder.listFiles())) {
+                byte[] storedSceneData = FileUtils.readFileToByteArray(file);
+                StoredScene storedScene = SerializationUtils.deserialize(storedSceneData);
+                scenes = ArrayUtils.add(scenes, EditorScene.fromStoredScene(editorWindow, storedScene));
+            }
+        }
 
+        if(projectStorage.getGradleProject() == null) {
+            projectStorage.setGradleProject(GradleManager.setup(new File(getPath(), "src/")));
+        }
     }
 
     /**
@@ -91,6 +112,13 @@ public class Project extends SimpleProject {
      */
     public SimpleProject asSimple() {
         return new SimpleProject(getName(), getPath());
+    }
+
+    /**
+     * @return EditorWindow that is used
+     */
+    public EditorWindow getEditorWindow() {
+        return editorWindow;
     }
 
     /**

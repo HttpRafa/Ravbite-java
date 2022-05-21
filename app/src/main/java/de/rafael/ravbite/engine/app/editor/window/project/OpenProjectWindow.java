@@ -42,6 +42,7 @@ import de.rafael.ravbite.engine.app.project.SimpleProject;
 import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -70,7 +71,11 @@ public class OpenProjectWindow implements IGui {
                 ImGui.separator();
 
                 if (ImGui.button("Open" + "\n".repeat(i))) {
-                    editorWindow.open(project);
+                    try {
+                        editorWindow.open(project);
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
                 }
                 ImGui.sameLine();
                 if (ImGui.button("Delete" + "\n".repeat(i))) {

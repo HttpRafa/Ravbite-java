@@ -37,6 +37,7 @@ package de.rafael.ravbite.engine.app.project.manager;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.editor.EditorWindow;
 import de.rafael.ravbite.engine.app.project.Project;
 import de.rafael.ravbite.engine.app.project.SimpleProject;
 import de.rafael.ravbite.engine.app.project.generator.ProjectGenerator;
@@ -53,9 +54,15 @@ import java.util.Arrays;
 
 public class ProjectManager {
 
+    private final EditorWindow editorWindow;
+
     public static final File projectsFile = new File("projects.ravbite");
 
     private SimpleProject[] projects = new SimpleProject[0];
+
+    public ProjectManager(EditorWindow editorWindow) {
+        this.editorWindow = editorWindow;
+    }
 
     /**
      * Loads a projects
@@ -90,7 +97,7 @@ public class ProjectManager {
     public boolean createProject(String name, String path, int dimension, String packageName, GradleDslType dslType, GradleLanguageType languageType) {
         File projectFolder = new File(path, name);
 
-        Project project = new Project(name, projectFolder.getAbsolutePath());
+        Project project = new Project(editorWindow, name, projectFolder.getAbsolutePath());
         ProjectGenerator.generate(ProjectTemplates.STANDARD, project);
 
         projects = ArrayUtils.add(projects, project.asSimple());
@@ -102,8 +109,8 @@ public class ProjectManager {
      * Opens the specified project
      * @param simpleProject Simple version of the project
      */
-    public Project openProject(SimpleProject simpleProject) {
-        Project project = new Project(simpleProject.getName(), simpleProject.getPath());
+    public Project openProject(SimpleProject simpleProject) throws IOException {
+        Project project = new Project(editorWindow, simpleProject.getName(), simpleProject.getPath());
         project.load();
         return project;
     }

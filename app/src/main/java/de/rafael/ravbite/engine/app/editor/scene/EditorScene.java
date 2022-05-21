@@ -38,6 +38,7 @@ package de.rafael.ravbite.engine.app.editor.scene;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.project.storage.StoredScene;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.EngineView;
 
@@ -45,6 +46,10 @@ public class EditorScene extends Scene {
 
     public EditorScene(EngineView engineView) {
         super(engineView, "EditorScene");
+    }
+
+    public EditorScene(EngineView engineView, String name) {
+        super(engineView, name);
     }
 
     @Override
@@ -55,6 +60,10 @@ public class EditorScene extends Scene {
     @Override
     public void dispose() {
 
+    }
+
+    public static EditorScene fromStoredScene(EngineView engineView, StoredScene storedScene) {
+        return new EditorScene(engineView, storedScene.getName());
     }
 
 }

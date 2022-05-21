@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022. All rights reserved.
+ * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,23 +33,28 @@ package de.rafael.ravbite.engine.app.project.gradle;
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/06/2022 at 1:06 PM
+// On 5/21/2022 at 12:14 PM
 // In the project Ravbite
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.project.Project;
+
 import java.io.File;
+import java.io.Serializable;
 
-public class GradleManager {
+public class GradleProject implements Serializable {
 
-    private static final String GRADLE_DOWNLOAD_URL = "https://services.gradle.org/distributions/gradle-7.4.2-bin.zip";
+    static final long serialVersionUID = 55L;
 
     /**
-     * Creates a new gradle project
-     * @param folder Folder
+     * Creates a gradleProject for a ravbiteProject
+     * @param project Project
+     * @return GradleProject
      */
-    public static GradleProject setup(File folder) {
-        return null;
+    public static GradleProject createProjectFor(Project project) {
+        // Generate Gradle Project
+        return GradleManager.setup(new File(project.getPath(), "src/"));
     }
 
 }
