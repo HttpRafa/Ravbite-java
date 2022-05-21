@@ -41,14 +41,14 @@ package de.rafael.ravbite.engine.app.ui;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 
-public class CheckBoxDecider {
+public class CheckBoxList {
 
     private boolean onlyOne = false;
 
     private final String[] options;
     private final ImBoolean[] optionsValues;
 
-    public CheckBoxDecider(String[] options, boolean[] defaultValues) {
+    public CheckBoxList(String[] options, boolean[] defaultValues) {
         this.options = options;
         this.optionsValues = new ImBoolean[this.options.length];
         for (int i = 0; i < this.optionsValues.length; i++) {
@@ -56,7 +56,7 @@ public class CheckBoxDecider {
         }
     }
 
-    public CheckBoxDecider(boolean onlyOne, String[] options, boolean[] defaultValues) {
+    public CheckBoxList(boolean onlyOne, String[] options, boolean[] defaultValues) {
         this.options = options;
         this.optionsValues = new ImBoolean[this.options.length];
         for (int i = 0; i < this.optionsValues.length; i++) {
