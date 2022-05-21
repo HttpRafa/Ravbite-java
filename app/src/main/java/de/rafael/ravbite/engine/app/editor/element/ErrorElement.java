@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022. All rights reserved.
+ * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,26 +27,43 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.main;
+
+package de.rafael.ravbite.engine.app.editor.element;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/09/2022 at 11:26 PM
+// On 5/21/2022 at 8:35 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.Ravbite;
-import de.rafael.ravbite.engine.app.editor.Editor;
+import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
+import imgui.ImGui;
 
-public class Main {
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
-    public static void main(String[] args) {
-        new Ravbite().initialize();
+public record ErrorElement(Throwable throwable) implements IGuiElement {
 
-        Editor editor = new Editor();
-        editor.start();
+    @Override
+    public boolean render() {
+        boolean close = false;
+        ImGui.begin("Something bad happened! Error!");
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        throwable.printStackTrace(printWriter);
+        ImGui.textWrapped(stringWriter.toString());
+        ImGui.spacing();
+        if (ImGui.button("Close")) {
+            close = true;
+        }
+        ImGui.sameLine();
+        if(ImGui.button("Send errorLog")) {
+            close = true;
+        }
+        ImGui.end();
+        return close;
     }
 
 }

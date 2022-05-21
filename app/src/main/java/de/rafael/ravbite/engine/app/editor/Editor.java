@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022. All rights reserved.
+ * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,26 +27,76 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.main;
+
+package de.rafael.ravbite.engine.app.editor;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/09/2022 at 11:26 PM
+// On 5/21/2022 at 8:18 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.Ravbite;
-import de.rafael.ravbite.engine.app.editor.Editor;
+import de.rafael.ravbite.engine.app.editor.element.ErrorElement;
+import de.rafael.ravbite.engine.app.editor.manager.ProjectManager;
+import de.rafael.ravbite.engine.app.editor.manager.element.ElementManager;
+import de.rafael.ravbite.engine.app.editor.window.EditorWindow;
 
-public class Main {
+public class Editor {
 
-    public static void main(String[] args) {
-        new Ravbite().initialize();
+    private EditorWindow editorWindow;
+    private Thread windowThread;
 
-        Editor editor = new Editor();
-        editor.start();
+    private final ElementManager elementManager;
+    private final ProjectManager projectManager;
+
+    public Editor() {
+        elementManager = new ElementManager();
+        projectManager = new ProjectManager(this);
+        projectManager.loadProjects();
+    }
+
+    public void start() {
+        windowThread = new Thread(() -> {
+            editorWindow = new EditorWindow(this);
+            editorWindow.initialize();
+            editorWindow.loop();
+            editorWindow.destroy();
+        });
+        windowThread.start();
+    }
+
+    public void handleError(Throwable throwable) {
+        elementManager.startDrawing(new ErrorElement(throwable));
+    }
+
+    /**
+     * @return Window of the editor
+     */
+    public EditorWindow getEditorWindow() {
+        return editorWindow;
+    }
+
+    /**
+     * @return Thread of the window
+     */
+    public Thread getWindowThread() {
+        return windowThread;
+    }
+
+    /**
+     * @return Element manager
+     */
+    public ElementManager getElementManager() {
+        return elementManager;
+    }
+
+    /**
+     * @return Project manager
+     */
+    public ProjectManager getProjectManager() {
+        return projectManager;
     }
 
 }

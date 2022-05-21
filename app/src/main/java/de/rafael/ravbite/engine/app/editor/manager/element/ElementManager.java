@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022. All rights reserved.
+ * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,26 +27,37 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.main;
+
+package de.rafael.ravbite.engine.app.editor.manager.element;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/09/2022 at 11:26 PM
+// On 5/21/2022 at 8:21 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.Ravbite;
-import de.rafael.ravbite.engine.app.editor.Editor;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Main {
+public class ElementManager {
 
-    public static void main(String[] args) {
-        new Ravbite().initialize();
+    private final List<IGuiElement> guiElementsList = new ArrayList<>();
 
-        Editor editor = new Editor();
-        editor.start();
+    /**
+     * Adds element to the list
+     * @param element Element to add
+     */
+    public void startDrawing(IGuiElement element) {
+        guiElementsList.add(element);
+    }
+
+    /**
+     * @return List of guiElements to render in the window
+     */
+    public List<IGuiElement> getElements() {
+        return guiElementsList;
     }
 
 }

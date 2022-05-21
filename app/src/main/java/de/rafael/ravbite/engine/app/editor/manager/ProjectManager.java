@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022. All rights reserved.
+ * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,26 +27,48 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.app.main;
+
+package de.rafael.ravbite.engine.app.editor.manager;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/09/2022 at 11:26 PM
+// On 5/21/2022 at 8:21 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.Ravbite;
 import de.rafael.ravbite.engine.app.editor.Editor;
+import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
+import org.apache.commons.io.FileUtils;
 
-public class Main {
+import java.io.File;
 
-    public static void main(String[] args) {
-        new Ravbite().initialize();
+public class ProjectManager {
 
-        Editor editor = new Editor();
-        editor.start();
+    public static final File projectsFile = new File("projects.ravbite");
+
+    private final Editor editor;
+
+    private SimpleProject[] projects;
+
+    public ProjectManager(Editor editor) {
+        this.editor = editor;
+    }
+
+    public void loadProjects() {
+        try {
+            if(projectsFile.exists()) {
+                byte[] data = FileUtils.readFileToByteArray(projectsFile);
+            }
+            throw new NullPointerException("Test");
+        } catch (Exception exception) {
+            editor.handleError(exception);
+        }
+    }
+
+    public void storeProjects() {
+
     }
 
 }
