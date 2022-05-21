@@ -4,5 +4,6 @@
 /engine/build/
 /app/build/
 /app/projects.ravbite
+/app/imgui.ini
 /buildSrc/build/
 /buildSrc/.gradle/
