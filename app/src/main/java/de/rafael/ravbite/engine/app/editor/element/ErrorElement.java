@@ -38,34 +38,69 @@ package de.rafael.ravbite.engine.app.editor.element;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
 import imgui.ImGui;
+import imgui.flag.ImGuiWindowFlags;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public record ErrorElement(Throwable throwable) implements IGuiElement {
+public record ErrorElement(Editor editor) implements IGuiElement {
 
     @Override
     public boolean render() {
-        boolean close = false;
+        if(ImGui.beginPopupModal("Reported errors", ImGuiWindowFlags.AlwaysAutoResize)) {
+            Throwable[] reportedErrors = editor.getReportedErrors();
+            ImGui.text("The editor found " + reportedErrors.length + " errors! / " + (reportedErrors.length == 0 ? "Everything is OK!" : "Report them or ignore them"));
+            int[] solvedErrors = new int[0];
+            for (int i = 0; i < reportedErrors.length; i++) {
+                Throwable error = reportedErrors[i];
+                if(ImGui.collapsingHeader("Error " + (i + 1) + "[" + i + "] (" + error.getClass().getName() + ")")) {
+                    StringWriter stringWriter = new StringWriter();
+                    PrintWriter printWriter = new PrintWriter(stringWriter);
+                    error.printStackTrace(printWriter);
+                    for (String line : stringWriter.toString().split("\n")) {
+                        ImGui.text(line);
+                    }
 
-        ImGui.setNextWindowSize(870, 515);
-        ImGui.begin("Something bad happened! Error!");
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        throwable.printStackTrace(printWriter);
-        ImGui.textWrapped(stringWriter.toString());
-        ImGui.spacing();
-        if (ImGui.button("Close")) {
-            close = true;
+                    ImGui.spacing();
+
+                    if (ImGui.button("Ignore")) {
+                        solvedErrors = ArrayUtils.add(solvedErrors, i);
+                    }
+
+                    ImGui.sameLine();
+
+                    if(ImGui.button("Send errorLog")) {
+                        solvedErrors = ArrayUtils.add(solvedErrors, i);
+
+                        // TODO: Send errorLog to server
+                    }
+                }
+            }
+            for (int solvedError : solvedErrors) {
+                editor.solveError(solvedError);
+            }
+
+            ImGui.spacing();
+            ImGui.separator();
+            ImGui.spacing();
+
+            if(ImGui.button("Close")) {
+                ImGui.closeCurrentPopup();
+            }
+
+            ImGui.sameLine();
+
+            if(ImGui.button("Ignore all")) {
+                editor.solveAllErrors();
+            }
+
+            ImGui.endPopup();
         }
-        ImGui.sameLine();
-        if(ImGui.button("Send errorLog")) {
-            close = true;
-        }
-        ImGui.end();
-        return close;
+        return false;
     }
 
 }

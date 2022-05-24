@@ -39,7 +39,6 @@ package de.rafael.ravbite.engine.app.editor.manager.project;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
-import de.rafael.ravbite.engine.app.editor.element.ErrorElement;
 import de.rafael.ravbite.engine.app.editor.element.OpenProjectElement;
 import de.rafael.ravbite.engine.app.editor.project.ProjectFile;
 import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
@@ -92,7 +91,7 @@ public class ProjectManager {
      * @param i Index of the project
      */
     public void openProject(int i) {
-        editor.getElementManager().startDrawing(new ErrorElement(new RuntimeException(i + " project")));
+        editor.handleError(new RuntimeException("Project opened " + i));
     }
 
     /**
@@ -122,6 +121,7 @@ public class ProjectManager {
      */
     public void deleteProject(int i) {
         projects = ArrayUtils.remove(projects, i);
+        storeProjects();
     }
 
     /**

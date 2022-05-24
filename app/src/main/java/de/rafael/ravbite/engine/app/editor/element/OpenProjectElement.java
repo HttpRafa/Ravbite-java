@@ -48,6 +48,7 @@ import de.rafael.ravbite.engine.app.ui.CheckBoxList;
 import imgui.ImGui;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
 import imgui.extension.imguifiledialog.flag.ImGuiFileDialogFlags;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
 
 import java.io.File;
@@ -72,7 +73,7 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
     @Override
     public boolean render() {
         ImGui.setNextWindowSize(WIDTH, HEIGHT);
-        ImGui.begin("Open Project");
+        ImGui.begin("Open Project", ImGuiWindowFlags.NoCollapse);
 
         SimpleProject[] simpleProjects = editor.getProjectManager().getProjects();
         if(simpleProjects != null) {
@@ -97,7 +98,7 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
                 }
 
                 // Delete Popup
-                if (ImGui.beginPopupModal("Delete project" + "\n".repeat(i))) {
+                if (ImGui.beginPopupModal("Delete project" + "\n".repeat(i), ImGuiWindowFlags.AlwaysAutoResize)) {
                     ImGui.text("Name: " + project.getName());
                     ImGui.text("Directory: " + project.getProjectDirectory().getAbsolutePath());
                     ImGui.text("Project File: " + project.getProjectFile().getAbsolutePath());
@@ -126,12 +127,15 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
             ImGui.openPopup("Create project");
         }
 
-        if(ImGui.beginPopupModal("Create project")) {
+        if(ImGui.beginPopupModal("Create project", ImGuiWindowFlags.AlwaysAutoResize)) {
             if(ImGui.inputText("Name", STRINGS[0])) {
                 STRINGS[1].set("de.ravbite." + STRINGS[0].get().toLowerCase().trim().replaceAll("\\.", "").replaceAll(" ", "."));
             }
 
-            ImGui.text(STRINGS[2].get());
+            if(ImGui.inputText("Directory", STRINGS[2])) {
+
+            }
+
             ImGui.sameLine();
 
             if(ImGui.button("Choose")) {
@@ -188,7 +192,8 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
                     STRINGS[3].set("Name is already in use");
                     ImGui.openPopup("Error");
                 } else {
-                    SimpleProject simpleProject = new SimpleProject(name, new File(STRINGS[2].get()), new File(STRINGS[2].get(), name + ".ravproject"));
+                    File directory = new File(STRINGS[2].get(), name + "/");
+                    SimpleProject simpleProject = new SimpleProject(name, directory, new File(directory, name + ".ravproject"));
 
                     EditorSettings editorSettings = new EditorSettings(null);
                     EngineSettings engineSettings = new EngineSettings(CHECKBOX_LIST[0].getOptionsValues()[0].get() ? 2 : 3);

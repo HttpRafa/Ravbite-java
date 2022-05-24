@@ -43,6 +43,8 @@ import de.rafael.ravbite.engine.app.editor.element.ProcessRunningElement;
 import de.rafael.ravbite.engine.app.editor.manager.element.ElementManager;
 import de.rafael.ravbite.engine.app.editor.manager.project.ProjectManager;
 import de.rafael.ravbite.engine.app.editor.window.EditorWindow;
+import imgui.ImGui;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -55,6 +57,8 @@ public class Editor {
 
     private EditorWindow editorWindow;
     private Thread windowThread;
+
+    private Throwable[] reportedErrors = new Throwable[0];
 
     private final ThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(6);
 
@@ -86,6 +90,7 @@ public class Editor {
      * Loads all projects etc.
      */
     public void load() {
+        elementManager.startDrawing(new ErrorElement(this));
         projectManager.loadProjects();
 
         update();
@@ -101,7 +106,7 @@ public class Editor {
             editorWindow.loop();
             editorWindow.destroy();
             exit();
-        });
+        }, "Window Thread");
         windowThread.start();
         threadPoolExecutor.execute(this::load);
     }
@@ -111,7 +116,26 @@ public class Editor {
      * @param throwable Exception
      */
     public void handleError(Throwable throwable) {
-        elementManager.startDrawing(new ErrorElement(throwable));
+        reportedErrors = ArrayUtils.add(reportedErrors, throwable);
+
+        editorWindow.getThreadExecutor().addTask(() -> {
+            ImGui.openPopup("Reported errors");
+        });
+    }
+
+    /**
+     * Removes a reportedError
+     * @param index Index of the error
+     */
+    public void solveError(int index) {
+        reportedErrors = ArrayUtils.remove(reportedErrors, index);
+    }
+
+    /**
+     * Removes all reportedError
+     */
+    public void solveAllErrors() {
+        reportedErrors = new Throwable[0];
     }
 
     /**
@@ -140,6 +164,13 @@ public class Editor {
      */
     public Thread getWindowThread() {
         return windowThread;
+    }
+
+    /**
+     * @return Array of reportedErrors
+     */
+    public Throwable[] getReportedErrors() {
+        return reportedErrors;
     }
 
     /**

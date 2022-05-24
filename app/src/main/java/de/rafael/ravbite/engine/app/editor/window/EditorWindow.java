@@ -120,6 +120,8 @@ public class EditorWindow extends Window {
                 }
             }
 
+            super.getThreadExecutor().executeAllTasksInStack();
+
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());
 
