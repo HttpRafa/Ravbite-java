@@ -68,20 +68,32 @@ public class Editor {
         projectManager = new ProjectManager(this);
     }
 
+    /**
+     * Executes the last tasks of the editor
+     */
     public void exit() {
         threadPoolExecutor.shutdown();
     }
 
+    /**
+     * Updates the editor
+     */
     public void update() {
         projectManager.update();
     }
 
+    /**
+     * Loads all projects etc.
+     */
     public void load() {
         projectManager.loadProjects();
 
         update();
     }
 
+    /**
+     * Start the editor process
+     */
     public void start() {
         windowThread = new Thread(() -> {
             editorWindow = new EditorWindow(this);

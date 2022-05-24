@@ -68,6 +68,9 @@ public class ProjectManager {
         this.editor = editor;
     }
 
+    /**
+     * Updates the projectManager
+     */
     private OpenProjectElement openProjectElement;
     public void update() {
         if(openProject == null) {
@@ -92,6 +95,13 @@ public class ProjectManager {
         editor.getElementManager().startDrawing(new ErrorElement(new RuntimeException(i + " project")));
     }
 
+    /**
+     * Creates a new project
+     * @param simpleProject Simple project
+     * @param editorSettings Editor settings
+     * @param engineSettings Engine settings
+     * @param gradleSettings Gradle settings
+     */
     public void createProject(SimpleProject simpleProject, EditorSettings editorSettings, EngineSettings engineSettings, GradleSettings gradleSettings) {
         editor.execute("Creating project", () -> {
             projects = ArrayUtils.add(projects, simpleProject);

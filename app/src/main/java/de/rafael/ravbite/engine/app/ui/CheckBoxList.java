@@ -94,6 +94,9 @@ public class CheckBoxList {
         }
     }
 
+    /**
+     * @return The index of the value that is true !! Only works with onlyOne !!
+     */
     public int trueIndex() {
         for (int i = 0; i < optionsValues.length; i++) {
             if(optionsValues[i].get()) {

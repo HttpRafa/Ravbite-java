@@ -92,10 +92,16 @@ public class SimpleProject implements Serializable {
         this.projectFile = new File(projectDirectory, projectFile.getName());
     }
 
+    /**
+     * @return Directory of the project
+     */
     public File getProjectDirectory() {
         return projectDirectory;
     }
 
+    /**
+     * @return Project file of the project
+     */
     public File getProjectFile() {
         return projectFile;
     }

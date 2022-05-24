@@ -68,6 +68,10 @@ public class ProjectFile extends SimpleProject implements Serializable {
         this.gradleSettings = gradleSettings;
     }
 
+    /**
+     * Writes the data to a file
+     * @param file File to write in
+     */
     public void writeToFile(File file) {
         byte[] data = SerializationUtils.serialize(this);
         try {
