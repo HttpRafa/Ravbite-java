@@ -1,5 +1,5 @@
 /*
- * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,47 +28,47 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.manager;
+package de.rafael.ravbite.engine.app.editor.element;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 5/21/2022 at 8:21 PM
+// On 05/24/2022 at 2:41 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.Editor;
-import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
-import org.apache.commons.io.FileUtils;
+import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
+import imgui.ImGui;
 
-import java.io.File;
+public class ProcessRunningElement implements IGuiElement {
 
-public class ProjectManager {
+    private final String name;
 
-    public static final File projectsFile = new File("projects.ravbite");
+    private final long startTime;
 
-    private final Editor editor;
+    public ProcessRunningElement(String name) {
+        this.name = name;
 
-    private SimpleProject[] projects;
-
-    public ProjectManager(Editor editor) {
-        this.editor = editor;
+        this.startTime = System.currentTimeMillis();
     }
 
-    public void loadProjects() {
-        try {
-            if(projectsFile.exists()) {
-                byte[] data = FileUtils.readFileToByteArray(projectsFile);
-            }
-            throw new NullPointerException("Test");
-        } catch (Exception exception) {
-            editor.handleError(exception);
-        }
-    }
+    @Override
+    public boolean render() {
 
-    public void storeProjects() {
+        ImGui.setNextWindowSize(500, 100);
+        ImGui.begin("Busy | " + name);
+        ImGui.text("An action is being carried out that may take little or a lot of time.");
+        ImGui.text("Get a glass of water.");
 
+        ImGui.spacing();
+        ImGui.separator();
+        ImGui.spacing();
+
+        ImGui.text("Busy for " + ((System.currentTimeMillis() - startTime) / 1000) + " seconds.");
+        ImGui.end();
+
+        return false;
     }
 
 }

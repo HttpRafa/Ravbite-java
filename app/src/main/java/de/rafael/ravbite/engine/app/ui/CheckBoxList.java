@@ -70,7 +70,7 @@ public class CheckBoxList {
     /**
      * Called every frame to render the GUI
      */
-    public void imGui() {
+    public void render() {
         for (int i = 0; i < this.options.length; i++) {
             if(ImGui.checkbox(this.options[i], this.optionsValues[i])) {
                 if(onlyOne && this.optionsValues[i].get()) {
@@ -92,6 +92,15 @@ public class CheckBoxList {
                 ImGui.sameLine();
             }
         }
+    }
+
+    public int trueIndex() {
+        for (int i = 0; i < optionsValues.length; i++) {
+            if(optionsValues[i].get()) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     /**

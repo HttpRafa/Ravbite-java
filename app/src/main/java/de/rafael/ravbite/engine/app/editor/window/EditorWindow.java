@@ -42,14 +42,11 @@ import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
 import de.rafael.ravbite.engine.graphics.object.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.Window;
-import de.rafael.ravbite.utils.gui.IGui;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-
-import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -116,8 +113,12 @@ public class EditorWindow extends Window {
             imGuiGlfw.newFrame();
             ImGui.newFrame();
 
-            List<IGuiElement> elements = editor.getElementManager().getElements();
-            elements.removeIf(IGuiElement::render);
+            IGuiElement[] elements = editor.getElementManager().getElements();
+            for (int i = 0; i < elements.length; i++) {
+                if(elements[i].render()) {
+                    editor.getElementManager().stopDrawing(i);
+                }
+            }
 
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());

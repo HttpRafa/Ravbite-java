@@ -1,5 +1,5 @@
 /*
- * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,44 +28,43 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.element;
+package de.rafael.ravbite.engine.app.editor.project.settings;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 5/21/2022 at 8:35 PM
+// On 05/24/2022 at 2:14 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
-import imgui.ImGui;
+import java.io.Serial;
+import java.io.Serializable;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+public class EditorSettings implements Serializable {
 
-public record ErrorElement(Throwable throwable) implements IGuiElement {
+    @Serial
+    private static final long serialVersionUID = 55L;
 
-    @Override
-    public boolean render() {
-        boolean close = false;
+    private String lastModifiedScene;
 
-        ImGui.setNextWindowSize(870, 515);
-        ImGui.begin("Something bad happened! Error!");
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        throwable.printStackTrace(printWriter);
-        ImGui.textWrapped(stringWriter.toString());
-        ImGui.spacing();
-        if (ImGui.button("Close")) {
-            close = true;
-        }
-        ImGui.sameLine();
-        if(ImGui.button("Send errorLog")) {
-            close = true;
-        }
-        ImGui.end();
-        return close;
+    public EditorSettings(String lastModifiedScene) {
+        this.lastModifiedScene = lastModifiedScene;
+    }
+
+    /**
+     * Sets the last modified scene
+     * @param lastModifiedScene Scene
+     */
+    public void setLastModifiedScene(String lastModifiedScene) {
+        this.lastModifiedScene = lastModifiedScene;
+    }
+
+    /**
+     * @return the last modified scene
+     */
+    public String getLastModifiedScene() {
+        return lastModifiedScene;
     }
 
 }

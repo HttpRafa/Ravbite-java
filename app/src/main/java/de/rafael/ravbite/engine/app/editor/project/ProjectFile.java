@@ -1,5 +1,5 @@
 /*
- * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,71 +33,69 @@ package de.rafael.ravbite.engine.app.editor.project;
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 5/21/2022 at 8:29 PM
+// On 05/24/2022 at 2:05 PM
 // In the project Ravbite
 //
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
+import de.rafael.ravbite.engine.app.editor.project.settings.EditorSettings;
+import de.rafael.ravbite.engine.app.editor.project.settings.EngineSettings;
+import de.rafael.ravbite.engine.app.editor.project.settings.GradleSettings;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 
-public class SimpleProject implements Serializable {
+public class ProjectFile extends SimpleProject implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 55L;
 
-    private String name;
+    private final EditorSettings editorSettings;
 
-    private File projectDirectory;
-    private File projectFile;
+    private final EngineSettings engineSettings;
+    private final GradleSettings gradleSettings;
 
-    public SimpleProject(String name, File projectDirectory, File projectFile) {
-        this.name = name;
-        this.projectDirectory = projectDirectory;
-        this.projectFile = projectFile;
+    public ProjectFile(SimpleProject simpleProject, EditorSettings editorSettings, EngineSettings engineSettings, GradleSettings gradleSettings) {
+        super(simpleProject.getName(), simpleProject.getProjectDirectory(), simpleProject.getProjectFile());
+
+        this.editorSettings = editorSettings;
+        this.engineSettings = engineSettings;
+        this.gradleSettings = gradleSettings;
     }
 
-    /**
-     * Sets the name of the project
-     * @param name New name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return Returns the name of the project
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Updates the directory of the project
-     * @param projectDirectory New directory
-     */
-    public void updateDirectory(File projectDirectory) {
+    public void writeToFile(File file) {
+        byte[] data = SerializationUtils.serialize(this);
         try {
-            FileUtils.copyDirectory(this.projectDirectory, projectDirectory);
+            FileUtils.writeByteArrayToFile(file, data);
         } catch (IOException exception) {
             Editor.getInstance().handleError(exception);
         }
-
-        this.projectDirectory = projectDirectory;
-        this.projectFile = new File(projectDirectory, projectFile.getName());
     }
 
-    public File getProjectDirectory() {
-        return projectDirectory;
+    /**
+     * @return Settings for the editor
+     */
+    public EditorSettings getEditorSettings() {
+        return editorSettings;
     }
 
-    public File getProjectFile() {
-        return projectFile;
+    /**
+     * @return Settings for the engine
+     */
+    public EngineSettings getEngineSettings() {
+        return engineSettings;
+    }
+
+    /**
+     * @return Settings for the gradle project setup
+     */
+    public GradleSettings getGradleSettings() {
+        return gradleSettings;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2022. All rights reserved.
+ * Copyright (c) 2022. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,44 +28,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.element;
+package de.rafael.ravbite.engine.app.editor.project.settings;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 5/21/2022 at 8:35 PM
+// On 05/24/2022 at 2:07 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
-import imgui.ImGui;
+import java.io.Serial;
+import java.io.Serializable;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+public class EngineSettings implements Serializable {
 
-public record ErrorElement(Throwable throwable) implements IGuiElement {
+    @Serial
+    private static final long serialVersionUID = 55L;
 
-    @Override
-    public boolean render() {
-        boolean close = false;
+    private final int dimensions;
 
-        ImGui.setNextWindowSize(870, 515);
-        ImGui.begin("Something bad happened! Error!");
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        throwable.printStackTrace(printWriter);
-        ImGui.textWrapped(stringWriter.toString());
-        ImGui.spacing();
-        if (ImGui.button("Close")) {
-            close = true;
-        }
-        ImGui.sameLine();
-        if(ImGui.button("Send errorLog")) {
-            close = true;
-        }
-        ImGui.end();
-        return close;
+    public EngineSettings(int dimensions) {
+        this.dimensions = dimensions;
+    }
+
+    /**
+     * @return How much dimensions the gameWorld has !! Only 3D !!
+     */
+    public int getDimensions() {
+        return dimensions;
     }
 
 }

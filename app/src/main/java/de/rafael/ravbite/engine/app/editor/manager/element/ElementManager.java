@@ -38,26 +38,42 @@ package de.rafael.ravbite.engine.app.editor.manager.element;
 //
 //------------------------------
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class ElementManager {
 
-    private final List<IGuiElement> guiElementsList = new ArrayList<>();
+    private IGuiElement[] guiElements = new IGuiElement[0];
 
     /**
      * Adds element to the list
      * @param element Element to add
      */
-    public void startDrawing(IGuiElement element) {
-        guiElementsList.add(element);
+    public IGuiElement startDrawing(IGuiElement element) {
+        guiElements = ArrayUtils.add(guiElements, element);
+        return element;
+    }
+
+    /**
+     * Stops the drawing of an element
+     * @param indices index of the elements
+     */
+    public void stopDrawing(int... indices) {
+        guiElements = ArrayUtils.removeAll(guiElements, indices);
+    }
+
+    /**
+     * Stops the drawing of an element
+     * @param element Array of elements
+     */
+    public void stopDrawing(IGuiElement... element) {
+        guiElements = ArrayUtils.removeElements(guiElements, element);
     }
 
     /**
      * @return List of guiElements to render in the window
      */
-    public List<IGuiElement> getElements() {
-        return guiElementsList;
+    public IGuiElement[] getElements() {
+        return guiElements;
     }
 
 }

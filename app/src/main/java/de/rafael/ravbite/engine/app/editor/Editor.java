@@ -39,22 +39,47 @@ package de.rafael.ravbite.engine.app.editor;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.element.ErrorElement;
-import de.rafael.ravbite.engine.app.editor.manager.ProjectManager;
+import de.rafael.ravbite.engine.app.editor.element.ProcessRunningElement;
 import de.rafael.ravbite.engine.app.editor.manager.element.ElementManager;
+import de.rafael.ravbite.engine.app.editor.manager.project.ProjectManager;
 import de.rafael.ravbite.engine.app.editor.window.EditorWindow;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Editor {
 
+    public static final String GRADLE_DOWNLOAD_URL = "https://services.gradle.org/distributions/gradle-7.4.2-bin.zip";
+
+    private static Editor instance = null;
+
     private EditorWindow editorWindow;
     private Thread windowThread;
+
+    private final ThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(6);
 
     private final ElementManager elementManager;
     private final ProjectManager projectManager;
 
     public Editor() {
+        instance = this;
+
         elementManager = new ElementManager();
         projectManager = new ProjectManager(this);
+    }
+
+    public void exit() {
+        threadPoolExecutor.shutdown();
+    }
+
+    public void update() {
+        projectManager.update();
+    }
+
+    public void load() {
         projectManager.loadProjects();
+
+        update();
     }
 
     public void start() {
@@ -63,12 +88,32 @@ public class Editor {
             editorWindow.initialize();
             editorWindow.loop();
             editorWindow.destroy();
+            exit();
         });
         windowThread.start();
+        threadPoolExecutor.execute(this::load);
     }
 
+    /**
+     * Called if an exception is thrown
+     * @param throwable Exception
+     */
     public void handleError(Throwable throwable) {
         elementManager.startDrawing(new ErrorElement(throwable));
+    }
+
+    /**
+     * Executes a task
+     * @param name Name of the task
+     * @param runnable Runnable to execute
+     */
+    public void execute(String name, Runnable runnable) {
+        threadPoolExecutor.execute(() -> {
+            ProcessRunningElement element = new ProcessRunningElement(name);
+            elementManager.startDrawing(element);
+            runnable.run();
+            elementManager.stopDrawing(element);
+        });
     }
 
     /**
@@ -86,6 +131,13 @@ public class Editor {
     }
 
     /**
+     * @return Thread pool for the editor
+     */
+    public ThreadPoolExecutor getThreadPoolExecutor() {
+        return threadPoolExecutor;
+    }
+
+    /**
      * @return Element manager
      */
     public ElementManager getElementManager() {
@@ -97,6 +149,13 @@ public class Editor {
      */
     public ProjectManager getProjectManager() {
         return projectManager;
+    }
+
+    /**
+     * @return Instance of the editor
+     */
+    public static Editor getInstance() {
+        return instance;
     }
 
 }
