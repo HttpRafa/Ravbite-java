@@ -121,6 +121,7 @@ public class EditorWindow extends Window {
             }
 
             super.getThreadExecutor().executeAllTasksInStack();
+            editor.getTaskExecutor().executeNextTask();
 
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());

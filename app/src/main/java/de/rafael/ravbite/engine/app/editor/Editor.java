@@ -39,9 +39,10 @@ package de.rafael.ravbite.engine.app.editor;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.element.ErrorElement;
-import de.rafael.ravbite.engine.app.editor.element.ProcessRunningElement;
+import de.rafael.ravbite.engine.app.editor.element.TaskPopup;
 import de.rafael.ravbite.engine.app.editor.manager.element.ElementManager;
 import de.rafael.ravbite.engine.app.editor.manager.project.ProjectManager;
+import de.rafael.ravbite.engine.app.editor.task.TaskExecutor;
 import de.rafael.ravbite.engine.app.editor.window.EditorWindow;
 import imgui.ImGui;
 import org.apache.commons.lang3.ArrayUtils;
@@ -60,7 +61,8 @@ public class Editor {
 
     private Throwable[] reportedErrors = new Throwable[0];
 
-    private final ThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(6);
+    private final ThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(8);
+    private final TaskExecutor taskExecutor;
 
     private final ElementManager elementManager;
     private final ProjectManager projectManager;
@@ -70,6 +72,7 @@ public class Editor {
 
         elementManager = new ElementManager();
         projectManager = new ProjectManager(this);
+        taskExecutor = new TaskExecutor(this);
     }
 
     /**
@@ -91,6 +94,7 @@ public class Editor {
      */
     public void load() {
         elementManager.startDrawing(new ErrorElement(this));
+        elementManager.startDrawing(new TaskPopup(this));
         projectManager.loadProjects();
 
         update();
@@ -139,20 +143,6 @@ public class Editor {
     }
 
     /**
-     * Executes a task
-     * @param name Name of the task
-     * @param runnable Runnable to execute
-     */
-    public void execute(String name, Runnable runnable) {
-        threadPoolExecutor.execute(() -> {
-            ProcessRunningElement element = new ProcessRunningElement(name);
-            elementManager.startDrawing(element);
-            runnable.run();
-            elementManager.stopDrawing(element);
-        });
-    }
-
-    /**
      * @return Window of the editor
      */
     public EditorWindow getEditorWindow() {
@@ -178,6 +168,13 @@ public class Editor {
      */
     public ThreadPoolExecutor getThreadPoolExecutor() {
         return threadPoolExecutor;
+    }
+
+    /**
+     * @return Running tasks manager
+     */
+    public TaskExecutor getTaskExecutor() {
+        return taskExecutor;
     }
 
     /**

@@ -14,7 +14,7 @@
  *         without specific prior written permission.
  *     * Redistributions in source or binary form must keep the original package
  *         and class name.
- *
+ *           
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -28,47 +28,51 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.element;
+package de.rafael.ravbite.engine.app.editor.task;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/24/2022 at 2:41 PM
+// On 05/25/2022 at 7:38 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
-import imgui.ImGui;
+import de.rafael.ravbite.engine.app.editor.Editor;
 
-public class ProcessRunningElement implements IGuiElement {
+import java.util.Stack;
 
-    private final String name;
+public class TaskExecutor {
 
-    private final long startTime;
+    private final Editor editor;
+    private final Stack<EditorTask> taskStack = new Stack<>();
+    private EditorTask runningTask = null;
 
-    public ProcessRunningElement(String name) {
-        this.name = name;
-
-        this.startTime = System.currentTimeMillis();
+    public TaskExecutor(Editor editor) {
+        this.editor = editor;
     }
 
-    @Override
-    public boolean render() {
+    public void executeNextTask() {
+        if(!taskStack.isEmpty() && runningTask == null) {
+            runningTask = taskStack.pop();
+            editor.getThreadPoolExecutor().execute(() -> {
+                runningTask.execute();
+                runningTask = null;
+                executeNextTask();
+            });
+        }
+    }
 
-        ImGui.setNextWindowSize(500, 100);
-        ImGui.begin("Busy | " + name);
-        ImGui.text("An action is being carried out that may take little or a lot of time.");
-        ImGui.text("Get a glass of water.");
+    public void execute(EditorTask editorTask) {
+        taskStack.push(editorTask);
+    }
 
-        ImGui.spacing();
-        ImGui.separator();
-        ImGui.spacing();
+    public EditorTask getRunningTask() {
+        return runningTask;
+    }
 
-        ImGui.text("Busy for " + ((System.currentTimeMillis() - startTime) / 1000) + " seconds.");
-        ImGui.end();
-
-        return false;
+    public Stack<EditorTask> getTaskStack() {
+        return taskStack;
     }
 
 }

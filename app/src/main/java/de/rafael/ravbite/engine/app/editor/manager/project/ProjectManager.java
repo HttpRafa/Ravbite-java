@@ -45,6 +45,9 @@ import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
 import de.rafael.ravbite.engine.app.editor.project.settings.EditorSettings;
 import de.rafael.ravbite.engine.app.editor.project.settings.EngineSettings;
 import de.rafael.ravbite.engine.app.editor.project.settings.GradleSettings;
+import de.rafael.ravbite.engine.app.editor.task.TaskGroup;
+import de.rafael.ravbite.engine.app.editor.task.types.GroupTask;
+import de.rafael.ravbite.engine.app.editor.task.types.PrimaryTask;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.SerializationUtils;
@@ -102,17 +105,43 @@ public class ProjectManager {
      * @param gradleSettings Gradle settings
      */
     public void createProject(SimpleProject simpleProject, EditorSettings editorSettings, EngineSettings engineSettings, GradleSettings gradleSettings) {
-        editor.execute("Creating project", () -> {
-            projects = ArrayUtils.add(projects, simpleProject);
-            storeProjects();
+        GroupTask writeProjectFile = GroupTask.create(TaskGroup.PROJECT_MANAGER, "Writing project files...", () -> {
+                ProjectFile projectFile = new ProjectFile(simpleProject, editorSettings, engineSettings, gradleSettings);
+                projectFile.writeToFile(simpleProject.getProjectFile());
 
-            ProjectFile projectFile = new ProjectFile(simpleProject, editorSettings, engineSettings, gradleSettings);
-            projectFile.writeToFile(simpleProject.getProjectFile());
-
-            if(new File(simpleProject.getProjectDirectory(), "assets/").mkdirs()) System.out.println("Assets directory created");
-            if(new File(simpleProject.getProjectDirectory(), "scenes/").mkdirs()) System.out.println("Scenes directory created");
-            if(new File(simpleProject.getProjectDirectory(), "src/").mkdirs()) System.out.println("Sources directory created");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
         });
+        GroupTask createDirectories = GroupTask.create(TaskGroup.PROJECT_MANAGER, "Creating directories...", () -> {
+            if (new File(simpleProject.getProjectDirectory(), "assets/").mkdirs())
+                System.out.println("Assets directory created");
+            if (new File(simpleProject.getProjectDirectory(), "scenes/").mkdirs())
+                System.out.println("Scenes directory created");
+            if (new File(simpleProject.getProjectDirectory(), "src/").mkdirs())
+                System.out.println("Sources directory created");
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        GroupTask registeringProject = GroupTask.create(TaskGroup.EDITOR, "Registering project...", () -> {
+                projects = ArrayUtils.add(projects, simpleProject);
+                storeProjects();
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+        });
+
+        PrimaryTask primaryTask = new PrimaryTask(writeProjectFile, createDirectories, registeringProject);
+        editor.getTaskExecutor().execute(primaryTask);
     }
 
     /**
