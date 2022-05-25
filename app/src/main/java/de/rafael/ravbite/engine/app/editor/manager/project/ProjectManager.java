@@ -106,14 +106,14 @@ public class ProjectManager {
      */
     public void createProject(SimpleProject simpleProject, EditorSettings editorSettings, EngineSettings engineSettings, GradleSettings gradleSettings) {
         GroupTask writeProjectFile = GroupTask.create(TaskGroup.PROJECT_MANAGER, "Writing project files...", () -> {
-                ProjectFile projectFile = new ProjectFile(simpleProject, editorSettings, engineSettings, gradleSettings);
-                projectFile.writeToFile(simpleProject.getProjectFile());
+            ProjectFile projectFile = new ProjectFile(simpleProject, editorSettings, engineSettings, gradleSettings);
+            projectFile.writeToFile(simpleProject.getProjectFile());
 
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         });
         GroupTask createDirectories = GroupTask.create(TaskGroup.PROJECT_MANAGER, "Creating directories...", () -> {
             if (new File(simpleProject.getProjectDirectory(), "assets/").mkdirs())
@@ -124,20 +124,20 @@ public class ProjectManager {
                 System.out.println("Sources directory created");
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });
         GroupTask registeringProject = GroupTask.create(TaskGroup.EDITOR, "Registering project...", () -> {
-                projects = ArrayUtils.add(projects, simpleProject);
-                storeProjects();
+            projects = ArrayUtils.add(projects, simpleProject);
+            storeProjects();
 
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         PrimaryTask primaryTask = new PrimaryTask(writeProjectFile, createDirectories, registeringProject);
