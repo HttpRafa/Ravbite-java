@@ -84,21 +84,21 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
                     ImGui.text("Project File: " + project.getProjectFile().getAbsolutePath());
                     ImGui.separator();
 
-                    if (ImGui.button("Open" + "\n".repeat(i))) {
+                    if (ImGui.button("Open " + project.getName())) {
                         editor.getProjectManager().openProject(i);
                     }
 
                     ImGui.sameLine();
 
-                    if (ImGui.button("Delete" + "\n".repeat(i))) {
-                        ImGui.openPopup("Delete project" + "\n".repeat(i));
+                    if (ImGui.button("Delete " + project.getName())) {
+                        ImGui.openPopup("Delete project / " + project.getName());
                     }
 
                     ImGui.separator();
                 }
 
                 // Delete Popup
-                if (ImGui.beginPopupModal("Delete project" + "\n".repeat(i), ImGuiWindowFlags.AlwaysAutoResize)) {
+                if (ImGui.beginPopupModal("Delete project / " + project.getName(), ImGuiWindowFlags.AlwaysAutoResize)) {
                     ImGui.text("Name: " + project.getName());
                     ImGui.text("Directory: " + project.getProjectDirectory().getAbsolutePath());
                     ImGui.text("Project File: " + project.getProjectFile().getAbsolutePath());
