@@ -41,10 +41,12 @@ package de.rafael.ravbite.engine.app.editor.element;
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
 import de.rafael.ravbite.engine.app.editor.task.EditorTask;
-import de.rafael.ravbite.engine.app.editor.task.types.GroupTask;
-import de.rafael.ravbite.engine.app.editor.task.types.PrimaryTask;
-import imgui.ImGui;
+import de.rafael.ravbite.engine.app.editor.task.types.PrimaryEditorTask;
 import imgui.flag.ImGuiWindowFlags;
+import imgui.internal.ImGui;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskPopup implements IGuiElement {
 
@@ -54,45 +56,57 @@ public class TaskPopup implements IGuiElement {
         this.editor = editor;
     }
 
-    private float targetProtestantize = 0;
-    private float displayProtestantize = 0;
+    private final List<EditorTask> displayedTasks = new ArrayList<>();
+
+    private void handle(EditorTask editorTask) {
+        if(editorTask.toDo() > 0 || editorTask.getRunnable() != null) {
+            displayedTasks.add(editorTask);
+        }
+        if(editorTask.getChildTasks().length > 0) {
+            handle(editorTask.getChildTasks()[editorTask.getRunningTask()]);
+        }
+    }
 
     @Override
     public boolean render() {
-
+        displayedTasks.clear();
         if(editor.getTaskExecutor().getRunningTask() != null) {
             EditorTask editorTask = editor.getTaskExecutor().getRunningTask();
-            if(editorTask instanceof PrimaryTask primaryTask) {
-                if(primaryTask.getRunningTask() != null) {
-                    GroupTask runningTask = primaryTask.getRunningTask();
-                    targetProtestantize = ((float) primaryTask.getRunningIndex()) / ((float) (primaryTask.getTasks().length));
-
-                    if(targetProtestantize > displayProtestantize) {
-                        float step = targetProtestantize - displayProtestantize;
-                        if(step > 0.0065f) {
-                            step = 0.0065f;
-                        }
-                        displayProtestantize += step;
-                    } else if(targetProtestantize < displayProtestantize) {
-                        displayProtestantize = 0f;
-                    }
-
-                    ImGui.setNextWindowSize(600, 100);
-                    if(ImGui.beginPopupModal("Busy", ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoResize)) {
-                        ImGui.text(runningTask.getTaskGroup().getName() + " (busy for " + (primaryTask.runningFor() / 1000) + "s)...");
-
-                        ImGui.spacing();
-                        ImGui.separator();
-                        ImGui.spacing();
-
-                        ImGui.progressBar(displayProtestantize);
-                        ImGui.text(runningTask.getAction());
-
-                        ImGui.endPopup();
-                    }
-                    ImGui.openPopup("Busy");
-                }
+            if(editorTask instanceof PrimaryEditorTask primaryEditorTask) {
+                handle(primaryEditorTask);
             }
+        }
+
+        if(displayedTasks.size() > 0) {
+            if(ImGui.beginPopupModal("Busy", ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.AlwaysAutoResize)) {
+                for (int i = 0; i < displayedTasks.size(); i++) {
+                    EditorTask displayedTask = displayedTasks.get(i);
+                    if(i == 0 && displayedTask instanceof PrimaryEditorTask primaryEditorTask) {
+                        ImGui.text(primaryEditorTask.getTaskGroup().getName() + " (busy for " + (primaryEditorTask.runningFor() / 1000) + "s)...");
+                        ImGui.spacing();
+                        ImGui.progressBar(primaryEditorTask.percentage(), 650, 20);
+                        if(primaryEditorTask.getChildTasks().length > 0) {
+                            ImGui.spacing();
+                            ImGui.separator();
+                            ImGui.spacing();
+                        }
+                    } else {
+                        ImGui.spacing();
+                        ImGui.text(displayedTask.getDescription());
+                        if(displayedTask.toDo() > 0) {
+                            ImGui.progressBar(displayedTask.percentage(), 650, 20);
+                        } else if(displayedTask.getRunnable() != null) {
+                            ImGui.sameLine();
+                            ImGui.text("/");
+                            ImGui.sameLine();
+                            ImGui.textColored(50, 140, 50, 255, "Running...");
+                        }
+                        ImGui.spacing();
+                    }
+                }
+                ImGui.endPopup();
+            }
+            ImGui.openPopup("Busy");
         }
 
         return false;

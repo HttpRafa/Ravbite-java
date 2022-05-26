@@ -38,8 +38,90 @@ package de.rafael.ravbite.engine.app.editor.task;
 //
 //------------------------------
 
-public interface EditorTask {
+import org.apache.commons.lang3.ArrayUtils;
 
-    void execute();
+public class EditorTask {
+
+    private Runnable runnable;
+
+    private final String description;
+
+    private EditorTask parentTask;
+
+    private EditorTask[] childTasks = new EditorTask[0];
+    private int runningTask;
+
+    private long startTime;
+
+    public EditorTask(String description, Runnable runnable) {
+        this.runnable = runnable;
+        this.description = description;
+    }
+
+    public EditorTask(String description) {
+        this.description = description;
+    }
+
+    public EditorTask add(EditorTask editorTask) {
+        childTasks = ArrayUtils.add(childTasks, editorTask);
+        editorTask.setParentTask(this);
+        return this;
+    }
+
+    public void execute() {
+        this.startTime = System.currentTimeMillis();
+
+        if(runnable != null) runnable.run();
+        for (int i = 0; i < childTasks.length; i++) {
+            runningTask = i;
+            childTasks[i].execute();
+        }
+    }
+
+    public float toDo() {
+        return childTasks.length;
+    }
+
+    public float done() {
+        if(childTasks.length > 0 && childTasks[runningTask].toDo() > 0) {
+            return runningTask + childTasks[runningTask].percentage();
+        }
+        return runningTask;
+    }
+
+    public float percentage() {
+        if(childTasks.length == 1) {
+            return childTasks[0].percentage();
+        }
+        return done() / toDo();
+    }
+
+    public long runningFor() {
+        return System.currentTimeMillis() - startTime;
+    }
+
+    public Runnable getRunnable() {
+        return runnable;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setParentTask(EditorTask parentTask) {
+        this.parentTask = parentTask;
+    }
+
+    public EditorTask getParentTask() {
+        return parentTask;
+    }
+
+    public EditorTask[] getChildTasks() {
+        return childTasks;
+    }
+
+    public int getRunningTask() {
+        return runningTask;
+    }
 
 }

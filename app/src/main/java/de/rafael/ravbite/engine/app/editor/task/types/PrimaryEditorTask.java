@@ -33,7 +33,7 @@ package de.rafael.ravbite.engine.app.editor.task.types;
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/25/2022 at 7:57 PM
+// On 05/26/2022 at 6:34 PM
 // In the project Ravbite
 //
 //------------------------------
@@ -41,31 +41,27 @@ package de.rafael.ravbite.engine.app.editor.task.types;
 import de.rafael.ravbite.engine.app.editor.task.EditorTask;
 import de.rafael.ravbite.engine.app.editor.task.TaskGroup;
 
-public abstract class GroupTask implements EditorTask {
+public class PrimaryEditorTask extends EditorTask {
 
     private final TaskGroup taskGroup;
-    private final String action;
 
-    public GroupTask(TaskGroup taskGroup, String action) {
+    public PrimaryEditorTask(String description, TaskGroup taskGroup, Runnable runnable) {
+        super(description, runnable);
         this.taskGroup = taskGroup;
-        this.action = action;
     }
 
-    public static GroupTask create(TaskGroup taskGroup, String action, Runnable runnable) {
-        return new GroupTask(taskGroup, action) {
-            @Override
-            public void execute() {
-                runnable.run();
-            }
-        };
+    public PrimaryEditorTask(String description, TaskGroup taskGroup) {
+        super(description);
+        this.taskGroup = taskGroup;
+    }
+
+    @Override
+    public PrimaryEditorTask add(EditorTask editorTask) {
+        return (PrimaryEditorTask) super.add(editorTask);
     }
 
     public TaskGroup getTaskGroup() {
         return taskGroup;
-    }
-
-    public String getAction() {
-        return action;
     }
 
 }

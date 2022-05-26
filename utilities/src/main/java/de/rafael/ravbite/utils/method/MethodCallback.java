@@ -28,54 +28,18 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.task.types;
+package de.rafael.ravbite.utils.method;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/25/2022 at 7:55 PM
+// On 05/26/2022 at 2:05 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.task.EditorTask;
+public interface MethodCallback<T> {
 
-public class PrimaryTask implements EditorTask {
-
-    private final GroupTask[] tasks;
-    private GroupTask runningTask;
-    private int runningIndex = 0;
-
-    private long executionStart;
-
-    public PrimaryTask(GroupTask... tasks) {
-        this.tasks = tasks;
-    }
-
-    @Override
-    public void execute() {
-        executionStart = System.currentTimeMillis();
-        for (int i = 0; i < tasks.length; i++) {
-            runningTask = tasks[i];
-            runningIndex = i;
-            runningTask.execute();
-        }
-    }
-
-    public GroupTask[] getTasks() {
-        return tasks;
-    }
-
-    public GroupTask getRunningTask() {
-        return runningTask;
-    }
-
-    public int getRunningIndex() {
-        return runningIndex;
-    }
-
-    public long runningFor() {
-        return System.currentTimeMillis() - executionStart;
-    }
+    void provide(T t);
 
 }

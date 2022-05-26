@@ -44,9 +44,6 @@ import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
 import de.rafael.ravbite.engine.app.editor.project.settings.EditorSettings;
 import de.rafael.ravbite.engine.app.editor.project.settings.EngineSettings;
 import de.rafael.ravbite.engine.app.editor.project.settings.GradleSettings;
-import de.rafael.ravbite.engine.app.editor.task.TaskGroup;
-import de.rafael.ravbite.engine.app.editor.task.types.GroupTask;
-import de.rafael.ravbite.engine.app.editor.task.types.PrimaryTask;
 import de.rafael.ravbite.engine.app.ui.CheckBoxList;
 import imgui.ImGui;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
@@ -55,8 +52,6 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public record OpenProjectElement(Editor editor) implements IGuiElement {
 
@@ -231,29 +226,6 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
             }
 
             ImGui.endPopup();
-        }
-
-        if(ImGui.button("Debug")) {
-
-            for (int a = 1; a <= 5; a++) {
-                List<GroupTask> tasks = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
-                    tasks.add(new GroupTask((a % 2 == 0) ? TaskGroup.EDITOR : TaskGroup.PROJECT_MANAGER, "Task " + i  + " / " + a) {
-                        @Override
-                        public void execute() {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    });
-                }
-
-                PrimaryTask primaryTask = new PrimaryTask(tasks.toArray(new GroupTask[0]));
-                editor.getTaskExecutor().execute(primaryTask);
-            }
-
         }
 
         ImGui.end();

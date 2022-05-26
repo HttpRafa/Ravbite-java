@@ -45,15 +45,18 @@ import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
 import de.rafael.ravbite.engine.app.editor.project.settings.EditorSettings;
 import de.rafael.ravbite.engine.app.editor.project.settings.EngineSettings;
 import de.rafael.ravbite.engine.app.editor.project.settings.GradleSettings;
+import de.rafael.ravbite.engine.app.editor.task.EditorTask;
 import de.rafael.ravbite.engine.app.editor.task.TaskGroup;
-import de.rafael.ravbite.engine.app.editor.task.types.GroupTask;
-import de.rafael.ravbite.engine.app.editor.task.types.PrimaryTask;
+import de.rafael.ravbite.engine.app.editor.task.types.PrimaryEditorTask;
+import de.rafael.ravbite.engine.app.editor.task.types.download.DownloadEditorTask;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 public class ProjectManager {
@@ -95,53 +98,6 @@ public class ProjectManager {
      */
     public void openProject(int i) {
         editor.handleError(new RuntimeException("Project opened " + i));
-    }
-
-    /**
-     * Creates a new project
-     * @param simpleProject Simple project
-     * @param editorSettings Editor settings
-     * @param engineSettings Engine settings
-     * @param gradleSettings Gradle settings
-     */
-    public void createProject(SimpleProject simpleProject, EditorSettings editorSettings, EngineSettings engineSettings, GradleSettings gradleSettings) {
-        GroupTask writeProjectFile = GroupTask.create(TaskGroup.PROJECT_MANAGER, "Writing project files...", () -> {
-            ProjectFile projectFile = new ProjectFile(simpleProject, editorSettings, engineSettings, gradleSettings);
-            projectFile.writeToFile(simpleProject.getProjectFile());
-
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        GroupTask createDirectories = GroupTask.create(TaskGroup.PROJECT_MANAGER, "Creating directories...", () -> {
-            if (new File(simpleProject.getProjectDirectory(), "assets/").mkdirs())
-                System.out.println("Assets directory created");
-            if (new File(simpleProject.getProjectDirectory(), "scenes/").mkdirs())
-                System.out.println("Scenes directory created");
-            if (new File(simpleProject.getProjectDirectory(), "src/").mkdirs())
-                System.out.println("Sources directory created");
-
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        GroupTask registeringProject = GroupTask.create(TaskGroup.EDITOR, "Registering project...", () -> {
-            projects = ArrayUtils.add(projects, simpleProject);
-            storeProjects();
-
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        PrimaryTask primaryTask = new PrimaryTask(writeProjectFile, createDirectories, registeringProject);
-        editor.getTaskExecutor().execute(primaryTask);
     }
 
     /**
@@ -198,6 +154,95 @@ public class ProjectManager {
         } catch (IOException exception) {
             editor.handleError(exception);
         }
+    }
+
+    /**
+     * Creates a new project
+     * @param simpleProject Simple project
+     * @param editorSettings Editor settings
+     * @param engineSettings Engine settings
+     * @param gradleSettings Gradle settings
+     */
+    public void createProject(SimpleProject simpleProject, EditorSettings editorSettings, EngineSettings engineSettings, GradleSettings gradleSettings) {
+        File assetsDirectory = new File(simpleProject.getProjectDirectory(), "assets/");
+        File scenesDirectory = new File(simpleProject.getProjectDirectory(), "scenes/");
+        File srcDirectory = new File(simpleProject.getProjectDirectory(), "src/");
+
+        EditorTask writeProjectFile = new EditorTask("Writing project files...", () -> {
+            ProjectFile projectFile = new ProjectFile(simpleProject, editorSettings, engineSettings, gradleSettings);
+            projectFile.writeToFile(simpleProject.getProjectFile());
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        EditorTask createDirectories = new EditorTask("Creating directories...")
+                .add(new EditorTask("Assets directory", () -> {
+                    if (assetsDirectory.mkdirs())
+                        System.out.println("Assets directory created");
+
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                })).add(new EditorTask("Scenes directory", () -> {
+                    if (scenesDirectory.mkdirs())
+                        System.out.println("Scenes directory created");
+
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                })).add(new EditorTask("Sources directory", () -> {
+                    if (srcDirectory.mkdirs())
+                        System.out.println("Sources directory created");
+
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }));
+
+        EditorTask setupGradle = new EditorTask("Setting up gradle...").add(new DownloadEditorTask("https://services.gradle.org/distributions/gradle-7.4.2-bin.zip", watchedInputStream -> {
+            try {
+                Files.copy(watchedInputStream, new File(srcDirectory, "gradle-bin.zip").getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException exception) {
+                editor.handleError(exception);
+            }
+        })).add(new EditorTask("Unpacking the zip...", () -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        })).add(new EditorTask("Running gradle task \"init\"", () -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }));
+
+        EditorTask registerProject = new EditorTask("Registering project...", () -> {
+            projects = ArrayUtils.add(projects, simpleProject);
+            storeProjects();
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        PrimaryEditorTask createProject = new PrimaryEditorTask("Project Creation", TaskGroup.PROJECT_MANAGER).add(writeProjectFile).add(createDirectories).add(setupGradle).add(registerProject);
+
+        editor.getTaskExecutor().execute(createProject);
     }
 
     /**
