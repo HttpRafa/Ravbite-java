@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.object.scene;
+package de.rafael.ravbite.engine.graphics.objects.scene;
 
 //------------------------------
 //
@@ -42,7 +42,7 @@ import de.rafael.ravbite.engine.graphics.components.classes.Component;
 import de.rafael.ravbite.engine.graphics.components.classes.ISizeDependent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
 import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.engine.input.InputSystem;
 import de.rafael.ravbite.engine.utils.RavbiteUtils;

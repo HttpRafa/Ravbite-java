@@ -27,91 +27,38 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.object.game.material.standard;
+package de.rafael.ravbite.engine.graphics.objects.game.mesh;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/28/2022 at 7:19 PM
+// On 3/26/2022 at 11:30 AM
 // In the project Ravbite
 //
 //------------------------------
 
-import org.joml.Vector4f;
+public class StoredMesh {
 
-import java.awt.*;
+    private final int vao;
+    private final int vertexCount;
 
-public class DiffuseProperty {
-
-    private final Material material;
-
-    private Integer diffuseTextureId;
-    private Color color;
-
-    public DiffuseProperty(Material material, Color color) {
-        this.material = material;
-        this.color = color;
-    }
-
-    public DiffuseProperty texture(int id) {
-        this.diffuseTextureId = id;
-        return this;
+    public StoredMesh(int vao, int vertexCount) {
+        this.vao = vao;
+        this.vertexCount = vertexCount;
     }
 
     /**
-     * @return Material
+     * @return OpenGL vaoId
      */
-    public Material getMaterial() {
-        return material;
+    public int getVao() {
+        return vao;
     }
 
     /**
-     * @return ID of the texture
+     * @return Amount of vertexes in mesh
      */
-    public Integer getDiffuseTextureId() {
-        if(diffuseTextureId == null) {
-            return material.getEngineView().getDefaultTexture();
-        }
-        return diffuseTextureId;
-    }
-
-    /**
-     * @return Color
-     */
-    public Color getColor() {
-        return color;
-    }
-
-    /**
-     * @return Color as Vector
-     */
-    public Vector4f getColorAsVector() {
-        return new Vector4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
-    }
-
-    /**
-     * Sets textureId
-     * @param diffuseTextureId New textureId
-     */
-    public void setDiffuseTextureId(int diffuseTextureId) {
-        this.diffuseTextureId = diffuseTextureId;
-    }
-
-    /**
-     * Sets color
-     * @param color New color
-     */
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    @Override
-    public String toString() {
-        return "DiffuseProperty{" +
-                "material=" + material +
-                ", diffuseTextureId=" + diffuseTextureId +
-                ", color=" + color +
-                '}';
+    public int getVertexCount() {
+        return vertexCount;
     }
 
 }

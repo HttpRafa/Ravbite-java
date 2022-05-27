@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.graphics.window;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.scene.Scene;
+import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;

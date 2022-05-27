@@ -27,96 +27,91 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.object.game.material.standard;
+package de.rafael.ravbite.engine.graphics.objects.game.material.standard;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/26/2022 at 7:06 PM
+// On 3/28/2022 at 7:19 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
-import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import org.joml.Vector4f;
 
 import java.awt.*;
 
-public class Material implements IMaterial {
+public class DiffuseProperty {
 
-    private final EngineView engineView;
+    private final Material material;
 
-    private Integer shaderId;
-    private DiffuseProperty diffuse;
-    private float shineDamper = 10f; // TODO: Change to texture based
-    private float reflectivity = 0f; // TODO: Change to texture based
+    private Integer diffuseTextureId;
+    private Color color;
 
-    public Material(EngineView engineView) {
-        this.engineView = engineView;
+    public DiffuseProperty(Material material, Color color) {
+        this.material = material;
+        this.color = color;
     }
 
-    public Material shader(int id) {
-        shaderId = id;
+    public DiffuseProperty texture(int id) {
+        this.diffuseTextureId = id;
         return this;
     }
 
-    public Material diffuse(DiffuseProperty albedo) {
-        this.diffuse = albedo;
-        return this;
+    /**
+     * @return Material
+     */
+    public Material getMaterial() {
+        return material;
     }
 
-    public Material specular(float shineDamper, float reflectivity) {
-        this.shineDamper = shineDamper;
-        this.reflectivity = reflectivity;
-        return this;
-    }
-
-    public Material create() {
-        if(this.shaderId == null) {
-            this.shaderId = engineView.getIdOfShader(StandardShader.class);
+    /**
+     * @return ID of the texture
+     */
+    public Integer getDiffuseTextureId() {
+        if(diffuseTextureId == null) {
+            return material.getEngineView().getDefaultTexture();
         }
-        if(this.diffuse == null) {
-            this.diffuse = new DiffuseProperty(this, new Color(0, 0, 0));
-        }
-        return this;
+        return diffuseTextureId;
     }
 
     /**
-     * @return EngineView
+     * @return Color
      */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @return Color as Vector
+     */
+    public Vector4f getColorAsVector() {
+        return new Vector4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
+    }
+
+    /**
+     * Sets textureId
+     * @param diffuseTextureId New textureId
+     */
+    public void setDiffuseTextureId(int diffuseTextureId) {
+        this.diffuseTextureId = diffuseTextureId;
+    }
+
+    /**
+     * Sets color
+     * @param color New color
+     */
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     @Override
-    public EngineView getEngineView() {
-        return engineView;
-    }
-
-    /**
-     * @return ID of the shader the material is using
-     */
-    @Override
-    public int getShaderId() {
-        return shaderId;
-    }
-
-    /**
-     * @return DiffuseProperty
-     */
-    public DiffuseProperty getDiffuse() {
-        return diffuse;
-    }
-
-    /**
-     * @return ShineDamper value
-     */
-    public float getShineDamper() {
-        return shineDamper;
-    }
-
-    /**
-     * @return Reflectivity value
-     */
-    public float getReflectivity() {
-        return reflectivity;
+    public String toString() {
+        return "DiffuseProperty{" +
+                "material=" + material +
+                ", diffuseTextureId=" + diffuseTextureId +
+                ", color=" + color +
+                '}';
     }
 
 }

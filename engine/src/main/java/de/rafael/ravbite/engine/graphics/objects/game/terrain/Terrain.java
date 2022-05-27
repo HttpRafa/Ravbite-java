@@ -27,38 +27,62 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.object.game.mesh;
+package de.rafael.ravbite.engine.graphics.objects.game.terrain;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 3/26/2022 at 11:30 AM
+// On 04/08/2022 at 7:09 PM
 // In the project Ravbite
 //
 //------------------------------
 
-public class StoredMesh {
+import de.rafael.ravbite.engine.graphics.components.rendering.terrain.TerrainComponent;
+import de.rafael.ravbite.engine.graphics.objects.game.material.standard.Material;
+import de.rafael.ravbite.engine.graphics.objects.game.mesh.Mesh;
+import de.rafael.ravbite.engine.graphics.objects.game.mesh.MeshGenerator;
 
-    private final int vao;
-    private final int vertexCount;
+public class Terrain {
 
-    public StoredMesh(int vao, int vertexCount) {
-        this.vao = vao;
-        this.vertexCount = vertexCount;
+    private final float x;
+    private final float z;
+
+    private final Mesh mesh;
+    private final Material material;
+
+    public Terrain(float gridX, float gridZ, Material material, TerrainComponent terrainComponent) {
+        this.material = material;
+        this.x = gridX * terrainComponent.getTerrainSize();
+        this.z = gridZ * terrainComponent.getTerrainSize();
+        this.mesh = MeshGenerator.generateSimpleTerrainMesh(terrainComponent.getVertexCount(), terrainComponent.getTerrainSize(), terrainComponent.getGameObject().getScene().getEngineView());
     }
 
     /**
-     * @return OpenGL vaoId
+     * @return X coords of the terrain
      */
-    public int getVao() {
-        return vao;
+    public float getX() {
+        return x;
     }
 
     /**
-     * @return Amount of vertexes in mesh
+     * @return Z coords of the terrain
      */
-    public int getVertexCount() {
-        return vertexCount;
+    public float getZ() {
+        return z;
+    }
+
+    /**
+     * @return Material of the terrain
+     */
+    public Material getMaterial() {
+        return material;
+    }
+
+    /**
+     * @return Mesh of the terrain
+     */
+    public Mesh getMesh() {
+        return mesh;
     }
 
 }

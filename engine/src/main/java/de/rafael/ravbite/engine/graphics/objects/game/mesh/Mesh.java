@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.object.game.mesh;
+package de.rafael.ravbite.engine.graphics.objects.game.mesh;
 
 //------------------------------
 //
@@ -37,7 +37,7 @@ package de.rafael.ravbite.engine.graphics.object.game.mesh;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.game.material.IMaterial;
+import de.rafael.ravbite.engine.graphics.objects.game.material.IMaterial;
 import de.rafael.ravbite.engine.graphics.window.EngineView;
 
 import java.util.ArrayList;

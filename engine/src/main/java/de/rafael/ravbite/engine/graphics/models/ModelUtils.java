@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.model;
+package de.rafael.ravbite.engine.graphics.models;
 
 //------------------------------
 //
@@ -37,9 +37,9 @@ package de.rafael.ravbite.engine.graphics.model;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.game.material.standard.DiffuseProperty;
-import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
-import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
+import de.rafael.ravbite.engine.graphics.objects.game.material.standard.DiffuseProperty;
+import de.rafael.ravbite.engine.graphics.objects.game.material.standard.Material;
+import de.rafael.ravbite.engine.graphics.objects.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.io.IOUtils;

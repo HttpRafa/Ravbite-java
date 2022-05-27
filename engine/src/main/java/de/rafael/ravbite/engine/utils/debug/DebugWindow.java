@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.utils.debug;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
 import de.rafael.ravbite.engine.graphics.window.EngineView;
 import de.rafael.ravbite.engine.utils.debug.windows.EngineDebugOptionsWindow;
 import de.rafael.ravbite.engine.utils.debug.windows.EnginePerformanceDebugWindow;

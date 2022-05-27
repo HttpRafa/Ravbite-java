@@ -34,7 +34,7 @@
  */
 package de.rafael.ravbite.engine.utils.debug.windows;
 
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
 
 /**
  *

@@ -40,7 +40,7 @@ package de.rafael.ravbite.engine.app.editor.window;
 
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
-import de.rafael.ravbite.engine.graphics.object.scene.Scene;
+import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
 import imgui.ImGuiIO;

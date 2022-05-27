@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.graphics.components.mesh;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.components.classes.Component;
-import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
+import de.rafael.ravbite.engine.graphics.objects.game.mesh.Mesh;
 
 public class MeshComponent extends Component {
 

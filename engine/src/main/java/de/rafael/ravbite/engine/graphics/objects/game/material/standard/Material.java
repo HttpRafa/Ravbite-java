@@ -27,62 +27,96 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.rafael.ravbite.engine.graphics.object.game.terrain;
+package de.rafael.ravbite.engine.graphics.objects.game.material.standard;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 04/08/2022 at 7:09 PM
+// On 3/26/2022 at 7:06 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.components.rendering.terrain.TerrainComponent;
-import de.rafael.ravbite.engine.graphics.object.game.material.standard.Material;
-import de.rafael.ravbite.engine.graphics.object.game.mesh.Mesh;
-import de.rafael.ravbite.engine.graphics.object.game.mesh.MeshGenerator;
+import de.rafael.ravbite.engine.graphics.objects.game.material.IMaterial;
+import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
+import de.rafael.ravbite.engine.graphics.window.EngineView;
 
-public class Terrain {
+import java.awt.*;
 
-    private final float x;
-    private final float z;
+public class Material implements IMaterial {
 
-    private final Mesh mesh;
-    private final Material material;
+    private final EngineView engineView;
 
-    public Terrain(float gridX, float gridZ, Material material, TerrainComponent terrainComponent) {
-        this.material = material;
-        this.x = gridX * terrainComponent.getTerrainSize();
-        this.z = gridZ * terrainComponent.getTerrainSize();
-        this.mesh = MeshGenerator.generateSimpleTerrainMesh(terrainComponent.getVertexCount(), terrainComponent.getTerrainSize(), terrainComponent.getGameObject().getScene().getEngineView());
+    private Integer shaderId;
+    private DiffuseProperty diffuse;
+    private float shineDamper = 10f; // TODO: Change to texture based
+    private float reflectivity = 0f; // TODO: Change to texture based
+
+    public Material(EngineView engineView) {
+        this.engineView = engineView;
+    }
+
+    public Material shader(int id) {
+        shaderId = id;
+        return this;
+    }
+
+    public Material diffuse(DiffuseProperty albedo) {
+        this.diffuse = albedo;
+        return this;
+    }
+
+    public Material specular(float shineDamper, float reflectivity) {
+        this.shineDamper = shineDamper;
+        this.reflectivity = reflectivity;
+        return this;
+    }
+
+    public Material create() {
+        if(this.shaderId == null) {
+            this.shaderId = engineView.getIdOfShader(StandardShader.class);
+        }
+        if(this.diffuse == null) {
+            this.diffuse = new DiffuseProperty(this, new Color(0, 0, 0));
+        }
+        return this;
     }
 
     /**
-     * @return X coords of the terrain
+     * @return EngineView
      */
-    public float getX() {
-        return x;
+    @Override
+    public EngineView getEngineView() {
+        return engineView;
     }
 
     /**
-     * @return Z coords of the terrain
+     * @return ID of the shader the material is using
      */
-    public float getZ() {
-        return z;
+    @Override
+    public int getShaderId() {
+        return shaderId;
     }
 
     /**
-     * @return Material of the terrain
+     * @return DiffuseProperty
      */
-    public Material getMaterial() {
-        return material;
+    public DiffuseProperty getDiffuse() {
+        return diffuse;
     }
 
     /**
-     * @return Mesh of the terrain
+     * @return ShineDamper value
      */
-    public Mesh getMesh() {
-        return mesh;
+    public float getShineDamper() {
+        return shineDamper;
+    }
+
+    /**
+     * @return Reflectivity value
+     */
+    public float getReflectivity() {
+        return reflectivity;
     }
 
 }

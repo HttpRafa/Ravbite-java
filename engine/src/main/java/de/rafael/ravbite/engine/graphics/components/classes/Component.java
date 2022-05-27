@@ -37,7 +37,7 @@ package de.rafael.ravbite.engine.graphics.components.classes;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
 import de.rafael.ravbite.utils.gui.IGui;
 
 public abstract class Component implements IGui {

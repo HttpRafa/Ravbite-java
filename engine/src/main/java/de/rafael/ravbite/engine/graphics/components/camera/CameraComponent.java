@@ -39,7 +39,7 @@ package de.rafael.ravbite.engine.graphics.components.camera;
 
 import de.rafael.ravbite.engine.graphics.components.classes.Component;
 import de.rafael.ravbite.engine.graphics.components.classes.ISizeDependent;
-import de.rafael.ravbite.engine.graphics.object.game.GameObject;
+import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.joml.Matrix4f;
 

@@ -63,6 +63,22 @@ public class GradleUtils {
     public static final String GRADLE_VERSION = "7.4.2";
     public static final String GRADLE_DOWNLOAD = "https://services.gradle.org/distributions/gradle-" + GRADLE_VERSION + "-bin.zip";
 
+    public static final String[] dependencies = new String[] {
+            "files(\"libs/engine.jar\", \"libs/utilities.jar\")",
+            "platform(\"org.lwjgl:lwjgl-bom:3.3.1\")",
+            "\"org.lwjgl:lwjgl\"",
+            "\"org.lwjgl:lwjgl-assimp\"",
+            "\"org.lwjgl:lwjgl-glfw\"",
+            "\"org.lwjgl:lwjgl-openal\"",
+            "\"org.lwjgl:lwjgl-opengl\"",
+            "\"org.lwjgl:lwjgl-stb\"",
+            "\"org.joml:joml:1.10.2\"",
+            "\"com.github.stephengold:jbullet:1.0.2\"",
+            "\"org.apache.commons:commons-lang3:3.5\"",
+            "\"org.apache.commons:commons-io:1.3.2\"",
+            "\"com.google.code.gson:gson:2.7\""
+    };
+
     private static final File binariesDirectory = new File("binaries/");
     private static final File gradleDirectory = new File(binariesDirectory, "gradle-" + GRADLE_VERSION + "/");
     private static final File gradleBinDirectory = new File(gradleDirectory, "bin/");
@@ -135,6 +151,8 @@ public class GradleUtils {
         }
     }
 
+
+
     public static void prepareGradleProject(File directory) {
         try {
             File libDirectory = new File(directory, "lib/");
@@ -174,9 +192,13 @@ public class GradleUtils {
                                 lines.add(" ");
                                 lines.add("    // Dependencies needed for the development of the game");
                                 if(gradleBuildFileGroovy.exists()) {
-                                    lines.add("    api files(\"libs/engine.jar\", \"libs/utilities.jar\")");
+                                    for (String dependency : dependencies) {
+                                        lines.add("    api " + dependency);
+                                    }
                                 } else {
-                                    lines.add("    api(files(\"libs/engine.jar\", \"libs/utilities.jar\"))");
+                                    for (String dependency : dependencies) {
+                                        lines.add("    api(" + dependency + ")");
+                                    }
                                 }
                                 lines.add(" ");
                             }
