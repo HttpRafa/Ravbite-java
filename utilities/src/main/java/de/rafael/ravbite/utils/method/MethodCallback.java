@@ -40,6 +40,6 @@ package de.rafael.ravbite.utils.method;
 
 public interface MethodCallback<T> {
 
-    void provide(T t);
+    void provide(T t) throws Exception;
 
 }

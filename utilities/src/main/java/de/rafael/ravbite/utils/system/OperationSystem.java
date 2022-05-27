@@ -28,45 +28,50 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.project.settings;
+package de.rafael.ravbite.utils.system;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/24/2022 at 2:10 PM
+// On 05/27/2022 at 2:44 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.util.Locale;
 
-public class GradleSettings implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 55L;
-
-    private final String packageName;
-
-    private final int language;
-
-    public GradleSettings(String packageName, int language) {
-        this.packageName = packageName;
-        this.language = language;
-    }
+public class OperationSystem {
 
     /**
-     * @return Name of the start package
+     * types of Operating Systems
      */
-    public String getPackageName() {
-        return packageName;
-    }
+    public enum OSType {
+        Windows, MacOS, Linux, Other
+    };
+
+    // cached result of OS detection
+    protected static OSType detectedOS;
 
     /**
-     * @return Language used to code the project
+     * detect the operating system from the os.name System property and cache
+     * the result
+     *
+     * @return - the operating system detected
      */
-    public int getLanguage() {
-        return language;
+    public static OSType getOperatingSystemType() {
+        if (detectedOS == null) {
+            String OS = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+            if ((OS.contains("mac")) || (OS.contains("darwin"))) {
+                detectedOS = OSType.MacOS;
+            } else if (OS.contains("win")) {
+                detectedOS = OSType.Windows;
+            } else if (OS.contains("nux")) {
+                detectedOS = OSType.Linux;
+            } else {
+                detectedOS = OSType.Other;
+            }
+        }
+        return detectedOS;
     }
 
 }

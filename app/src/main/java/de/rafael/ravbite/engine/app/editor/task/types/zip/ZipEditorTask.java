@@ -28,82 +28,85 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.task.types.download;
+package de.rafael.ravbite.engine.app.editor.task.types.zip;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/26/2022 at 6:49 PM
+// On 05/27/2022 at 2:13 PM
 // In the project Ravbite
 //
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.task.EditorTask;
-import de.rafael.ravbite.utils.method.MethodCallback;
+import org.apache.commons.io.IOUtils;
 
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.*;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
-public class DownloadEditorTask extends EditorTask {
+public class ZipEditorTask extends EditorTask {
 
-    private URL url;
+    private long elementAmount = 0;
+    private long currentElement = 0;
 
-    private final MethodCallback<WatchedInputStream> callback;
+    private final int operation;
 
-    private WatchedInputStream watchedInputStream;
+    private final File input;
+    private final File output;
 
-    public DownloadEditorTask(String description, String urlString, MethodCallback<WatchedInputStream> callback) {
-        super(description.replaceAll("%url%", urlString));
-        this.callback = callback;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException exception) {
-            Editor.getInstance().handleError(exception);
-        }
+    public ZipEditorTask(String description, int operation, File input, File output) {
+        super(description);
+
+        this.operation = operation;
+
+        this.input = input;
+        this.output = output;
     }
 
     @Override
     public void execute() {
-        try {
-            URLConnection urlConnection = url.openConnection();
-            urlConnection.setRequestProperty("User-Agent",
-                    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            long contentLength = urlConnection.getHeaderFieldLong("Content-Length", inputStream.available());
-
-            watchedInputStream = new WatchedInputStream(inputStream, contentLength);
-            callback.provide(watchedInputStream);
-        } catch (Exception exception) {
-            Editor.getInstance().handleError(exception);
+        if(operation == 0) {
+            try (ZipFile zipFile = new ZipFile(input)) {
+                Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                elementAmount = zipFile.size();
+                int i = 0;
+                while (entries.hasMoreElements()) {
+                    currentElement = i;
+                    ZipEntry entry = entries.nextElement();
+                    File entryDestination = new File(output,  entry.getName());
+                    if (entry.isDirectory()) {
+                        entryDestination.mkdirs();
+                    } else {
+                        entryDestination.getParentFile().mkdirs();
+                        try (InputStream inputStream = zipFile.getInputStream(entry);
+                             OutputStream fileOutputStream = new FileOutputStream(entryDestination)) {
+                            IOUtils.copy(inputStream, fileOutputStream);
+                        }
+                    }
+                    i++;
+                }
+            } catch (IOException exception) {
+                Editor.getInstance().handleError(exception);
+            }
         }
     }
 
     @Override
     public float done() {
-        return watchedInputStream == null ? 0 : watchedInputStream.getCurrent();
+        return currentElement;
     }
 
     @Override
     public float toDo() {
-        return watchedInputStream == null ? 0 : watchedInputStream.getLength();
+        return elementAmount;
     }
 
     @Override
     public float percentage() {
         return done() / toDo();
-    }
-
-    public URL getUrl() {
-        return url;
-    }
-
-    public WatchedInputStream getWatchedInputStream() {
-        return watchedInputStream;
     }
 
 }

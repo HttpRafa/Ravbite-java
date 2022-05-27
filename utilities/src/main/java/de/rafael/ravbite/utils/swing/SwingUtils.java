@@ -55,7 +55,7 @@ public class SwingUtils {
 
     }
 
-    public static enum SwingThemes {
+    public enum SwingThemes {
 
         ATOM_ONE_DARK("Atom One Dark", "Atom One Dark.theme.json"),
         LIGHT_FLAT("Light Flat", "LightFlatTheme.theme.json"),

@@ -63,6 +63,7 @@ public class EditorTask {
     }
 
     public EditorTask add(EditorTask editorTask) {
+        if(editorTask == null) return this;
         childTasks = ArrayUtils.add(childTasks, editorTask);
         editorTask.setParentTask(this);
         return this;

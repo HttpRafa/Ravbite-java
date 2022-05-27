@@ -63,7 +63,6 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
     };
     public static CheckBoxList[] CHECKBOX_LIST = new CheckBoxList[] {
             new CheckBoxList(true, new String[]{"2D", "3D"}, new boolean[] {false, true}),
-            new CheckBoxList(true, new String[]{"Groovy DSL", "Kotlin DSL"}, new boolean[] {true, false}),
             new CheckBoxList(true, new String[]{"Java", "Kotlin", "Groovy"}, new boolean[] {true, false, false})
     };
 
@@ -129,7 +128,7 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
 
         if(ImGui.beginPopupModal("Create project", ImGuiWindowFlags.AlwaysAutoResize)) {
             if(ImGui.inputText("Name", STRINGS[0])) {
-                STRINGS[1].set("de.ravbite." + STRINGS[0].get().toLowerCase().trim().replaceAll("\\.", "").replaceAll(" ", "."));
+                STRINGS[1].set("de.ravbite." + STRINGS[0].get().toLowerCase().trim().replaceAll("\\.", "").replaceAll(" ", "."), true);
             }
 
             if(ImGui.inputText("Directory", STRINGS[2])) {
@@ -143,7 +142,7 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
             }
             if (ImGuiFileDialog.display("browse-folder-key", ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
                 if (ImGuiFileDialog.isOk()) {
-                    STRINGS[2].set(ImGuiFileDialog.getSelection().values().stream().findFirst().orElse(null));
+                    STRINGS[2].set(ImGuiFileDialog.getSelection().values().stream().findFirst().orElse(null), true);
                 }
                 ImGuiFileDialog.close();
             }
@@ -163,13 +162,10 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
             if (ImGui.inputText("Package", STRINGS[1])) {
 
             }
-            ImGui.spacing();
-            ImGui.text("Gradle DSL");
-            CHECKBOX_LIST[1].render();
 
             ImGui.spacing();
             ImGui.text("Language");
-            CHECKBOX_LIST[2].render();
+            CHECKBOX_LIST[1].render();
 
             ImGui.spacing();
             ImGui.separator();
@@ -197,7 +193,7 @@ public record OpenProjectElement(Editor editor) implements IGuiElement {
 
                     EditorSettings editorSettings = new EditorSettings(null);
                     EngineSettings engineSettings = new EngineSettings(CHECKBOX_LIST[0].getOptionsValues()[0].get() ? 2 : 3);
-                    GradleSettings gradleSettings = new GradleSettings(packageName, CHECKBOX_LIST[1].trueIndex(), CHECKBOX_LIST[2].trueIndex());
+                    GradleSettings gradleSettings = new GradleSettings(packageName, CHECKBOX_LIST[1].trueIndex());
 
                     editor.getProjectManager().createProject(simpleProject, editorSettings, engineSettings, gradleSettings);
 

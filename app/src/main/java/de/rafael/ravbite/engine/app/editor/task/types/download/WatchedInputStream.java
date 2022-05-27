@@ -61,11 +61,6 @@ public class WatchedInputStream extends InputStream {
     public int read() throws IOException {
         int read = this.wrapped.read();
         current += 1;
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         return read;
     }
 
@@ -73,11 +68,6 @@ public class WatchedInputStream extends InputStream {
     public int read(byte[] b) throws IOException {
         int read = this.wrapped.read(b);
         current += read;
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         return read;
     }
 
@@ -85,11 +75,6 @@ public class WatchedInputStream extends InputStream {
     public int read(byte[] b, int off, int len) throws IOException {
         int read = this.wrapped.read(b, off, len);
         current += read;
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         return read;
     }
 
@@ -97,11 +82,6 @@ public class WatchedInputStream extends InputStream {
     public long skip(long n) throws IOException {
         long length = this.wrapped.skip(n);
         current += length;
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         return length;
     }
 
