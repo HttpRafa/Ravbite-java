@@ -123,6 +123,10 @@ public class GradleUtils {
         }
     }
 
+    public static void stopGradleDaemon() {
+        executeGradle(new File("."), "--stop");
+    }
+
     public static void createGradleProject(File srcDirectory, SimpleProject simpleProject, GradleSettings gradleSettings) {
         List<String> arguments = new ArrayList<>();
         arguments.add("init");
@@ -141,17 +145,25 @@ public class GradleUtils {
         }
         arguments.add(lang + "-library");
 
+        arguments.add("--dsl");
+        arguments.add("groovy");
+
+        arguments.add("--test-framework");
+        arguments.add("junit-jupiter");
+
         arguments.add("--incubating");
 
         System.out.println(Arrays.toString(arguments.toArray(new String[0])));
         Process process = GradleUtils.executeGradle(srcDirectory, arguments.toArray(new String[0]));
         if(process != null) {
-            while(process.isAlive()) {}
-            process.destroyForcibly();
+            try {
+                process.waitFor();
+            } catch (InterruptedException exception) {
+                Editor.getInstance().handleError(exception);
+            }
+            stopGradleDaemon();
         }
     }
-
-
 
     public static void prepareGradleProject(File directory) {
         try {

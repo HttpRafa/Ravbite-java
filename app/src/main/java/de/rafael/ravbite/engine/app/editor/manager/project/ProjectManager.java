@@ -40,8 +40,9 @@ package de.rafael.ravbite.engine.app.editor.manager.project;
 
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.element.OpenProjectElement;
-import de.rafael.ravbite.engine.app.editor.project.ProjectFile;
 import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
+import de.rafael.ravbite.engine.app.editor.project.files.ProjectFile;
+import de.rafael.ravbite.engine.app.editor.project.files.SceneFile;
 import de.rafael.ravbite.engine.app.editor.project.settings.EditorSettings;
 import de.rafael.ravbite.engine.app.editor.project.settings.EngineSettings;
 import de.rafael.ravbite.engine.app.editor.project.settings.GradleSettings;
@@ -189,12 +190,23 @@ public class ProjectManager {
                 .add(new EditorTask("Running gradle task \"init\"", () -> GradleUtils.createGradleProject(srcDirectory, simpleProject, gradleSettings)))
                 .add(new EditorTask("Preparing gradle project...", () -> GradleUtils.prepareGradleProject(srcDirectory)));
 
+        EditorTask createScene = new EditorTask("Setting up first scene...", () -> {
+            SceneFile sceneFile = SceneFile.createEmpty("Scene 1");
+            sceneFile.writeToFile(new File(scenesDirectory, sceneFile.getNameAsFileName()));
+        });
+
         EditorTask registerProject = new EditorTask("Registering project...", () -> {
             projects = ArrayUtils.add(projects, simpleProject);
             storeProjects();
         });
 
-        PrimaryEditorTask createProject = new PrimaryEditorTask("Project Creation", TaskGroup.PROJECT_MANAGER).add(writeProjectFile).add(createDirectories).add(setupGradle).add(setupGradleProject).add(registerProject);
+        PrimaryEditorTask createProject = new PrimaryEditorTask("Project Creation", TaskGroup.PROJECT_MANAGER)
+                .add(writeProjectFile)
+                .add(createDirectories)
+                .add(setupGradle)
+                .add(setupGradleProject)
+                .add(createScene)
+                .add(registerProject);
 
         editor.getTaskExecutor().execute(createProject);
     }

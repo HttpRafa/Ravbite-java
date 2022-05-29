@@ -28,20 +28,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.project;
+package de.rafael.ravbite.engine.app.editor.project.files;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/24/2022 at 2:05 PM
+// On 05/29/2022 at 7:36 PM
 // In the project Ravbite
 //
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
-import de.rafael.ravbite.engine.app.editor.project.settings.EditorSettings;
-import de.rafael.ravbite.engine.app.editor.project.settings.EngineSettings;
-import de.rafael.ravbite.engine.app.editor.project.settings.GradleSettings;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -50,22 +47,39 @@ import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 
-public class ProjectFile extends SimpleProject implements Serializable {
+public class SceneFile implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 55L;
 
-    private final EditorSettings editorSettings;
+    private String name;
 
-    private final EngineSettings engineSettings;
-    private final GradleSettings gradleSettings;
+    public SceneFile(String name) {
+        this.name = name;
+    }
 
-    public ProjectFile(SimpleProject simpleProject, EditorSettings editorSettings, EngineSettings engineSettings, GradleSettings gradleSettings) {
-        super(simpleProject.getName(), simpleProject.getProjectDirectory(), simpleProject.getProjectFile());
+    /**
+     * Reads the bytes from the file and returns the data as an instance of the SceneFile class
+     * @param file File to read
+     * @return Instance
+     */
+    public static SceneFile fromFile(File file) {
+        try {
+            byte[] data = FileUtils.readFileToByteArray(file);
+            return SerializationUtils.deserialize(data);
+        } catch (IOException exception) {
+            Editor.getInstance().handleError(exception);
+            return null;
+        }
+    }
 
-        this.editorSettings = editorSettings;
-        this.engineSettings = engineSettings;
-        this.gradleSettings = gradleSettings;
+    /**
+     * Creates an empty scene
+     * @param name Name of the scene
+     * @return SceneFile
+     */
+    public static SceneFile createEmpty(String name) {
+        return new SceneFile(name);
     }
 
     /**
@@ -82,24 +96,25 @@ public class ProjectFile extends SimpleProject implements Serializable {
     }
 
     /**
-     * @return Settings for the editor
+     * Sets the name of the scene
+     * @param name New name
      */
-    public EditorSettings getEditorSettings() {
-        return editorSettings;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
-     * @return Settings for the engine
+     * @return Name of the scene
      */
-    public EngineSettings getEngineSettings() {
-        return engineSettings;
+    public String getName() {
+        return name;
     }
 
     /**
-     * @return Settings for the gradle project setup
+     * @return Name for the file
      */
-    public GradleSettings getGradleSettings() {
-        return gradleSettings;
+    public String getNameAsFileName() {
+        return name.trim() + ".ravscene";
     }
 
 }

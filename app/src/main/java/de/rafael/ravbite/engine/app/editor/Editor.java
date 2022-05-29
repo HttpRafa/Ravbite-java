@@ -79,7 +79,8 @@ public class Editor {
      * Executes the last tasks of the editor
      */
     public void exit() {
-        threadPoolExecutor.shutdown();
+        threadPoolExecutor.shutdownNow();
+        System.exit(0);
     }
 
     /**
