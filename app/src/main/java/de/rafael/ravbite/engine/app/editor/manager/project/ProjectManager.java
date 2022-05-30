@@ -49,6 +49,7 @@ import de.rafael.ravbite.engine.app.editor.project.settings.GradleSettings;
 import de.rafael.ravbite.engine.app.editor.task.EditorTask;
 import de.rafael.ravbite.engine.app.editor.task.TaskGroup;
 import de.rafael.ravbite.engine.app.editor.task.types.PrimaryEditorTask;
+import de.rafael.ravbite.engine.app.editor.task.types.watched.WatchedEditorTask;
 import de.rafael.ravbite.engine.app.editor.utils.GradleUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -56,7 +57,11 @@ import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ProjectManager {
 
@@ -96,7 +101,32 @@ public class ProjectManager {
      * @param i Index of the project
      */
     public void openProject(int i) {
-        editor.handleError(new RuntimeException("Project opened " + i));
+        SimpleProject simpleProject = projects[i];
+        AtomicReference<ProjectFile> projectFile = new AtomicReference<>();
+        List<SceneFile> scenes = new ArrayList<>();
+
+        EditorTask loadProjectFile = new EditorTask("Loading projectFile...", () -> {
+            projectFile.set(ProjectFile.fromFile(simpleProject.getProjectFile()));
+        });
+
+        EditorTask loadScenes = new WatchedEditorTask("Loading scenes...", (taskWatcher) -> {
+            File scenesDirectory = new File(simpleProject.getProjectDirectory(), "scenes/");
+            if(scenesDirectory.exists()) {
+                File[] files = Arrays.stream(Objects.requireNonNull(scenesDirectory.listFiles())).filter(item -> item.getName().endsWith(".ravscene")).toList().toArray(new File[0]);
+                taskWatcher.toDo(files.length);
+                for (int a = 0; a < files.length; a++) {
+                    scenes.add(SceneFile.fromFile(files[a]));
+                    taskWatcher.done(a + 1);
+                }
+            }
+        });
+
+        EditorTask openingEditor = new EditorTask("Opening editor...", () -> {
+
+        });
+
+        PrimaryEditorTask loadProject = new PrimaryEditorTask("Load project " + simpleProject.getName(), TaskGroup.PROJECT_MANAGER).add(loadProjectFile).add(loadScenes).add(openingEditor);
+        editor.getTaskExecutor().execute(loadProject);
     }
 
     /**
@@ -118,7 +148,7 @@ public class ProjectManager {
     }
 
     /**
-     * Loads all project as simple version
+     * Loads all projects as a simple version
      */
     public void loadProjects() {
         try {
@@ -188,7 +218,8 @@ public class ProjectManager {
 
         EditorTask setupGradleProject = new EditorTask("Setting up gradleProject...")
                 .add(new EditorTask("Running gradle task \"init\"", () -> GradleUtils.createGradleProject(srcDirectory, simpleProject, gradleSettings)))
-                .add(new EditorTask("Preparing gradle project...", () -> GradleUtils.prepareGradleProject(srcDirectory)));
+                .add(new EditorTask("Stopping gradle daemon...", GradleUtils::stopGradleDaemon)
+                .add(new EditorTask("Preparing gradle project...", () -> GradleUtils.prepareGradleProject(srcDirectory))));
 
         EditorTask createScene = new EditorTask("Setting up first scene...", () -> {
             SceneFile sceneFile = SceneFile.createEmpty("Scene 1");
@@ -200,7 +231,7 @@ public class ProjectManager {
             storeProjects();
         });
 
-        PrimaryEditorTask createProject = new PrimaryEditorTask("Project Creation", TaskGroup.PROJECT_MANAGER)
+        PrimaryEditorTask createProject = new PrimaryEditorTask("Create project", TaskGroup.PROJECT_MANAGER)
                 .add(writeProjectFile)
                 .add(createDirectories)
                 .add(setupGradle)

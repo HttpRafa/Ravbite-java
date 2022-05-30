@@ -28,93 +28,65 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.project.files;
+package de.rafael.ravbite.engine.app.editor.task.types.watched;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/29/2022 at 7:36 PM
+// On 05/30/2022 at 4:33 PM
 // In the project Ravbite
 //
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.SerializationUtils;
+import de.rafael.ravbite.engine.app.editor.task.EditorTask;
+import de.rafael.ravbite.utils.method.MethodCallback;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serial;
-import java.io.Serializable;
+public class WatchedEditorTask extends EditorTask {
 
-public class SceneFile implements Serializable {
+    private final MethodCallback<TaskWatcher> watchedRunnable;
+    private final TaskWatcher taskWatcher = new TaskWatcher();
 
-    @Serial
-    private static final long serialVersionUID = 55L;
+    public WatchedEditorTask(String description, MethodCallback<TaskWatcher> watchedRunnable) {
+        super(description);
 
-    private String name;
-
-    public SceneFile(String name) {
-        this.name = name;
+        this.watchedRunnable = watchedRunnable;
     }
 
-    /**
-     * Reads the bytes from the file and returns the data as an instance of the SceneFile class
-     * @param file File to read
-     * @return Instance
-     */
-    public static SceneFile fromFile(File file) {
+    @Override
+    public void execute() {
         try {
-            byte[] data = FileUtils.readFileToByteArray(file);
-            return SerializationUtils.deserialize(data);
-        } catch (IOException exception) {
-            Editor.getInstance().handleError(exception);
-            return null;
-        }
-    }
-
-    /**
-     * Creates an empty scene
-     * @param name Name of the scene
-     * @return SceneFile
-     */
-    public static SceneFile createEmpty(String name) {
-        return new SceneFile(name);
-    }
-
-    /**
-     * Writes the data to a file
-     * @param file File to write in
-     */
-    public void writeToFile(File file) {
-        byte[] data = SerializationUtils.serialize(this);
-        try {
-            FileUtils.writeByteArrayToFile(file, data);
-        } catch (IOException exception) {
+            watchedRunnable.provide(taskWatcher);
+        } catch (Exception exception) {
             Editor.getInstance().handleError(exception);
         }
+
+        super.execute();
     }
 
-    /**
-     * Sets the name of the scene
-     * @param name New name
-     */
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public float done() {
+        return taskWatcher.done;
     }
 
-    /**
-     * @return Name of the scene
-     */
-    public String getName() {
-        return name;
+    @Override
+    public float toDo() {
+        return taskWatcher.toDo;
     }
 
-    /**
-     * @return Name for the file
-     */
-    public String getNameAsFileName() {
-        return name.trim().replaceAll(" ", "_").toLowerCase() + ".ravscene";
+    public static class TaskWatcher {
+
+        private long toDo = 0;
+        private long done = 0;
+
+        public void done(long value) {
+            done = value;
+        }
+
+        public void toDo(long value) {
+            toDo = value;
+        }
+
     }
 
 }

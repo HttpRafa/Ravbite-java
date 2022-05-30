@@ -145,11 +145,11 @@ public class GradleUtils {
         }
         arguments.add(lang + "-library");
 
-        arguments.add("--dsl");
-        arguments.add("groovy");
+        //arguments.add("--dsl");
+        //arguments.add("groovy");
 
-        arguments.add("--test-framework");
-        arguments.add("junit-jupiter");
+        //arguments.add("--test-framework");
+        //arguments.add("junit-jupiter");
 
         arguments.add("--incubating");
 
@@ -161,7 +161,6 @@ public class GradleUtils {
             } catch (InterruptedException exception) {
                 Editor.getInstance().handleError(exception);
             }
-            stopGradleDaemon();
         }
     }
 

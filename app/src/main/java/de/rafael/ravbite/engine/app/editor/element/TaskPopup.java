@@ -92,7 +92,7 @@ public class TaskPopup implements IGuiElement {
                         }
                     } else {
                         ImGui.spacing();
-                        ImGui.text(displayedTask.getDescription());
+                        ImGui.text(displayedTask.getDescription() + ((displayedTask.toDo() > 0) ? " [" + ((int)displayedTask.done()) + "/" + ((int)displayedTask.toDo()) + "]" : ""));
                         if(displayedTask.toDo() > 0) {
                             ImGui.progressBar(displayedTask.percentage(), 650, 20);
                         } else if(displayedTask.getRunnable() != null) {

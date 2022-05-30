@@ -7,3 +7,4 @@
 /app/imgui.ini
 /buildSrc/build/
 /buildSrc/.gradle/
+/app/binaries/
