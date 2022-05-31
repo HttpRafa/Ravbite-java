@@ -50,6 +50,7 @@ import de.rafael.ravbite.engine.utils.debug.DebugWindow;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.performance.EngineWatcher;
 import de.rafael.ravbite.utils.performance.TasksType;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -57,6 +58,8 @@ import java.util.Arrays;
 public abstract class EngineView {
 
     public static boolean DEBUG_MODE = false;
+
+    private String glVersion = "";
 
     private int width;
     private int height;
@@ -108,6 +111,8 @@ public abstract class EngineView {
      * Initializes the engine
      */
     public void initialize() {
+        this.glVersion = GL11.glGetString(GL11.GL_VERSION);
+
         if(DEBUG_MODE) this.debugWindow = new DebugWindow(this);
 
         // Setup soundEngine
@@ -278,7 +283,7 @@ public abstract class EngineView {
         scenes[currentScene].dispose();
         if(dataWatcher != null) dataWatcher.rbCleanUp();
 
-        // Prepare new scene
+        // Prepare a new scene
         dataWatcher = new DataWatcher();
         currentScene = index;
         scenes[currentScene].prepare();
@@ -296,6 +301,13 @@ public abstract class EngineView {
 
         // TODO: Resize frameBuffer
         scenes[currentScene].sizeChanged();
+    }
+
+    /**
+     * @return OpenGL version used
+     */
+    public String getGlVersion() {
+        return glVersion;
     }
 
     /**

@@ -39,7 +39,9 @@ package de.rafael.ravbite.engine.app.editor.manager.project;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
+import de.rafael.ravbite.engine.app.editor.element.MenuBar;
 import de.rafael.ravbite.engine.app.editor.element.OpenProjectElement;
+import de.rafael.ravbite.engine.app.editor.project.OpenedProject;
 import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
 import de.rafael.ravbite.engine.app.editor.project.files.ProjectFile;
 import de.rafael.ravbite.engine.app.editor.project.files.SceneFile;
@@ -71,7 +73,7 @@ public class ProjectManager {
 
     private SimpleProject[] projects;
 
-    private SimpleProject openProject;
+    private OpenedProject openProject;
 
     public ProjectManager(Editor editor) {
         this.editor = editor;
@@ -80,19 +82,19 @@ public class ProjectManager {
     /**
      * Updates the projectManager
      */
-    private OpenProjectElement openProjectElement;
     public void update() {
         if(openProject == null) {
             // Check of openProject window is opened
-            if(openProjectElement == null) {
-                openProjectElement = (OpenProjectElement) editor.getElementManager().startDrawing(new OpenProjectElement(editor));
+            if(!editor.getElementManager().isOpened(OpenProjectElement.class)) {
+                editor.getElementManager().startDrawing(new OpenProjectElement(editor));
             }
+            editor.getElementManager().stopDrawing(MenuBar.class);
         } else {
             // Close openProject window if opened
-            if(openProjectElement != null) {
-                editor.getElementManager().stopDrawing(openProjectElement);
-                openProjectElement = null;
-            }
+            editor.getElementManager().stopDrawing(OpenProjectElement.class);
+            editor.getElementManager().startDrawing(new MenuBar(editor));
+
+            editor.getEditorWindow().setTitle("Ravbite Editor <OpenGL " + editor.getEditorWindow().getGlVersion() + "> - " + openProject.getProject().getName());
         }
     }
 
@@ -122,11 +124,28 @@ public class ProjectManager {
         });
 
         EditorTask openingEditor = new EditorTask("Opening editor...", () -> {
-
+            openProject = new OpenedProject(simpleProject, projectFile.get(), scenes.toArray(new SceneFile[0]));
+            editor.update();
         });
 
         PrimaryEditorTask loadProject = new PrimaryEditorTask("Load project " + simpleProject.getName(), TaskGroup.PROJECT_MANAGER).add(loadProjectFile).add(loadScenes).add(openingEditor);
         editor.getTaskExecutor().execute(loadProject);
+    }
+
+    /**
+     * Closes the currently opened project
+     */
+    public void closeProject() {
+        if(openProject != null) {
+            EditorTask closingEditor = new EditorTask("Closing editor...", () -> {
+                openProject = null;
+
+                editor.update();
+            });
+
+            PrimaryEditorTask closeProject = new PrimaryEditorTask("Close project" + openProject.getProject().getName(), TaskGroup.EDITOR).add(closingEditor);
+            editor.getTaskExecutor().execute(closeProject);
+        }
     }
 
     /**
@@ -252,7 +271,7 @@ public class ProjectManager {
     /**
      * @return Project that is currently selected/opened
      */
-    public SimpleProject getOpenProject() {
+    public OpenedProject getOpenProject() {
         return openProject;
     }
 

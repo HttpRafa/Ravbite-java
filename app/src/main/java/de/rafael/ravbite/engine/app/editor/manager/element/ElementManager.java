@@ -40,9 +40,20 @@ package de.rafael.ravbite.engine.app.editor.manager.element;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.Arrays;
+
 public class ElementManager {
 
     private IGuiElement[] guiElements = new IGuiElement[0];
+
+    /**
+     * Check of an element with a certain type is in the array
+     * @param type Type of the element
+     * @return true if the element is in the array
+     */
+    public boolean isOpened(Class<?> type) {
+        return Arrays.stream(guiElements).anyMatch(item -> item.getClass().isAssignableFrom(type));
+    }
 
     /**
      * Adds element to the list
@@ -51,6 +62,20 @@ public class ElementManager {
     public IGuiElement startDrawing(IGuiElement element) {
         guiElements = ArrayUtils.add(guiElements, element);
         return element;
+    }
+
+    /**
+     * Stops the drawing of an element
+     * @param type Type of the element
+     */
+    public void stopDrawing(Class<?> type) {
+        int[] toRemove = new int[0];
+        for (int i = 0; i < guiElements.length; i++) {
+            if(guiElements[i].getClass().isAssignableFrom(type)) {
+                toRemove = ArrayUtils.add(toRemove, i);
+            }
+        }
+        stopDrawing(toRemove);
     }
 
     /**
