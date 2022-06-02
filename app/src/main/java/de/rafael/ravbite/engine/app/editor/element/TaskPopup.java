@@ -84,7 +84,7 @@ public class TaskPopup implements IGuiElement {
                     if(i == 0 && displayedTask instanceof PrimaryEditorTask primaryEditorTask) {
                         ImGui.text(primaryEditorTask.getTaskGroup().getName() + " (busy for " + (primaryEditorTask.runningFor() / 1000) + "s)...");
                         ImGui.spacing();
-                        ImGui.progressBar(primaryEditorTask.percentage(), 650, 20);
+                        ImGui.progressBar(primaryEditorTask.percentage(), 800, 20);
                         if(primaryEditorTask.getChildTasks().length > 0) {
                             ImGui.spacing();
                             ImGui.separator();
@@ -92,9 +92,15 @@ public class TaskPopup implements IGuiElement {
                         }
                     } else {
                         ImGui.spacing();
-                        ImGui.text(displayedTask.getDescription() + ((displayedTask.toDo() > 0) ? " [" + ((int)displayedTask.done()) + "/" + ((int)displayedTask.toDo()) + "]" : ""));
+                        String finishedString = "";
                         if(displayedTask.toDo() > 0) {
-                            ImGui.progressBar(displayedTask.percentage(), 650, 20);
+                            int toDo = (int) displayedTask.toDo();
+                            int done = (int) displayedTask.done();
+                            finishedString = "[" + done + "/" + toDo + "]";
+                        }
+                        ImGui.text(displayedTask.getDescription() + " " + finishedString);
+                        if(displayedTask.toDo() > 0) {
+                            ImGui.progressBar(displayedTask.percentage(), 800, 20);
                         } else if(displayedTask.getRunnable() != null) {
                             ImGui.sameLine();
                             ImGui.text("/");

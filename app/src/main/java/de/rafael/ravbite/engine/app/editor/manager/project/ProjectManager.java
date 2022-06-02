@@ -89,6 +89,8 @@ public class ProjectManager {
                 editor.getElementManager().startDrawing(new OpenProjectElement(editor));
             }
             editor.getElementManager().stopDrawing(MenuBar.class);
+
+            editor.getEditorWindow().setTitle("Ravbite Editor <OpenGL " + editor.getEditorWindow().getGlVersion() + ">");
         } else {
             // Close openProject window if opened
             editor.getElementManager().stopDrawing(OpenProjectElement.class);

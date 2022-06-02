@@ -93,7 +93,7 @@ public class EditorWindow extends Window {
 
         super.initialize();
         glfwMaximizeWindow(getWindow());
-        super.setTitle("Ravbite Editor");
+        super.setTitle("Ravbite Editor <OpenGL " + super.getGlVersion() + ">");
 
         ImGui.createContext();
         ImGuiIO io = ImGui.getIO();
