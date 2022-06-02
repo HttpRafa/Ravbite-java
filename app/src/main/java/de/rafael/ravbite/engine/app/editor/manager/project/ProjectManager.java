@@ -39,8 +39,9 @@ package de.rafael.ravbite.engine.app.editor.manager.project;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
-import de.rafael.ravbite.engine.app.editor.element.MenuBar;
-import de.rafael.ravbite.engine.app.editor.element.OpenProjectElement;
+import de.rafael.ravbite.engine.app.editor.element.opened.AssetExplorer;
+import de.rafael.ravbite.engine.app.editor.element.opened.MenuBar;
+import de.rafael.ravbite.engine.app.editor.element.start.OpenProjectElement;
 import de.rafael.ravbite.engine.app.editor.project.OpenedProject;
 import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
 import de.rafael.ravbite.engine.app.editor.project.files.ProjectFile;
@@ -89,12 +90,14 @@ public class ProjectManager {
                 editor.getElementManager().startDrawing(new OpenProjectElement(editor));
             }
             editor.getElementManager().stopDrawing(MenuBar.class);
+            editor.getElementManager().stopDrawing(AssetExplorer.class);
 
             editor.getEditorWindow().setTitle("Ravbite Editor <OpenGL " + editor.getEditorWindow().getGlVersion() + ">");
         } else {
             // Close openProject window if opened
             editor.getElementManager().stopDrawing(OpenProjectElement.class);
             editor.getElementManager().startDrawing(new MenuBar(editor));
+            editor.getElementManager().startDrawing(new AssetExplorer(editor));
 
             editor.getEditorWindow().setTitle("Ravbite Editor <OpenGL " + editor.getEditorWindow().getGlVersion() + "> - " + openProject.getProject().getName());
         }
@@ -218,11 +221,6 @@ public class ProjectManager {
         File scenesDirectory = new File(simpleProject.getProjectDirectory(), "scenes/");
         File srcDirectory = new File(simpleProject.getProjectDirectory(), "src/");
 
-        EditorTask writeProjectFile = new EditorTask("Writing project files...", () -> {
-            ProjectFile projectFile = new ProjectFile(simpleProject, editorSettings, engineSettings, gradleSettings);
-            projectFile.writeToFile(simpleProject.getProjectFile());
-        });
-
         EditorTask createDirectories = new EditorTask("Creating directories...")
                 .add(new EditorTask("Assets directory", () -> {
                     if (assetsDirectory.mkdirs())
@@ -245,6 +243,13 @@ public class ProjectManager {
         EditorTask createScene = new EditorTask("Setting up first scene...", () -> {
             SceneFile sceneFile = SceneFile.createEmpty("Scene 1");
             sceneFile.writeToFile(new File(scenesDirectory, sceneFile.getNameAsFileName()));
+
+            editorSettings.setLastModifiedScene(sceneFile.getName());
+        });
+
+        EditorTask writeProjectFile = new EditorTask("Writing project files...", () -> {
+            ProjectFile projectFile = new ProjectFile(simpleProject, editorSettings, engineSettings, gradleSettings);
+            projectFile.writeToFile(simpleProject.getProjectFile());
         });
 
         EditorTask registerProject = new EditorTask("Registering project...", () -> {

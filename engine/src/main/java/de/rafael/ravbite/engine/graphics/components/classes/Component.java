@@ -38,9 +38,8 @@ package de.rafael.ravbite.engine.graphics.components.classes;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
-import de.rafael.ravbite.utils.gui.IGui;
 
-public abstract class Component implements IGui {
+public abstract class Component {
 
     private GameObject gameObject;
     private boolean enabled = true;
@@ -56,10 +55,6 @@ public abstract class Component implements IGui {
     public Component(GameObject gameObject, boolean enabled) {
         this.gameObject = gameObject;
         this.enabled = enabled;
-    }
-
-    @Override
-    public void gui() {
     }
 
     /**

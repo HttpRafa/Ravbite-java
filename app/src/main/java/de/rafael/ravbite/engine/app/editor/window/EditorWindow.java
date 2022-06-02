@@ -44,7 +44,10 @@ import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
 import imgui.ImGuiIO;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 
@@ -98,6 +101,7 @@ public class EditorWindow extends Window {
         ImGui.createContext();
         ImGuiIO io = ImGui.getIO();
         io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+        io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
 
         imGuiGlfw.init(getWindow(), true);
         imGuiGl3.init(glslVersion);
@@ -113,6 +117,8 @@ public class EditorWindow extends Window {
             imGuiGlfw.newFrame();
             ImGui.newFrame();
 
+            this.setupDockspace();
+
             IGuiElement[] elements = editor.getElementManager().getElements();
             for (int i = 0; i < elements.length; i++) {
                 if(elements[i].render()) {
@@ -122,6 +128,8 @@ public class EditorWindow extends Window {
 
             super.getThreadExecutor().executeAllTasksInStack();
             editor.getTaskExecutor().executeNextTask();
+
+            ImGui.end();
 
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());
@@ -136,6 +144,29 @@ public class EditorWindow extends Window {
             glfwSwapBuffers(getWindow());
             glfwPollEvents();
         }
+    }
+
+    private void setupDockspace() {
+        int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+
+        ImGui.setNextWindowSize(getWidth(), getHeight());
+        ImGui.setNextWindowViewport(ImGui.getMainViewport().getID());
+
+        int[] x = new int[1];
+        int[] y = new int[1];
+        glfwGetWindowPos(getWindow(), x, y);
+
+        ImGui.setNextWindowPos(x[0], y[0], ImGuiCond.Always);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+        windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+
+        ImGui.begin("Dockspace", windowFlags);
+        ImGui.popStyleVar(2);
+
+        // Dockspace
+        ImGui.dockSpace(ImGui.getID("Dockspace"));
+
     }
 
     /**

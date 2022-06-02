@@ -38,8 +38,8 @@ package de.rafael.ravbite.engine.app.editor;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.element.ErrorElement;
-import de.rafael.ravbite.engine.app.editor.element.TaskPopup;
+import de.rafael.ravbite.engine.app.editor.element.error.ErrorElement;
+import de.rafael.ravbite.engine.app.editor.element.task.TaskPopup;
 import de.rafael.ravbite.engine.app.editor.manager.element.ElementManager;
 import de.rafael.ravbite.engine.app.editor.manager.project.ProjectManager;
 import de.rafael.ravbite.engine.app.editor.task.TaskExecutor;

@@ -28,99 +28,62 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.element;
+package de.rafael.ravbite.engine.app.editor.element.opened;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 05/31/2022 at 11:41 AM
+// On 06/02/2022 at 4:12 PM
 // In the project Ravbite
 //
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
+import imgui.flag.ImGuiMouseButton;
 import imgui.internal.ImGui;
 
-public record MenuBar(Editor editor) implements IGuiElement {
+import java.io.File;
+import java.util.Objects;
+
+public class AssetExplorer implements IGuiElement {
+
+    private final Editor editor;
+
+    private File currentDirectory;
+    private final File assetsDirectory;
+
+    public AssetExplorer(Editor editor) {
+        this.editor = editor;
+
+        this.assetsDirectory = new File(editor.getProjectManager().getOpenProject().getProject().getProjectDirectory(), "assets/");
+        this.currentDirectory = assetsDirectory;
+    }
 
     @Override
     public boolean render() {
 
-        ImGui.beginMainMenuBar();
+        ImGui.begin("Content Browser");
 
-        if (ImGui.beginMenu("File")) {
-            if (ImGui.menuItem("New Scene", "Ctrl+N")) {
-
+        if(currentDirectory.compareTo(assetsDirectory) > 0) {
+            if (ImGui.button("<-")) {
+                currentDirectory = currentDirectory.getParentFile();
             }
-            if (ImGui.menuItem("Open Scene", "Ctrl+O")) {
-
-            }
-            ImGui.separator();
-            if(ImGui.menuItem("Save", "Ctrl+S")) {
-
-            }
-            if(ImGui.menuItem("Save As", "Ctrl+Shift+S")) {
-
-            }
-            ImGui.separator();
-            if(ImGui.menuItem("Close Project")) {
-                editor.getProjectManager().closeProject();
-            }
-            ImGui.endMenu();
-        }
-        if (ImGui.beginMenu("Edit")) {
-            if (ImGui.menuItem("Undo", "Ctrl+Z")) {
-
-            }
-            if (ImGui.menuItem("Redo", "Ctrl+Y")) {
-
-            }
-            ImGui.separator();
-            if(ImGui.menuItem("Cut", "Ctrl+X")) {
-
-            }
-            if(ImGui.menuItem("Copy", "Ctrl+C")) {
-
-            }
-            if(ImGui.menuItem("Paste", "Ctrl+V")) {
-
-            }
-            ImGui.endMenu();
-        }
-        if (ImGui.beginMenu("Project")) {
-            if (ImGui.menuItem("Project Settings")) {
-
-            }
-            ImGui.endMenu();
-        }
-        if (ImGui.beginMenu("Run")) {
-            if(ImGui.menuItem("Play", "Ctrl+P")) {
-
-            }
-            if(ImGui.menuItem("Pause", "Ctrl+Shift+P")) {
-
-            }
-            if(ImGui.menuItem("Stop", "Ctrl+Alt+P")) {
-
-            }
-            ImGui.endMenu();
-        }
-        if (ImGui.beginMenu("Build")) {
-            if (ImGui.menuItem("Build Settings")) {
-
-            }
-            ImGui.separator();
-            if (ImGui.menuItem("Build", "Ctrl+B")) {
-
-            }
-            if (ImGui.menuItem("Build And Run", "Ctrl+Shift+B")) {
-
-            }
-            ImGui.endMenu();
         }
 
-        ImGui.endMainMenuBar();
+        File[] files = this.currentDirectory.listFiles();
+        for (int i = 0; i < Objects.requireNonNull(files).length; i++) {
+            File file = files[i];
+
+            ImGui.button(file.getName());
+            if(ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
+                if(file.isDirectory()) {
+                    currentDirectory = file;
+                }
+            }
+        }
+
+        ImGui.end();
 
         return false;
     }
