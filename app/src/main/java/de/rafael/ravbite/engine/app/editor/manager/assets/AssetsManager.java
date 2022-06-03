@@ -28,64 +28,67 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.element.opened;
+package de.rafael.ravbite.engine.app.editor.manager.assets;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 06/02/2022 at 4:12 PM
+// On 06/03/2022 at 5:33 PM
 // In the project Ravbite
 //
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
-import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
-import imgui.flag.ImGuiMouseButton;
-import imgui.internal.ImGui;
+import de.rafael.ravbite.engine.utils.RavbiteUtils;
+import de.rafael.ravbite.utils.asset.AssetLocation;
 
 import java.io.File;
-import java.util.Objects;
 
-public class AssetExplorer implements IGuiElement {
+public class AssetsManager {
 
-    private final Editor editor;
+    private int TEXTURE_ICON_DIRECTORY;
+    private int TEXTURE_ICON_FILE;
 
-    private File currentDirectory;
-    private final File assetsDirectory;
+    private int TEXTURE_ICON_NEXT;
+    private int TEXTURE_ICON_PREVIOUS;
+    private int TEXTURE_ICON_PLAY;
+    private int TEXTURE_ICON_STOP;
 
-    public AssetExplorer(Editor editor) {
-        this.editor = editor;
+    public AssetsManager(Editor editor) {
+        RavbiteUtils utils = editor.getEditorWindow().getUtils();
 
-        this.assetsDirectory = new File(editor.getProjectManager().getOpenProject().getProject().getProjectDirectory(), "assets/");
-        this.currentDirectory = assetsDirectory;
+        try {
+            this.TEXTURE_ICON_DIRECTORY = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/directory.png", AssetLocation.INTERNAL));
+            this.TEXTURE_ICON_FILE = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/file.png", AssetLocation.INTERNAL));
+
+            this.TEXTURE_ICON_NEXT = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/next.png", AssetLocation.INTERNAL));
+            this.TEXTURE_ICON_PREVIOUS = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/previous.png", AssetLocation.INTERNAL));
+
+            this.TEXTURE_ICON_PLAY = this.TEXTURE_ICON_NEXT;
+            this.TEXTURE_ICON_STOP = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/stop.png", AssetLocation.INTERNAL));
+        } catch(Exception exception) {
+            editor.handleError(exception);
+        }
     }
 
-    @Override
-    public boolean render() {
+    public int getTextureForFile(File file) {
+        return file.isDirectory() ? TEXTURE_ICON_DIRECTORY : TEXTURE_ICON_FILE;
+    }
 
-        ImGui.begin("Content Browser");
+    public int TEXTURE_ICON_NEXT() {
+        return TEXTURE_ICON_NEXT;
+    }
 
-        if(currentDirectory.compareTo(assetsDirectory) > 0) {
-            if (ImGui.button("<-")) {
-                currentDirectory = currentDirectory.getParentFile();
-            }
-        }
+    public int TEXTURE_ICON_PREVIOUS() {
+        return TEXTURE_ICON_PREVIOUS;
+    }
 
-        File[] files = this.currentDirectory.listFiles();
-        for (int i = 0; i < Objects.requireNonNull(files).length; i++) {
-            File file = files[i];
+    public int TEXTURE_ICON_PLAY() {
+        return TEXTURE_ICON_PLAY;
+    }
 
-            ImGui.button(file.getName());
-            if(ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
-                if(file.isDirectory()) {
-                    currentDirectory = file;
-                }
-            }
-        }
-
-        ImGui.end();
-
-        return false;
+    public int TEXTURE_ICON_STOP() {
+        return TEXTURE_ICON_STOP;
     }
 
 }

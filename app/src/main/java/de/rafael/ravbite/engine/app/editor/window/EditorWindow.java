@@ -40,13 +40,19 @@ package de.rafael.ravbite.engine.app.editor.window;
 
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
+import de.rafael.ravbite.engine.app.editor.manager.theme.Theme;
 import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -57,6 +63,8 @@ public class EditorWindow extends Window {
 
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
+
+    private boolean exit = false;
 
     public EditorWindow(Editor editor) {
         super(1900, 1000);
@@ -108,18 +116,39 @@ public class EditorWindow extends Window {
     public void loop() {
         glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
 
-        while (!glfwWindowShouldClose(getWindow())) {
+        while (!exit) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             imGuiGlfw.newFrame();
             ImGui.newFrame();
             ImGui.dockSpaceOverViewport(ImGui.getMainViewport());
 
+            if(glfwWindowShouldClose(getWindow())) {
+                glfwSetWindowShouldClose(getWindow(), false);
+                ImGui.openPopup("Exit");
+            }
+            exitPopup();
+
             IGuiElement[] elements = editor.getElementManager().getElements();
+            int[] toRemove = new int[0];
             for (int i = 0; i < elements.length; i++) {
-                if(elements[i].render()) {
-                    editor.getElementManager().stopDrawing(i);
+                Theme theme = editor.getThemeManager().getCurrentTheme();
+                for (Method method : theme.getClass().getMethods()) {
+                    if(method.getName().startsWith("style")) {
+                        try {method.invoke(theme, elements[i].getClass());} catch (IllegalAccessException | InvocationTargetException exception) {throw new RuntimeException(exception);}
+                    }
                 }
+                if(elements[i].render()) {
+                    toRemove = ArrayUtils.add(toRemove, i);
+                }
+                for (Method method : theme.getClass().getMethods()) {
+                    if(method.getName().startsWith("clean")) {
+                        try {method.invoke(theme, elements[i].getClass());} catch (IllegalAccessException | InvocationTargetException exception) {throw new RuntimeException(exception);}
+                    }
+                }
+            }
+            for (int i : toRemove) {
+                editor.getElementManager().stopDrawing(i);
             }
 
             super.getThreadExecutor().executeAllTasksInStack();
@@ -137,6 +166,23 @@ public class EditorWindow extends Window {
 
             glfwSwapBuffers(getWindow());
             glfwPollEvents();
+        }
+    }
+
+    private void exitPopup() {
+        if(ImGui.beginPopupModal("Exit", ImGuiWindowFlags.AlwaysAutoResize)) {
+            ImGui.text("Do you want to close the editor?");
+            ImGui.spacing();
+            ImGui.separator();
+            ImGui.spacing();
+            if(ImGui.button("Yes")) {
+                exit = true;
+            }
+            ImGui.sameLine();
+            if(ImGui.button("No")) {
+                ImGui.closeCurrentPopup();
+            }
+            ImGui.endPopup();
         }
     }
 

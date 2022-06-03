@@ -39,8 +39,13 @@ package de.rafael.ravbite.engine.app.editor.manager.project;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.Editor;
-import de.rafael.ravbite.engine.app.editor.element.opened.AssetExplorer;
-import de.rafael.ravbite.engine.app.editor.element.opened.MenuBar;
+import de.rafael.ravbite.engine.app.editor.element.opened.bottom.AssetsBrowserElement;
+import de.rafael.ravbite.engine.app.editor.element.opened.bottom.ConsoleElement;
+import de.rafael.ravbite.engine.app.editor.element.opened.center.SceneViewElement;
+import de.rafael.ravbite.engine.app.editor.element.opened.left.SceneHierarchyElement;
+import de.rafael.ravbite.engine.app.editor.element.opened.right.InspectorElement;
+import de.rafael.ravbite.engine.app.editor.element.opened.top.MenuBarElement;
+import de.rafael.ravbite.engine.app.editor.element.opened.top.ToolBarElement;
 import de.rafael.ravbite.engine.app.editor.element.start.OpenProjectElement;
 import de.rafael.ravbite.engine.app.editor.project.OpenedProject;
 import de.rafael.ravbite.engine.app.editor.project.SimpleProject;
@@ -89,15 +94,25 @@ public class ProjectManager {
             if(!editor.getElementManager().isOpened(OpenProjectElement.class)) {
                 editor.getElementManager().startDrawing(new OpenProjectElement(editor));
             }
-            editor.getElementManager().stopDrawing(MenuBar.class);
-            editor.getElementManager().stopDrawing(AssetExplorer.class);
+            editor.getElementManager().stopDrawing(MenuBarElement.class);
+            editor.getElementManager().stopDrawing(ToolBarElement.class);
+            editor.getElementManager().stopDrawing(AssetsBrowserElement.class);
+            editor.getElementManager().stopDrawing(InspectorElement.class);
+            editor.getElementManager().stopDrawing(ConsoleElement.class);
+            editor.getElementManager().stopDrawing(SceneHierarchyElement.class);
+            editor.getElementManager().stopDrawing(SceneViewElement.class);
 
             editor.getEditorWindow().setTitle("Ravbite Editor <OpenGL " + editor.getEditorWindow().getGlVersion() + ">");
         } else {
             // Close openProject window if opened
             editor.getElementManager().stopDrawing(OpenProjectElement.class);
-            editor.getElementManager().startDrawing(new MenuBar(editor));
-            editor.getElementManager().startDrawing(new AssetExplorer(editor));
+            editor.getElementManager().startDrawing(new MenuBarElement(editor));
+            editor.getElementManager().startDrawing(new ToolBarElement(editor));
+            editor.getElementManager().startDrawing(new AssetsBrowserElement(editor));
+            editor.getElementManager().startDrawing(new InspectorElement(editor));
+            editor.getElementManager().startDrawing(new ConsoleElement(editor));
+            editor.getElementManager().startDrawing(new SceneHierarchyElement(editor));
+            editor.getElementManager().startDrawing(new SceneViewElement(editor));
 
             editor.getEditorWindow().setTitle("Ravbite Editor <OpenGL " + editor.getEditorWindow().getGlVersion() + "> - " + openProject.getProject().getName());
         }

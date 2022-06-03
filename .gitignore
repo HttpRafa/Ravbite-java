@@ -3,8 +3,7 @@
 /utilities/build/
 /engine/build/
 /app/build/
+/app/binaries/
 /app/projects.ravbite
-/app/imgui.ini
 /buildSrc/build/
 /buildSrc/.gradle/
-/app/binaries/

@@ -38,10 +38,12 @@ package de.rafael.ravbite.engine.app.editor;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.element.error.ErrorElement;
-import de.rafael.ravbite.engine.app.editor.element.task.TaskPopup;
+import de.rafael.ravbite.engine.app.editor.element.start.ErrorElement;
+import de.rafael.ravbite.engine.app.editor.element.start.TaskPopup;
+import de.rafael.ravbite.engine.app.editor.manager.assets.AssetsManager;
 import de.rafael.ravbite.engine.app.editor.manager.element.ElementManager;
 import de.rafael.ravbite.engine.app.editor.manager.project.ProjectManager;
+import de.rafael.ravbite.engine.app.editor.manager.theme.ThemeManager;
 import de.rafael.ravbite.engine.app.editor.task.TaskExecutor;
 import de.rafael.ravbite.engine.app.editor.window.EditorWindow;
 import imgui.ImGui;
@@ -66,10 +68,14 @@ public class Editor {
 
     private final ElementManager elementManager;
     private final ProjectManager projectManager;
+    private final ThemeManager themeManager;
+
+    private AssetsManager assetsManager;
 
     public Editor() {
         instance = this;
 
+        themeManager = new ThemeManager();
         elementManager = new ElementManager();
         projectManager = new ProjectManager(this);
         taskExecutor = new TaskExecutor(this);
@@ -108,6 +114,7 @@ public class Editor {
         windowThread = new Thread(() -> {
             editorWindow = new EditorWindow(this);
             editorWindow.initialize();
+            assetsManager = new AssetsManager(this);
             editorWindow.loop();
             editorWindow.destroy();
             exit();
@@ -179,6 +186,13 @@ public class Editor {
     }
 
     /**
+     * @return Theme manager
+     */
+    public ThemeManager getThemeManager() {
+        return themeManager;
+    }
+
+    /**
      * @return Element manager
      */
     public ElementManager getElementManager() {
@@ -190,6 +204,13 @@ public class Editor {
      */
     public ProjectManager getProjectManager() {
         return projectManager;
+    }
+
+    /**
+     * @return Assets manager
+     */
+    public AssetsManager getAssetsManager() {
+        return assetsManager;
     }
 
     /**
