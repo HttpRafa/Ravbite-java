@@ -136,7 +136,8 @@ public class CameraComponent extends Component implements ISizeDependent {
      * Called if a frame is render on this camera
      */
     public void startRendering() {
-        // TODO: frameBuffer.bind();
+        frameBuffer.bind();
+        frameBuffer.clear();
     }
 
     /**
@@ -212,6 +213,13 @@ public class CameraComponent extends Component implements ISizeDependent {
      */
     public void setProjectionMatrix(Matrix4f projectionMatrix) {
         this.projectionMatrix = projectionMatrix;
+    }
+
+    /**
+     * @return FrameBuffer for the camera
+     */
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
     }
 
 }

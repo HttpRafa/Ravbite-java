@@ -37,14 +37,15 @@ package de.rafael.ravbite.engine.utils.exception;
 //
 //------------------------------
 
-import de.rafael.ravbite.utils.asset.AssetLocation;
+import java.io.Serial;
 
 public class ShaderCompilationException extends Exception {
 
+    @Serial
     private static final long serialVersionUID = -997853943823790472L;
 
-    public ShaderCompilationException(String glError, AssetLocation assetLocation) {
-        super("Failed to compile shader[" + assetLocation.toString() + "]: " + glError);
+    public ShaderCompilationException(String glError, String source) {
+        super("Failed to compile shader[" + source + "]: " + glError);
     }
 
 }

@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.sound.utils;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.utils.WindowUtils;
+import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
 import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.io.IOUtils;
@@ -54,7 +54,7 @@ import java.nio.ShortBuffer;
 import static org.lwjgl.stb.STBVorbis.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public abstract class SoundUtils extends WindowUtils {
+public abstract class SoundUtils extends ImageUtils {
 
     public SoundUtils(EngineView engineView) {
         super(engineView);
@@ -125,6 +125,7 @@ public abstract class SoundUtils extends WindowUtils {
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
+        getEngineView().getDataWatcher().alBuffer(buffer);
         return new Sound(buffer, location);
     }
 
@@ -137,7 +138,6 @@ public abstract class SoundUtils extends WindowUtils {
      * @throws Exception ?
      */
     private ShortBuffer readVorbis(String resource, int bufferSize, STBVorbisInfo info) throws Exception {
-
         try (MemoryStack stack = MemoryStack.stackPush()) {
             ByteBuffer vorbis = IOUtils.ioResourceToByteBuffer(resource, bufferSize);
             IntBuffer error = stack.mallocInt(1);

@@ -43,6 +43,7 @@ import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
+import de.rafael.ravbite.engine.graphics.utils.TextureRenderer;
 import de.rafael.ravbite.engine.graphics.view.executor.ThreadExecutor;
 import de.rafael.ravbite.engine.input.InputSystem;
 import de.rafael.ravbite.engine.sound.SoundSystem;
@@ -71,6 +72,7 @@ public abstract class EngineView {
 
     private SoundSystem soundSystem;
     private InputSystem inputSystem;
+    private TextureRenderer textureRenderer;
 
     private DebugWindow debugWindow;
     private long startTime = 0;
@@ -117,6 +119,9 @@ public abstract class EngineView {
 
         // Setup soundEngine
         this.soundSystem = new SoundSystem(this).initialize();
+
+        // Setup bufferRenderer
+        this.textureRenderer = new TextureRenderer(this);
 
         // Load default assets
         try {
@@ -178,6 +183,7 @@ public abstract class EngineView {
         }
 
         this.soundSystem.destroy();
+        this.textureRenderer.destroy();
     }
 
     /**
@@ -199,6 +205,7 @@ public abstract class EngineView {
         CameraComponent[] cameras = scenes[currentScene].render();
 
         // Render cameras to engineView
+        textureRenderer.glRenderTexture(cameras[0].getFrameBuffer().getColorTexture());
 
         update();
     }

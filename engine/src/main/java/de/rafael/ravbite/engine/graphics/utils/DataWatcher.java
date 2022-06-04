@@ -95,4 +95,12 @@ public class DataWatcher {
         textureList.add(texture);
     }
 
+    /**
+     * Store buffers for later cleanUp
+     * @param buffer Buffer to store
+     */
+    public void alBuffer(int buffer) {
+        soundBuffersList.add(buffer);
+    }
+
 }

@@ -37,6 +37,7 @@ package de.rafael.ravbite.engine.graphics.utils;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWImage;
@@ -47,7 +48,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class ImageUtils {
+public abstract class ImageUtils extends WindowUtils {
+
+    public ImageUtils(EngineView engineView) {
+        super(engineView);
+    }
 
     /**
      * Loads an image from a path
@@ -55,7 +60,7 @@ public class ImageUtils {
      * @return Image as BufferedImage
      * @throws IOException If the file doesn't exist or an error occurred while reading the data
      */
-    public static BufferedImage loadImage(AssetLocation assetLocation) throws IOException {
+    public BufferedImage loadImage(AssetLocation assetLocation) throws IOException {
         return ImageIO.read(assetLocation.inputStream());
     }
 
@@ -64,7 +69,7 @@ public class ImageUtils {
      * @param bufferedImageArray Array of BufferedImages
      * @return Array of GLFWImages
      */
-    public static GLFWImage[] bufferedImageArrayToGLFWImageArray(BufferedImage[] bufferedImageArray) {
+    public GLFWImage[] bufferedImageArrayToGLFWImageArray(BufferedImage[] bufferedImageArray) {
         GLFWImage[] array = new GLFWImage[bufferedImageArray.length];
         for (int i = 0; i < bufferedImageArray.length; i++) {
             array[i] = bufferedImageToGLFWImage(bufferedImageArray[i]);
@@ -77,7 +82,7 @@ public class ImageUtils {
      * @param bufferedImage BufferedImage
      * @return GLFWImage
      */
-    public static GLFWImage bufferedImageToGLFWImage(BufferedImage bufferedImage) {
+    public GLFWImage bufferedImageToGLFWImage(BufferedImage bufferedImage) {
         if (bufferedImage.getType() != BufferedImage.TYPE_INT_ARGB_PRE) {
             BufferedImage convertedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
             Graphics2D graphics = convertedImage.createGraphics();

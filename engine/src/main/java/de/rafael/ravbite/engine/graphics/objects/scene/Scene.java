@@ -75,7 +75,11 @@ public abstract class Scene implements ISizeDependent {
     /**
      * Delete all GameObjects
      */
-    public abstract void dispose();
+    public void dispose() {
+        for (GameObject gameObject : sceneObject.getGameObjects()) {
+            gameObject.dispose();
+        }
+    }
 
     public void storeObject(int slot, Object object) {
         storedObjects.put(slot, object);

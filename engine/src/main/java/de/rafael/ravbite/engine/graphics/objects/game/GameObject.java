@@ -192,6 +192,15 @@ public class GameObject implements ISizeDependent {
     }
 
     /**
+     * Disposes all components
+     */
+    public void dispose() {
+        for (Component objectComponent : getObjectComponents()) {
+            objectComponent.dispose();
+        }
+    }
+
+    /**
      * @return All GameObjects under this object
      */
     public Collection<GameObject> getGameObjects() {

@@ -67,7 +67,7 @@ public class FrameBuffer {
         this.frameBuffer = GL30.glGenFramebuffers();
 
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-        GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
+        GL30.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
 
         textureAttachment();
 
@@ -110,6 +110,13 @@ public class FrameBuffer {
     }
 
     /**
+     * Clear the framebuffer
+     */
+    public void clear() {
+        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+    }
+
+    /**
      * Binds the framebuffer
      */
     public void bind() {
@@ -143,7 +150,7 @@ public class FrameBuffer {
     private void textureAttachment() {
         colorTexture = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, colorTexture);
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, width, height,
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height,
                 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);

@@ -38,7 +38,6 @@ package de.rafael.ravbite.engine.graphics.view;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
 import de.rafael.ravbite.engine.input.InputSystem;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.performance.TasksType;
@@ -123,7 +122,7 @@ public abstract class Window extends EngineView {
 
         // Set default icon
         try {
-            BufferedImage iconImage = ImageUtils.loadImage(new AssetLocation("/textures/icon/icon128.png", AssetLocation.INTERNAL));
+            BufferedImage iconImage = getUtils().loadImage(new AssetLocation("/textures/icon/icon128.png", AssetLocation.INTERNAL));
             setIcon(iconImage);
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -146,7 +145,7 @@ public abstract class Window extends EngineView {
         glCullFace(GL_BACK);
 
         // Set the clear color
-        glClearColor(220f/255f,220f/255f,220f/255f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     /**
@@ -187,7 +186,7 @@ public abstract class Window extends EngineView {
     public void loop() {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        final long[] nextDebugUpdate = {0};
+        final long[] nextDebugUpdate = {0, 0};
         while(!glfwWindowShouldClose(getWindow())) {
             super.startFrame();
 
@@ -219,6 +218,12 @@ public abstract class Window extends EngineView {
                         }
                     }
                 }
+                if(nextDebugUpdate[1] < System.currentTimeMillis()) {
+                    nextDebugUpdate[1] = System.currentTimeMillis() + 1000 * 10;
+                    if(DEBUG_MODE) {
+                        super.getEngineWatcher().clearMax();
+                    }
+                }
             });
         }
     }
@@ -236,7 +241,7 @@ public abstract class Window extends EngineView {
      * @param bufferedImages Array of icons
      */
     public void setIcons(BufferedImage[] bufferedImages) {
-        GLFWImage[] glfwImages = ImageUtils.bufferedImageArrayToGLFWImageArray(bufferedImages);
+        GLFWImage[] glfwImages = getUtils().bufferedImageArrayToGLFWImageArray(bufferedImages);
         try(GLFWImage.Buffer iconBuffer = GLFWImage.malloc(glfwImages.length)) {
             for (int i = 0; i < glfwImages.length; i++) {
                 iconBuffer.put(i, glfwImages[i]);
