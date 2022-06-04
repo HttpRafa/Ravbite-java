@@ -95,6 +95,7 @@ public abstract class Scene implements ISizeDependent {
 
     /**
      * Called to render the frame
+     * @return Array of rendered cameras
      */
     public CameraComponent[] render() {
         Collection<GameObject> gameObjects = getGameObjects();

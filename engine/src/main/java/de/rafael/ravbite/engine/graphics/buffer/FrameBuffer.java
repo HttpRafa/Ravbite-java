@@ -75,6 +75,9 @@ public class FrameBuffer {
         depthTextureAttachment();
     }
 
+    /**
+     * Disposes of the framebuffer
+     */
     public void dispose() {
         GL30.glDeleteFramebuffers(frameBuffer);
         GL11.glDeleteTextures(colorTexture);
@@ -82,6 +85,11 @@ public class FrameBuffer {
         GL30.glDeleteRenderbuffers(depthBuffer);
     }
 
+    /**
+     * Resizes the framebuffer to the specified size
+     * @param width Width
+     * @param height Height
+     */
     public void resize(int width, int height) {
         dispose();
 
@@ -91,22 +99,35 @@ public class FrameBuffer {
         create();
     }
 
+    /**
+     * Atomically binds the framebuffer and unbinds it at the end
+     * @param runnable Task to run
+     */
     public void use(Runnable runnable) {
         bind();
         runnable.run();
         unbind();
     }
 
+    /**
+     * Binds the framebuffer
+     */
     public void bind() {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
         GL11.glViewport(0, 0, width, height);
     }
 
+    /**
+     * Unbinds the framebuffer
+     */
     public void unbind() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
+    /**
+     * Creates the depthBugger attachment
+     */
     private void depthBufferAttachment() {
         depthBuffer = GL30.glGenRenderbuffers();
         GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, depthBuffer);
@@ -116,6 +137,9 @@ public class FrameBuffer {
                 GL30.GL_RENDERBUFFER, depthBuffer);
     }
 
+    /**
+     * Creates the texture attachment
+     */
     private void textureAttachment() {
         colorTexture = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, colorTexture);
@@ -127,6 +151,9 @@ public class FrameBuffer {
                 colorTexture, 0);
     }
 
+    /**
+     * Creates the depthTexture attachment
+     */
     private void depthTextureAttachment() {
         depthTexture = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, depthTexture);
@@ -138,26 +165,44 @@ public class FrameBuffer {
                 depthTexture, 0);
     }
 
+    /**
+     * @return OpenGL framebuffer
+     */
     public int getFrameBuffer() {
         return frameBuffer;
     }
 
+    /**
+     * @return Width of the framebuffer
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * @return Height of the framebuffer
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * @return OpenGL depthBuffer
+     */
     public int getDepthBuffer() {
         return depthBuffer;
     }
 
+    /**
+     * @return OpenGL colorTexture
+     */
     public int getColorTexture() {
         return colorTexture;
     }
 
+    /**
+     * @return OpenGL depthTexture
+     */
     public int getDepthTexture() {
         return depthTexture;
     }
