@@ -40,7 +40,7 @@ package de.rafael.ravbite.engine.graphics.utils;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.rafael.ravbite.engine.graphics.objects.game.mesh.Mesh;
 import de.rafael.ravbite.engine.graphics.objects.game.mesh.StoredMesh;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.lwjgl.BufferUtils;

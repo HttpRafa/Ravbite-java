@@ -96,6 +96,8 @@ public class CameraComponent extends Component implements ISizeDependent {
     @Override
     public void sizeChanged() {
         updateProjectionMatrix();
+
+        // TODO: Resize frameBuffer
     }
 
     /**
@@ -121,6 +123,7 @@ public class CameraComponent extends Component implements ISizeDependent {
      */
     public void startRendering() {
         // TODO: Render to Camera FBO
+
     }
 
     /**

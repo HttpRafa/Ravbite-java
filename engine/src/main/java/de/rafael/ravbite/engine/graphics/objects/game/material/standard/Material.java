@@ -39,7 +39,7 @@ package de.rafael.ravbite.engine.graphics.objects.game.material.standard;
 
 import de.rafael.ravbite.engine.graphics.objects.game.material.IMaterial;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 
 import java.awt.*;
 

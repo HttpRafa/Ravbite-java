@@ -42,7 +42,7 @@ import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
 import de.rafael.ravbite.engine.app.editor.manager.theme.style.Theme;
 import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
-import de.rafael.ravbite.engine.graphics.window.Window;
+import de.rafael.ravbite.engine.graphics.view.Window;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;

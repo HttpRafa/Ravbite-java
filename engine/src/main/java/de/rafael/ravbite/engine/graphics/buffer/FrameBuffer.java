@@ -38,8 +38,33 @@ package de.rafael.ravbite.engine.graphics.buffer;
 //
 //------------------------------
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+
 public class FrameBuffer {
 
+    private int frameBuffer;
 
+    private int width, height;
+
+    /**
+     * Creates a new frameBuffer
+     */
+    public void create(int width, int height) {
+        this.frameBuffer = GL30.glGenFramebuffers();
+        this.width = width;
+        this.height = height;
+
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
+        GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
+    }
+
+    private void textureAttachment() {
+
+    }
+
+    public int getFrameBuffer() {
+        return frameBuffer;
+    }
 
 }

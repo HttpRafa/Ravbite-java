@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.utils;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.engine.sound.utils.SoundUtils;
 
 /**

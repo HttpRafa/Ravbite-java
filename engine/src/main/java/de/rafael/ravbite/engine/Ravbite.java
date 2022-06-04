@@ -37,7 +37,7 @@ package de.rafael.ravbite.engine;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.Window;
+import de.rafael.ravbite.engine.graphics.view.Window;
 import de.rafael.ravbite.utils.swing.SwingUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 

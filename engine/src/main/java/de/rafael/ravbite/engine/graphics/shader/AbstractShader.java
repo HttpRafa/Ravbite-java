@@ -41,7 +41,7 @@ import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.components.classes.RenderComponent;
 import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
 import de.rafael.ravbite.engine.graphics.objects.game.material.IMaterial;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.engine.utils.exception.ShaderCompilationException;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import org.joml.Matrix4f;

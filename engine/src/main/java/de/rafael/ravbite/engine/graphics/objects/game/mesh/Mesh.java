@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.graphics.objects.game.mesh;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.objects.game.material.IMaterial;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 
 import java.util.ArrayList;
 import java.util.Arrays;

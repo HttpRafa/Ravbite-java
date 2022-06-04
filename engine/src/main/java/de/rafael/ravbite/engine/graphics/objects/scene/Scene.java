@@ -43,7 +43,7 @@ import de.rafael.ravbite.engine.graphics.components.classes.ISizeDependent;
 import de.rafael.ravbite.engine.graphics.components.light.LightComponent;
 import de.rafael.ravbite.engine.graphics.components.transform.Transform;
 import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.engine.input.InputSystem;
 import de.rafael.ravbite.engine.utils.RavbiteUtils;
 import org.joml.Vector3f;

@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.graphics.objects.game.mesh;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.objects.game.material.standard.Material;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 
 public class MeshGenerator {
 

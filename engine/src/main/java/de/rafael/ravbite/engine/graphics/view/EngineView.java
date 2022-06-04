@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.graphics.window;
+package de.rafael.ravbite.engine.graphics.view;
 
 //------------------------------
 //
@@ -42,7 +42,7 @@ import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
 import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
-import de.rafael.ravbite.engine.graphics.window.executor.ThreadExecutor;
+import de.rafael.ravbite.engine.graphics.view.executor.ThreadExecutor;
 import de.rafael.ravbite.engine.input.InputSystem;
 import de.rafael.ravbite.engine.sound.SoundSystem;
 import de.rafael.ravbite.engine.utils.RavbiteUtils;
@@ -299,7 +299,6 @@ public abstract class EngineView {
         this.width = width;
         this.height = height;
 
-        // TODO: Resize frameBuffer
         scenes[currentScene].sizeChanged();
     }
 

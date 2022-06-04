@@ -39,7 +39,7 @@ package de.rafael.ravbite.engine.sound.utils;
 //------------------------------
 
 import de.rafael.ravbite.engine.graphics.utils.WindowUtils;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.io.IOUtils;
 import org.lwjgl.openal.*;

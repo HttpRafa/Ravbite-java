@@ -44,7 +44,7 @@ import de.rafael.ravbite.engine.graphics.components.rendering.mesh.MeshRendererC
 import de.rafael.ravbite.engine.graphics.models.ModelUtils;
 import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
 import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.engine.input.callbacks.KeyCallback;
 import de.rafael.ravbite.engine.sound.components.AudioListener;
 import de.rafael.ravbite.engine.sound.components.AudioSource;

@@ -37,7 +37,7 @@ package de.rafael.ravbite.engine.window;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.Window;
+import de.rafael.ravbite.engine.graphics.view.Window;
 import de.rafael.ravbite.engine.window.scene.GameScene;
 
 import java.awt.*;

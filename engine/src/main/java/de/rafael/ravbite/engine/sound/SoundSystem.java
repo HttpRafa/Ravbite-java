@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.sound;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import org.lwjgl.openal.AL10;
 
 public class SoundSystem {

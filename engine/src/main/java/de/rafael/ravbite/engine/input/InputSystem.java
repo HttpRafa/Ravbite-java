@@ -37,7 +37,7 @@ package de.rafael.ravbite.engine.input;
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.graphics.window.Window;
+import de.rafael.ravbite.engine.graphics.view.Window;
 import de.rafael.ravbite.engine.input.keyboard.Keyboard;
 import de.rafael.ravbite.engine.input.mouse.Mouse;
 import org.lwjgl.glfw.GLFW;

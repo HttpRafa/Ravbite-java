@@ -38,7 +38,7 @@ package de.rafael.ravbite.engine.window;
 //------------------------------
 
 import de.rafael.ravbite.engine.Ravbite;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import org.junit.jupiter.api.Test;
 
 public class WindowTest {

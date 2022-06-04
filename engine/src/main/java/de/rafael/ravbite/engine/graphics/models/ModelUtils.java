@@ -40,7 +40,7 @@ package de.rafael.ravbite.engine.graphics.models;
 import de.rafael.ravbite.engine.graphics.objects.game.material.standard.DiffuseProperty;
 import de.rafael.ravbite.engine.graphics.objects.game.material.standard.Material;
 import de.rafael.ravbite.engine.graphics.objects.game.mesh.Mesh;
-import de.rafael.ravbite.engine.graphics.window.EngineView;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.utils.asset.AssetLocation;
 import de.rafael.ravbite.utils.io.IOUtils;
 import org.lwjgl.PointerBuffer;

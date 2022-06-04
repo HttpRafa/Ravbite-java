@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.graphics.window;
+package de.rafael.ravbite.engine.graphics.view;
 
 //------------------------------
 //
