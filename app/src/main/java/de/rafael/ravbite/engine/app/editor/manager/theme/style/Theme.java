@@ -28,26 +28,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.manager.theme.standard;
+package de.rafael.ravbite.engine.app.editor.manager.theme.style;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 06/03/2022 at 8:08 PM
+// On 06/03/2022 at 8:06 PM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.manager.theme.style.ButtonStyle;
-import de.rafael.ravbite.engine.app.editor.manager.theme.style.Theme;
-import imgui.app.Color;
+import java.util.ArrayList;
+import java.util.List;
 
-public class StandardTheme extends Theme {
+public class Theme {
 
-    public StandardTheme() {
-        super("Standard");
+    private final String name;
 
-        super.addStyle(ButtonStyle.create("transparentButton", new Color(0, 0, 0, 0), new Color(0.3f, 0.305f, 0.31f, 0.5f), new Color(0.15f, 0.1505f, 00.151f, 0.5f)));
+    private final List<Style> styles = new ArrayList<>();
+
+    public Theme(String name) {
+        this.name = name;
+    }
+
+    public void addStyle(Style style) {
+        styles.add(style);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Style> getStyles() {
+        return styles;
     }
 
 }

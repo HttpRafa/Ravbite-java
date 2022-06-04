@@ -40,6 +40,7 @@ package de.rafael.ravbite.engine.app.editor.element.opened.top;
 
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
+import de.rafael.ravbite.engine.app.editor.manager.theme.Gui;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
@@ -63,9 +64,11 @@ public class ToolBarElement implements IGuiElement {
         float size = ImGui.getWindowHeight() - 4f;
 
         ImGui.setCursorPosX((ImGui.getWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
-        if(ImGui.imageButton(editor.getAssetsManager().TEXTURE_ICON_PLAY(), size, size, 0, 0, 1, 1, 0)) {
+        Gui.style(editor, () -> {
+            if(ImGui.imageButton(editor.getAssetsManager().TEXTURE_ICON_PLAY(), size, size, 0, 0, 1, 1, 0)) {
 
-        }
+            }
+        }, "transparentButton");
 
         ImGui.popStyleVar(2);
         ImGui.end();

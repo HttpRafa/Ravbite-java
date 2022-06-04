@@ -40,6 +40,7 @@ package de.rafael.ravbite.engine.app.editor.element.opened.bottom;
 
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
+import de.rafael.ravbite.engine.app.editor.manager.theme.Gui;
 import imgui.flag.ImGuiMouseButton;
 import imgui.internal.ImGui;
 import imgui.type.ImString;
@@ -69,13 +70,17 @@ public class AssetsBrowserElement implements IGuiElement {
 
         ImGui.begin("Assets Browser");
 
-        if (ImGui.imageButton(editor.getAssetsManager().TEXTURE_ICON_PREVIOUS(), 16, 16, 0, 0, 1, 1)) {
-            if(currentDirectory.compareTo(assetsDirectory) > 0) currentDirectory = currentDirectory.getParentFile();
-        }
+        Gui.style(editor, () -> {
+            if (ImGui.imageButton(editor.getAssetsManager().TEXTURE_ICON_PREVIOUS(), 16, 16, 0, 0, 1, 1)) {
+                if(currentDirectory.compareTo(assetsDirectory) > 0) currentDirectory = currentDirectory.getParentFile();
+            }
+        }, "transparentButton");
         ImGui.sameLine();
-        if (ImGui.imageButton(editor.getAssetsManager().TEXTURE_ICON_NEXT(), 16, 16, 0, 0, 1, 1)) {
+        Gui.style(editor, () -> {
+            if (ImGui.imageButton(editor.getAssetsManager().TEXTURE_ICON_NEXT(), 16, 16, 0, 0, 1, 1)) {
 
-        }
+            }
+        }, "transparentButton");
 
         ImGui.sameLine();
         ImGui.inputTextWithHint("##searchQuery", "Search...", searchQuery);
@@ -102,7 +107,7 @@ public class AssetsBrowserElement implements IGuiElement {
 
             int textureId = editor.getAssetsManager().getTextureForFile(file);
 
-            ImGui.imageButton(textureId, thumbnailSize[0], thumbnailSize[0], 0, 0, 1, 1);
+            Gui.style(editor, () -> ImGui.imageButton(textureId, thumbnailSize[0], thumbnailSize[0], 0, 0, 1, 1), "transparentButton");
             if(ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
                 if(file.isDirectory()) currentDirectory = new File(currentDirectory, file.getName());
             }

@@ -39,6 +39,7 @@ package de.rafael.ravbite.engine.app.editor.manager.theme;
 //------------------------------
 
 import de.rafael.ravbite.engine.app.editor.manager.theme.standard.StandardTheme;
+import de.rafael.ravbite.engine.app.editor.manager.theme.style.Theme;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class ThemeManager {

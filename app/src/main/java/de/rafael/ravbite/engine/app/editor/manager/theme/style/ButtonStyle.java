@@ -28,21 +28,36 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.rafael.ravbite.engine.app.editor.manager.theme;
+package de.rafael.ravbite.engine.app.editor.manager.theme.style;
 
 //------------------------------
 //
 // This class was developed by Rafael K.
-// On 06/03/2022 at 8:06 PM
+// On 06/04/2022 at 10:31 AM
 // In the project Ravbite
 //
 //------------------------------
 
-import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
+import imgui.ImGui;
+import imgui.app.Color;
+import imgui.flag.ImGuiCol;
 
-public interface Theme {
+public record ButtonStyle(String id, Color button, Color buttonHovered, Color buttonActive) implements Style {
 
-    void styleButton(Class<? extends IGuiElement> element);
-    void cleanButton(Class<? extends IGuiElement> element);
+    @Override
+    public void push() {
+        ImGui.pushStyleColor(ImGuiCol.Button, button.getRed(), button.getGreen(), button.getBlue(), button.getAlpha());
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, buttonHovered.getRed(), buttonHovered.getGreen(), buttonHovered.getBlue(), buttonHovered.getAlpha());
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, buttonActive.getRed(), buttonActive.getGreen(), buttonActive.getBlue(), buttonActive.getAlpha());
+    }
+
+    @Override
+    public void pop() {
+        ImGui.popStyleColor(3);
+    }
+
+    public static ButtonStyle create(String id, Color button, Color buttonHovered, Color buttonActive) {
+        return new ButtonStyle(id, button, buttonHovered, buttonActive);
+    }
 
 }

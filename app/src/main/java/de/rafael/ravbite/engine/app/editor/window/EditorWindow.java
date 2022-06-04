@@ -40,7 +40,7 @@ package de.rafael.ravbite.engine.app.editor.window;
 
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
-import de.rafael.ravbite.engine.app.editor.manager.theme.Theme;
+import de.rafael.ravbite.engine.app.editor.manager.theme.style.Theme;
 import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
 import de.rafael.ravbite.engine.graphics.window.Window;
 import imgui.ImGui;
@@ -50,9 +50,6 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import org.apache.commons.lang3.ArrayUtils;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -133,18 +130,8 @@ public class EditorWindow extends Window {
             int[] toRemove = new int[0];
             for (int i = 0; i < elements.length; i++) {
                 Theme theme = editor.getThemeManager().getCurrentTheme();
-                for (Method method : theme.getClass().getMethods()) {
-                    if(method.getName().startsWith("style")) {
-                        try {method.invoke(theme, elements[i].getClass());} catch (IllegalAccessException | InvocationTargetException exception) {throw new RuntimeException(exception);}
-                    }
-                }
                 if(elements[i].render()) {
                     toRemove = ArrayUtils.add(toRemove, i);
-                }
-                for (Method method : theme.getClass().getMethods()) {
-                    if(method.getName().startsWith("clean")) {
-                        try {method.invoke(theme, elements[i].getClass());} catch (IllegalAccessException | InvocationTargetException exception) {throw new RuntimeException(exception);}
-                    }
                 }
             }
             for (int i : toRemove) {
