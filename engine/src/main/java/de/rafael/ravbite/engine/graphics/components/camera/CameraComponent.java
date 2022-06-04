@@ -37,9 +37,11 @@ package de.rafael.ravbite.engine.graphics.components.camera;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.buffer.FrameBuffer;
 import de.rafael.ravbite.engine.graphics.components.classes.Component;
 import de.rafael.ravbite.engine.graphics.components.classes.ISizeDependent;
 import de.rafael.ravbite.engine.graphics.objects.game.GameObject;
+import de.rafael.ravbite.engine.graphics.view.EngineView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.joml.Matrix4f;
 
@@ -52,6 +54,8 @@ public class CameraComponent extends Component implements ISizeDependent {
     public float farPlane = 1000f;
 
     private Matrix4f projectionMatrix;
+
+    private FrameBuffer frameBuffer;
 
     public CameraComponent() {
         this.renderLayers = new int[]{0};
@@ -85,7 +89,16 @@ public class CameraComponent extends Component implements ISizeDependent {
 
     @Override
     public void initialize() {
+        EngineView engineView = this.getGameObject().getScene().getEngineView();
+        frameBuffer = new FrameBuffer(engineView.getWidth(), engineView.getHeight());
+        frameBuffer.create();
+
         updateProjectionMatrix();
+    }
+
+    @Override
+    public void dispose() {
+        frameBuffer.dispose();
     }
 
     @Override
@@ -97,7 +110,8 @@ public class CameraComponent extends Component implements ISizeDependent {
     public void sizeChanged() {
         updateProjectionMatrix();
 
-        // TODO: Resize frameBuffer
+        EngineView engineView = this.getGameObject().getScene().getEngineView();
+        frameBuffer.resize(engineView.getWidth(), engineView.getHeight());
     }
 
     /**
@@ -122,15 +136,14 @@ public class CameraComponent extends Component implements ISizeDependent {
      * Called if a frame is render on this camera
      */
     public void startRendering() {
-        // TODO: Render to Camera FBO
-
+        // TODO: frameBuffer.bind();
     }
 
     /**
      * Called if a frame is finished rendering on this camera
      */
     public void stopRendering() {
-
+        frameBuffer.unbind();
     }
 
     /**

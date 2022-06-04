@@ -67,7 +67,7 @@ public abstract class Component {
     /**
      * Called when the component gets removed from a GameObject
      */
-    // TODO: If components can be removed
+    // TODO: If components can be removed / Scene is removed
     public void dispose() {
 
     }

@@ -39,32 +39,127 @@ package de.rafael.ravbite.engine.graphics.buffer;
 //------------------------------
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL32;
+
+import java.nio.ByteBuffer;
 
 public class FrameBuffer {
 
     private int frameBuffer;
-
     private int width, height;
+
+    private int depthBuffer;
+
+    private int colorTexture;
+    private int depthTexture;
+
+    public FrameBuffer(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
 
     /**
      * Creates a new frameBuffer
      */
-    public void create(int width, int height) {
+    public void create() {
         this.frameBuffer = GL30.glGenFramebuffers();
-        this.width = width;
-        this.height = height;
 
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
         GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
+
+        textureAttachment();
+
+        depthBufferAttachment();
+        depthTextureAttachment();
+    }
+
+    public void dispose() {
+        GL30.glDeleteFramebuffers(frameBuffer);
+        GL11.glDeleteTextures(colorTexture);
+        GL11.glDeleteTextures(depthTexture);
+        GL30.glDeleteRenderbuffers(depthBuffer);
+    }
+
+    public void resize(int width, int height) {
+        dispose();
+
+        this.width = width;
+        this.height = height;
+
+        create();
+    }
+
+    public void use(Runnable runnable) {
+        bind();
+        runnable.run();
+        unbind();
+    }
+
+    public void bind() {
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
+        GL11.glViewport(0, 0, width, height);
+    }
+
+    public void unbind() {
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+    }
+
+    private void depthBufferAttachment() {
+        depthBuffer = GL30.glGenRenderbuffers();
+        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, depthBuffer);
+        GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL11.GL_DEPTH_COMPONENT, width,
+                height);
+        GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT,
+                GL30.GL_RENDERBUFFER, depthBuffer);
     }
 
     private void textureAttachment() {
+        colorTexture = GL11.glGenTextures();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, colorTexture);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, width, height,
+                0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL32.glFramebufferTexture(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0,
+                colorTexture, 0);
+    }
 
+    private void depthTextureAttachment() {
+        depthTexture = GL11.glGenTextures();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, depthTexture);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL14.GL_DEPTH_COMPONENT32, width, height,
+                0, GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT, (ByteBuffer) null);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL32.glFramebufferTexture(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT,
+                depthTexture, 0);
     }
 
     public int getFrameBuffer() {
         return frameBuffer;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getDepthBuffer() {
+        return depthBuffer;
+    }
+
+    public int getColorTexture() {
+        return colorTexture;
+    }
+
+    public int getDepthTexture() {
+        return depthTexture;
     }
 
 }

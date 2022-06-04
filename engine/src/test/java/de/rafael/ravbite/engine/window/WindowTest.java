@@ -41,14 +41,20 @@ import de.rafael.ravbite.engine.Ravbite;
 import de.rafael.ravbite.engine.graphics.view.EngineView;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+
 public class WindowTest {
 
     @Test
     public void windowTest() {
         EngineView.DEBUG_MODE = true;
 
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int)(dimension.width - (dimension.width * 0.015f));
+        int height = (int)(dimension.height - (dimension.height * 0.085f));
+
         Ravbite ravbite = new Ravbite();
-        ravbite.addWindow(new GameWindow());
+        ravbite.addWindow(new GameWindow(width, height));
         ravbite.run();
     }
 

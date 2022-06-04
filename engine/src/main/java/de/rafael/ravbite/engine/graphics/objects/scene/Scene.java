@@ -48,10 +48,7 @@ import de.rafael.ravbite.engine.input.InputSystem;
 import de.rafael.ravbite.engine.utils.RavbiteUtils;
 import org.joml.Vector3f;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class Scene implements ISizeDependent {
@@ -99,8 +96,9 @@ public abstract class Scene implements ISizeDependent {
     /**
      * Called to render the frame
      */
-    public void render() {
+    public CameraComponent[] render() {
         Collection<GameObject> gameObjects = getGameObjects();
+        List<CameraComponent> cameras = new ArrayList<>();
         // TODO: Optimize
         for (GameObject gameObject : gameObjects) {
             Optional<Component> componentOptional = gameObject.hasComponent(CameraComponent.class);
@@ -109,8 +107,11 @@ public abstract class Scene implements ISizeDependent {
                 cameraComponent.startRendering();
                 renderCamera(gameObjects, cameraComponent);
                 cameraComponent.stopRendering();
+                cameras.add(cameraComponent);
             }
         }
+
+        return cameras.toArray(new CameraComponent[0]);
     }
 
     /**

@@ -38,6 +38,7 @@ package de.rafael.ravbite.engine.graphics.view;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.components.camera.CameraComponent;
 import de.rafael.ravbite.engine.graphics.objects.scene.Scene;
 import de.rafael.ravbite.engine.graphics.shader.AbstractShader;
 import de.rafael.ravbite.engine.graphics.shader.standard.StandardShader;
@@ -61,8 +62,7 @@ public abstract class EngineView {
 
     private String glVersion = "";
 
-    private int width;
-    private int height;
+    private int width, height;
 
     private int currentScene = 0;
     private Scene[] scenes = new Scene[0];
@@ -142,7 +142,7 @@ public abstract class EngineView {
     public void startFrame() {
         frameStart = System.currentTimeMillis();
 
-        // Start render to frameBuffer
+        // Start render to frameBuffer / Postprocessing input
     }
 
     /**
@@ -151,7 +151,7 @@ public abstract class EngineView {
     public void renderFrame() {
         engineWatcher.update(TasksType.LOOP_SCENE_RENDER_ALL, this::render);
 
-        // Stop render to frameBuffer
+        // Stop rendering to frameBuffer / Postprocessing output
 
         // Postprocessing
     }
@@ -196,7 +196,10 @@ public abstract class EngineView {
      * Called to render the frame
      */
     public void render() {
-        scenes[currentScene].render();
+        CameraComponent[] cameras = scenes[currentScene].render();
+
+        // Render cameras to engineView
+
         update();
     }
 

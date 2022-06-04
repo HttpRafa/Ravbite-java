@@ -58,7 +58,6 @@ public class RavbiteUtils extends SoundUtils {
 
     // Utils Methods
 
-
     /**
      * Returns an utils instance without a engineView !!No GLUtils usable!!
      * @return Utils instance

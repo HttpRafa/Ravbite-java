@@ -40,15 +40,10 @@ package de.rafael.ravbite.engine.window;
 import de.rafael.ravbite.engine.graphics.view.Window;
 import de.rafael.ravbite.engine.window.scene.GameScene;
 
-import java.awt.*;
-
 public class GameWindow extends Window {
 
-    public GameWindow() {
-        super(1920/2, 1080/2);
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setInitialWidth((int)(dimension.width - (dimension.width * 0.015f)));
-        setInitialHeight((int)(dimension.height - (dimension.height * 0.085f)));
+    public GameWindow(int width, int height) {
+        super(width, height);
     }
 
     @Override
