@@ -67,12 +67,14 @@ public class FrameBuffer {
         this.frameBuffer = GL30.glGenFramebuffers();
 
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-        GL30.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
+        GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
 
         textureAttachment();
 
         depthBufferAttachment();
         depthTextureAttachment();
+
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
     /**

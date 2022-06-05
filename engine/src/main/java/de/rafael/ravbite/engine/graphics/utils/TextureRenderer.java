@@ -107,7 +107,7 @@ public class TextureRenderer {
                     "\n" +
                     "void main(void){\n" +
                     "\n" +
-                    "\tout_Color = vec4(1,1,1,1) - texture(guiTexture, textureCoords);\n" +
+                    "\tout_Color = texture(guiTexture, textureCoords);\n" +
                     "\n" +
                     "}", GL20.GL_FRAGMENT_SHADER);
         } catch (IOException | ShaderCompilationException exception) {
