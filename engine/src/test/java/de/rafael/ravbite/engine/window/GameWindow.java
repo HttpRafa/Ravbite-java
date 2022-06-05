@@ -51,9 +51,4 @@ public class GameWindow extends Window {
         addScene(new GameScene(this));
     }
 
-    @Override
-    public void render() {
-        super.render();
-    }
-
 }

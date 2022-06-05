@@ -195,9 +195,12 @@ public abstract class Window extends EngineView {
 
             super.renderFrame();
 
+            // TODO: Render result to screen
+
             super.getEngineWatcher().update(TasksType.LOOP_SWAP_BUFFERS, () -> glfwSwapBuffers(getWindow())); // swap the color buffers
 
-            // Poll for window events. The key callback above will only be
+            // Poll for window events.
+            // The key callback above will only be
             // invoked during this call.
             super.getEngineWatcher().update(TasksType.LOOP_POLL_EVENTS, org.lwjgl.glfw.GLFW::glfwPollEvents);
 

@@ -146,8 +146,6 @@ public abstract class EngineView {
      */
     public void startFrame() {
         frameStart = System.currentTimeMillis();
-
-        // Start render to frameBuffer / Postprocessing input
     }
 
     /**
@@ -155,8 +153,6 @@ public abstract class EngineView {
      */
     public void renderFrame() {
         engineWatcher.update(TasksType.LOOP_SCENE_RENDER_ALL, this::render);
-
-        // Stop rendering to frameBuffer / Postprocessing output
 
         // Postprocessing
     }
@@ -177,6 +173,9 @@ public abstract class EngineView {
      * Destroys the engine
      */
     public void destroy() {
+        // TODO: Dispose everything used in this view
+        // TODO: Dispose also static loaded textures
+
         dataWatcher.rbCleanUp();
         for (AbstractShader abstractShader : abstractShaders) {
             abstractShader.dispose();
@@ -204,8 +203,12 @@ public abstract class EngineView {
     public void render() {
         CameraComponent[] cameras = scenes[currentScene].render();
 
+        // Start render to frameBuffer / Postprocessing input
+
         // Render cameras to engineView
         textureRenderer.glRenderTexture(cameras[0].getFrameBuffer().getColorTexture());
+
+        // Stop rendering to frameBuffer / Postprocessing input
 
         update();
     }
@@ -355,10 +358,17 @@ public abstract class EngineView {
     }
 
     /**
-     * @return InputSystem if you use standard Window.java
+     * @return InputSystem if you use a standard Window.java
      */
     public InputSystem getInputSystem() {
         return inputSystem;
+    }
+
+    /**
+     * @return TextureRenderer
+     */
+    public TextureRenderer getTextureRenderer() {
+        return textureRenderer;
     }
 
     /**

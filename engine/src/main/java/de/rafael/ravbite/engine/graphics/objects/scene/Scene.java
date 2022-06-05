@@ -181,7 +181,7 @@ public abstract class Scene implements ISizeDependent {
             } else {
                 return 0;
             }
-        }).collect(Collectors.toList());
+        }).toList();
 
         LightComponent[] components = new LightComponent[Math.min(sortedLights.size(), limit)];
         for (int i = 0; i < components.length; i++) {
