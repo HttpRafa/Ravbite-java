@@ -40,6 +40,8 @@ package de.rafael.ravbite.engine.app.editor.element.opened.center;
 
 import de.rafael.ravbite.engine.app.editor.Editor;
 import de.rafael.ravbite.engine.app.editor.manager.element.IGuiElement;
+import imgui.ImVec2;
+import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGui;
 
 public class SceneViewElement implements IGuiElement {
@@ -53,9 +55,14 @@ public class SceneViewElement implements IGuiElement {
     @Override
     public boolean render() {
 
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
         ImGui.begin("Scene View");
 
+        ImVec2 viewportPanelSize = ImGui.getContentRegionAvail();
+        ImGui.image(editor.getEditorWindow().getDefaultTexture(), viewportPanelSize.x, viewportPanelSize.y);
+
         ImGui.end();
+        ImGui.popStyleVar();
 
         return false;
     }

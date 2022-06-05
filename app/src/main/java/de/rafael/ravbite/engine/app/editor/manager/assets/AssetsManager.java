@@ -58,14 +58,14 @@ public class AssetsManager {
         RavbiteUtils utils = editor.getEditorWindow().getUtils();
 
         try {
-            this.TEXTURE_ICON_DIRECTORY = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/directory.png", AssetLocation.INTERNAL));
-            this.TEXTURE_ICON_FILE = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/file.png", AssetLocation.INTERNAL));
+            this.TEXTURE_ICON_DIRECTORY = utils.rbLoadViewTexture(AssetLocation.create("/assets/icons/directory.png", AssetLocation.INTERNAL));
+            this.TEXTURE_ICON_FILE = utils.rbLoadViewTexture(AssetLocation.create("/assets/icons/file.png", AssetLocation.INTERNAL));
 
-            this.TEXTURE_ICON_NEXT = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/next.png", AssetLocation.INTERNAL));
-            this.TEXTURE_ICON_PREVIOUS = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/previous.png", AssetLocation.INTERNAL));
+            this.TEXTURE_ICON_NEXT = utils.rbLoadViewTexture(AssetLocation.create("/assets/icons/next.png", AssetLocation.INTERNAL));
+            this.TEXTURE_ICON_PREVIOUS = utils.rbLoadViewTexture(AssetLocation.create("/assets/icons/previous.png", AssetLocation.INTERNAL));
 
             this.TEXTURE_ICON_PLAY = this.TEXTURE_ICON_NEXT;
-            this.TEXTURE_ICON_STOP = utils.rbStaticLoadTexture(AssetLocation.create("/assets/icons/stop.png", AssetLocation.INTERNAL));
+            this.TEXTURE_ICON_STOP = utils.rbLoadViewTexture(AssetLocation.create("/assets/icons/stop.png", AssetLocation.INTERNAL));
         } catch(Exception exception) {
             editor.handleError(exception);
         }
