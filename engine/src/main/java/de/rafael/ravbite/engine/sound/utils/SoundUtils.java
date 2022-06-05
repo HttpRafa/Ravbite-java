@@ -38,6 +38,7 @@ package de.rafael.ravbite.engine.sound.utils;
 //
 //------------------------------
 
+import de.rafael.ravbite.engine.graphics.utils.DataWatcher;
 import de.rafael.ravbite.engine.graphics.utils.ImageUtils;
 import de.rafael.ravbite.engine.graphics.view.EngineView;
 import de.rafael.ravbite.utils.asset.AssetLocation;
@@ -125,7 +126,7 @@ public abstract class SoundUtils extends ImageUtils {
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
-        getEngineView().getDataWatcher().alBuffer(buffer);
+        getEngineView().getDataWatcher().alBuffer(DataWatcher.DataScope.SCENE, buffer);
         return new Sound(buffer, location);
     }
 

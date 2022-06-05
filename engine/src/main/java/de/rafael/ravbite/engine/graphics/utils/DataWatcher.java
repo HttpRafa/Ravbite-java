@@ -43,64 +43,90 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DataWatcher {
 
-    private final List<Integer> vaoList = new ArrayList<>();
-    private final List<Integer> vboList = new ArrayList<>();
-    private final List<Integer> textureList = new ArrayList<>();
+    private final HashMap<DataScope, List<Integer>> vaoList = new HashMap<>();
+    private final HashMap<DataScope, List<Integer>> vboList = new HashMap<>();
+    private final HashMap<DataScope, List<Integer>> textureList = new HashMap<>();
     
-    private final List<Integer> soundBuffersList = new ArrayList<>();
+    private final HashMap<DataScope, List<Integer>> soundBuffersList = new HashMap<>();
+
+    public DataWatcher() {
+        vaoList.put(DataScope.SCENE, new ArrayList<>());
+        vaoList.put(DataScope.VIEW, new ArrayList<>());
+
+        vboList.put(DataScope.SCENE, new ArrayList<>());
+        vboList.put(DataScope.VIEW, new ArrayList<>());
+
+        textureList.put(DataScope.SCENE, new ArrayList<>());
+        textureList.put(DataScope.VIEW, new ArrayList<>());
+
+        soundBuffersList.put(DataScope.SCENE, new ArrayList<>());
+        soundBuffersList.put(DataScope.VIEW, new ArrayList<>());
+    }
 
     /**
      * Delete all VAOs and VBOs stored in this dataWatcher
      */
-    public void rbCleanUp() {
-        for (Integer vao : vaoList) {
+    public void rbCleanUp(DataScope dataScope) {
+        for (Integer vao : vaoList.get(dataScope)) {
             GL30.glDeleteVertexArrays(vao);
         }
-        for (Integer vbo : vboList) {
+        vaoList.get(dataScope).clear();
+        for (Integer vbo : vboList.get(dataScope)) {
             GL15.glDeleteBuffers(vbo);
         }
-        for (Integer texture : textureList) {
+        vboList.get(dataScope).clear();
+        for (Integer texture : textureList.get(dataScope)) {
             GL11.glDeleteTextures(texture);
         }
-        for (Integer buffer : soundBuffersList) {
+        textureList.get(dataScope).clear();
+        for (Integer buffer : soundBuffersList.get(dataScope)) {
             AL10.alDeleteBuffers(buffer);
         }
+        soundBuffersList.get(dataScope).clear();
     }
 
     /**
      * Store vao for later cleanUp
      * @param vao Vao to store
      */
-    public void glVao(int vao) {
-        vaoList.add(vao);
+    public void glVao(DataScope dataScope, int vao) {
+        vaoList.get(dataScope).add(vao);
     }
 
     /**
      * Store vbo for later cleanUp
      * @param vbo Vbo to store
      */
-    public void glVbo(int vbo) {
-        vboList.add(vbo);
+    public void glVbo(DataScope dataScope, int vbo) {
+        vboList.get(dataScope).add(vbo);
     }
 
     /**
      * Store texture for later cleanUp
      * @param texture Texture to store
      */
-    public void glTexture(int texture) {
-        textureList.add(texture);
+    public void glTexture(DataScope dataScope, int texture) {
+        textureList.get(dataScope).add(texture);
     }
 
     /**
      * Store buffers for later cleanUp
      * @param buffer Buffer to store
      */
-    public void alBuffer(int buffer) {
-        soundBuffersList.add(buffer);
+    public void alBuffer(DataScope dataScope, int buffer) {
+        soundBuffersList.get(dataScope).add(buffer);
+    }
+
+    public static enum DataScope {
+
+        SCENE,
+        VIEW
+
     }
 
 }

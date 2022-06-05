@@ -82,7 +82,7 @@ public abstract class EngineView {
 
     private int defaultTexture = 0;
 
-    private DataWatcher dataWatcher;
+    private final DataWatcher dataWatcher = new DataWatcher();
 
     private final EngineWatcher engineWatcher = new EngineWatcher();
     private final RavbiteUtils ravbiteUtils;
@@ -125,7 +125,7 @@ public abstract class EngineView {
 
         // Load default assets
         try {
-            this.defaultTexture = this.ravbiteUtils.rbStaticLoadTexture(AssetLocation.create("/textures/default/standard.png", AssetLocation.INTERNAL));
+            this.defaultTexture = this.ravbiteUtils.rbLoadViewTexture(AssetLocation.create("/textures/default/standard.png", AssetLocation.INTERNAL));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -176,7 +176,9 @@ public abstract class EngineView {
         // TODO: Dispose everything used in this view
         // TODO: Dispose also static loaded textures
 
-        dataWatcher.rbCleanUp();
+        dataWatcher.rbCleanUp(DataWatcher.DataScope.SCENE);
+        dataWatcher.rbCleanUp(DataWatcher.DataScope.VIEW);
+
         for (AbstractShader abstractShader : abstractShaders) {
             abstractShader.dispose();
         }
@@ -294,10 +296,9 @@ public abstract class EngineView {
 
         // Cleanup old scene
         scenes[currentScene].dispose();
-        if(dataWatcher != null) dataWatcher.rbCleanUp();
+        dataWatcher.rbCleanUp(DataWatcher.DataScope.SCENE);
 
         // Prepare a new scene
-        dataWatcher = new DataWatcher();
         currentScene = index;
         scenes[currentScene].prepare();
         return old;
